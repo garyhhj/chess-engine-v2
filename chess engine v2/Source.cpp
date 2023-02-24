@@ -7,7 +7,13 @@
 
 int main() {
 
-
+	initPawnAttack(); 
 
 	
+	
+	
+	
+
+
+
 }

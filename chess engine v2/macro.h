@@ -1,3 +1,4 @@
+#pragma once 
 
 #include <stdint.h>
 #include <iostream>
@@ -15,7 +16,6 @@ typedef uint64_t board;
 
 //forces compile time evaluation 
 //error, e3160, nothing on stackoverflow and documentation
-
 /*
 consteval auto compileTime(auto val) {
 	return val;
@@ -24,7 +24,7 @@ consteval auto compileTime(auto val) {
 
 consteval auto compileTime(auto val);
 
-void printBit(const uint64_t bit);
+extern void printBit(const uint64_t bit);
 
 
 
@@ -50,11 +50,12 @@ constexpr int lsbBitIndex(uint64_t bitboard);
 /********************
 *
 *	Enumerations
+*	and 
+*	Constants 
 *
 *********************/
-#define A8 1; 
 
-extern enum Squares : const bit; /* {
+extern enum Squares : const bit{
 	A8 = 0x8000000000000000ull,
 	B8 = 0x4000000000000000ull,
 	C8 = 0x2000000000000000ull, 
@@ -126,10 +127,10 @@ extern enum Squares : const bit; /* {
 	F1 = 0x0000000000000004ull,
 	G1 = 0x0000000000000002ull,
 	H1 = 0x0000000000000001ull,
-}; */
+}; 
 
-/*
-extern const bit indexSquare[64] = {
+
+extern const bit indexSquare[64];/* = {
 	A8, B8, C8, D8, E8, F8, G8, H8,
 	A7, B7, C7, D7, E7, F7, G7, H7,
 	A6, B6, C6, D6, E6, F6, G6, H6,
@@ -138,11 +139,14 @@ extern const bit indexSquare[64] = {
 	A3, B3, C3, D3, E3, F3, G3, H3,
 	A2, B2, C2, D2, E2, F2, G2, H2,
 	A1, B1, C1, D1, E1, F1, G1, H1,
-};
+};*/
 
 extern enum side : const int {
 	white = 0,
 	black = 1,
 	both = 2, 
-};*/
+};
+
+const map AFile = A8 | A7 | A6 | A5 | A4 | A3 | A2 | A1; 
+const map HFile = H8 | H7 | H6 | H5 | H4 | H3 | H2 | H1;
 
