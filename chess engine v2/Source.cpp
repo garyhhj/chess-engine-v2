@@ -8,9 +8,19 @@
 int main() {
 
 	initPawnAttack(); 
+	initKnightAttack(); 
 
-	
-	
+
+	std::string s; 
+	for (int i = 0; i < 64; ++i) {
+		std::cout << std::endl; 
+		std::cout << "pos: " << i << std::endl; 
+		
+		printBit(knightAttack[i]); 
+
+		std::cin >> s; 
+	}
+
 	
 	
 

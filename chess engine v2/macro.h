@@ -148,5 +148,7 @@ extern enum side : const int {
 };
 
 const map AFile = A8 | A7 | A6 | A5 | A4 | A3 | A2 | A1; 
+const map BFile = B8 | B7 | B6 | B5 | B4 | B3 | B2 | B1;
+const map GFile = G8 | G7 | G6 | G5 | G4 | G3 | G2 | G1;
 const map HFile = H8 | H7 | H6 | H5 | H4 | H3 | H2 | H1;
 

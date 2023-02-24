@@ -7,15 +7,13 @@
 *
 *********************/
 
-//precalculated pawn attack table 
-map pawnAttack[2][64]; 
+map pawnAttack[2][64]; //pawnAttack[side][index]
 
 //function to initialize 
 void initPawnAttack() {
 	//init wPawn attack 
 	for (int i = 0; i < 64; ++i) {
 		const map pos = indexSquare[i]; 
-
 		
 		if(pos & ~AFile) pawnAttack[white][i] |= pos << 9;  //left
 		if(pos & ~HFile) pawnAttack[white][i] |= pos << 7;  //right 
@@ -38,6 +36,33 @@ void initPawnAttack() {
 *	Knight
 *
 *********************/
+
+map knightAttack[64]; //knightAttack[index]
+
+void initKnightAttack() {
+
+	for (int i = 0; i < 64; ++i) {
+		const map pos = indexSquare[i]; 
+
+		//up 
+		if(pos & ~AFile) knightAttack[i] |= pos << 17; //left  
+		if(pos & ~HFile) knightAttack[i] |= pos << 15; //right 
+
+		//down 
+		if(pos & ~AFile) knightAttack[i] |= pos >> 15; //left
+		if(pos & ~HFile) knightAttack[i] |= pos >> 17; //right 
+
+		//left 
+		if(pos & ~AFile & ~BFile) knightAttack[i] |= pos << 10; //up 
+		if(pos & ~AFile & ~BFile) knightAttack[i] |= pos >> 6; //down
+
+		//right 
+		if(pos & ~GFile & ~HFile) knightAttack[i] |= pos << 6; //up  
+		if(pos & ~GFile & ~HFile) knightAttack[i] |= pos >> 10; //down  
+
+	}
+}
+
 
 /********************
 *
