@@ -70,6 +70,32 @@ void initKnightAttack() {
 *
 *********************/
 
+map kingAttack[64]; 
+
+void initKingAttack() {
+	
+	for (int i = 0; i < 64; ++i) {
+		const map pos = indexSquare[i]; 
+
+		//up down 
+		kingAttack[i] |= pos << 8; 
+		kingAttack[i] |= pos >> 8; 
+		
+		//left right 
+		if (pos & ~AFile) kingAttack[i] |= pos << 1;
+		if (pos & ~HFile) kingAttack[i] |= pos >> 1;
+
+		// '/' diagonal 
+		if (pos & ~HFile) kingAttack[i] |= pos << 7; 
+		if (pos & ~AFile) kingAttack[i] |= pos >> 7; 
+
+		// '\' diagonal
+		if (pos & ~AFile) kingAttack[i] |= pos << 9; 
+		if (pos & ~HFile) kingAttack[i] |= pos >> 9; 
+
+	}
+}
+
 /********************
 *
 *	Bishop 

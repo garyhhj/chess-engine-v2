@@ -9,6 +9,7 @@ int main() {
 
 	initPawnAttack(); 
 	initKnightAttack(); 
+	initKingAttack(); 
 
 
 	std::string s; 
@@ -16,9 +17,10 @@ int main() {
 		std::cout << std::endl; 
 		std::cout << "pos: " << i << std::endl; 
 		
-		printBit(knightAttack[i]); 
+		printBit(kingAttack[i]); 
 
 		std::cin >> s; 
+
 	}
 
 	
