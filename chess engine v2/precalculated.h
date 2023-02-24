@@ -96,6 +96,55 @@ void initKingAttack() {
 	}
 }
 
+
+
+/********************
+*
+*	Magic 
+*
+*********************/
+
+class Magic {
+	
+public: 
+	
+	//generate candidate magic number 
+	uint64_t generateMagicNumCandidate() {
+		return generateRandomUint64() & generateRandomUint64() & generateRandomUint64();
+	}
+	
+private: 
+	uint64_t generateRandomUint64() {
+		//defining numbers; 
+		uint64_t num1, num2, num3, num4;
+
+		num1 = generateRandomUint32() & 0xffff; 
+		num2 = generateRandomUint32() & 0xffff;
+		num3 = generateRandomUint32() & 0xffff;
+		num4 = generateRandomUint32() & 0xffff;
+
+		return num1 | num2 << 16 | num3 << 32 | num4 << 48;
+	}
+
+	static uint32_t generateRandomUint32() {
+		//defining next state 
+		uint32_t nxtState = magicNumberState;
+
+		//xor shifts 
+		nxtState ^= nxtState << 13;
+		nxtState ^= nxtState >> 17;
+		nxtState ^= nxtState << 5;
+
+		//storing next state 
+		magicNumberState = nxtState;
+
+		return nxtState;
+	}
+
+	inline static uint32_t magicNumberState = 1804289383;
+
+};
+
 /********************
 *
 *	Bishop 
