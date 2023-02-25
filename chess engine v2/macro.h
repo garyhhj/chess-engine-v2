@@ -42,7 +42,7 @@ constexpr void popBit(uint64_t& bitBoard, const uint64_t square);
 
 constexpr uint64_t lsbBit(const uint64_t bitBoard);
 
-constexpr int numBit(uint64_t bitboard);
+extern constexpr int getNumBit(uint64_t bitboard);
 
 constexpr int lsbBitIndex(uint64_t bitboard);
 

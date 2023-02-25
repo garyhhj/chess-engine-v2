@@ -78,7 +78,7 @@ constexpr uint64_t lsbBit(const uint64_t bitBoard) {
 	return bitBoard & ~bitBoard + 1;
 }
 
-constexpr int numBit(uint64_t bitboard) {
+constexpr int getNumBit(uint64_t bitboard) {
 	int count = 0;
 
 	while (bitboard) {
@@ -93,7 +93,7 @@ constexpr int lsbBitIndex(uint64_t bitboard) {
 
 	//make sure bitboard is not zero 
 	if (bitboard) {
-		return 63 - numBit((bitboard & (~bitboard + 1)) - 1);
+		return 63 - getNumBit((bitboard & (~bitboard + 1)) - 1);
 	}
 
 	else {
