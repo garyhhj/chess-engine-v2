@@ -17,14 +17,24 @@ int main() {
 	Magic a; 
 
 	for (int j = 0; j < 64; ++j) {
-		std::cout << "new mask " << std::endl; 
-		for (int i = 0; i < 0x1 << getNumBit(relevantBishopBlocker[j]); ++i) {
+		const bit pos = indexSquare[j];
 
-			map mask = a.mapCombination(i, relevantBishopBlocker[j]);
-			printBit(mask);
+		const bit relBlockers = relevantBishopBlocker[j]; 
+		std::cout << "next position: " << j << std::endl; 
+		//loop through combination of each blocker 
+		int numBit = getNumBit(relBlockers); 
+		for (int i = 0; i < numBit; ++i) {
+			const bit comb = a.mapCombination(i, relBlockers); 
 
-			std::cin >> s; 
+			const bit attackRt = initBishopAttackRunTime(pos, comb); 
+
+			std::cout << "blockers, attacks:" << std::endl; 
+			printBit(comb);
+			printBit(attackRt); 
+			std::cout << std::endl; 
 		}
+
+
 	}
 	
 

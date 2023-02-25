@@ -172,24 +172,13 @@ private:
 *
 *********************/
 
-const int relevantBishopBlockerBitCount[64] = {
-	6, 5, 5, 5, 5, 5, 5, 6,
-	5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 7, 7, 7, 7, 5, 5,
-	5, 5, 7, 9, 9, 7, 5, 5,
-	5, 5, 7, 9, 9, 7, 5, 5,
-	5, 5, 7, 7, 7, 7, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5,
-	6, 5, 5, 5, 5, 5, 5, 6,
-};
-
 //to generate all combinations, not very practical to store so just bitmask the necessary bits 
 
 //first need to generate all relevent bishop bits 
 
 uint64_t relevantBishopBlocker[64];
 
-void initRelevantBishopBlocker() {
+constexpr void initRelevantBishopBlocker() {
 	
 	for (int i = 0; i < 64; ++i) {
 
@@ -224,7 +213,63 @@ void initRelevantBishopBlocker() {
 	}
 }
 
+//return attack map given occupancy 
+constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t occ) {
 
+	uint64_t res = 0x0ull; 
+
+	// '/' diagonal 
+	for (int step = 1;
+		pos << step * 7 & ~Edge;
+		++step) {
+		res |= pos << (step * 7);
+		if ((pos << (step * 7)) & occ) break; 
+	}
+
+	for (int step = 1;
+		pos >> step * 7 & ~Edge;
+		++step) {
+		res |= pos >> (step * 7);
+		if ((pos >> (step * 7)) & occ) break; 
+	}
+
+
+	// '\' diagonal 
+	for (int step = 1;
+		pos << step * 9 & ~Edge;
+		++step) {
+		res |= pos << (step * 9);
+		if ((pos << (step * 9)) & occ)  break; 
+	}
+
+	for (int step = 1;
+		pos >> step * 9 & ~Edge;
+		++step) {
+		res |= pos >> (step * 9);
+		if ((pos >> (step * 9)) & occ) break; 
+	}
+
+	return res; 
+}
+
+uint64_t testingMagicNumAtIndex(int index) {
+
+	//max number of bits for bishop is 9 
+	return 0x0ull; 
+}
+
+void testingMagicNumBishop() {
+	
+	for (int i = 0; i < 64; ++i) {
+		map validMagicNumber = testingMagicNumAtIndex(i); 
+		if (validMagicNumber == 0x0) {
+			//oof not working  
+		}
+		else {
+			//yay working  
+		}
+	}
+}
 /********************
 *
 *	Rook
