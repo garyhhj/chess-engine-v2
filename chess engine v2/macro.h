@@ -152,3 +152,8 @@ const map BFile = B8 | B7 | B6 | B5 | B4 | B3 | B2 | B1;
 const map GFile = G8 | G7 | G6 | G5 | G4 | G3 | G2 | G1;
 const map HFile = H8 | H7 | H6 | H5 | H4 | H3 | H2 | H1;
 
+const map Row1 = A1 | B1 | C1 | D1 | E1 | F1 | G1 | H1; 
+const map Row8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
+
+const map Edge = AFile | HFile | Row1 | Row8; 
+

@@ -151,6 +151,59 @@ private:
 *
 *********************/
 
+const int bishopOccupancyCount[64] = {
+	6, 5, 5, 5, 5, 5, 5, 6,
+	5, 5, 5, 5, 5, 5, 5, 5,
+	5, 5, 7, 7, 7, 7, 5, 5,
+	5, 5, 7, 9, 9, 7, 5, 5,
+	5, 5, 7, 9, 9, 7, 5, 5,
+	5, 5, 7, 7, 7, 7, 5, 5,
+	5, 5, 5, 5, 5, 5, 5, 5,
+	6, 5, 5, 5, 5, 5, 5, 6,
+};
+
+//to generate all combinations, not very practical to store so just bitmask the necessary bits 
+
+//first need to generate all relevent bishop bits 
+
+uint64_t relevantBishopBlocker[64];
+
+void initRelevantBishopBlocker() {
+	
+	for (int i = 0; i < 64; ++i) {
+
+		const map pos = indexSquare[i]; 
+
+		// '/' diagonal 
+		for (int step = 1;
+			pos << step * 7 & ~Edge; 
+			++step) {
+			relevantBishopBlocker[i] |= pos << (step * 7); 
+		}
+
+		for (int step = 1;
+			pos >> step * 7 & ~Edge;
+			++step) {
+			relevantBishopBlocker[i] |= pos >> (step * 7); 
+		}
+
+
+		// '\' diagonal 
+		for (int step = 1;
+			pos << step * 9 & ~Edge;
+			++step) {
+			relevantBishopBlocker[i] |= pos << (step * 9); 
+		}
+
+		for (int step = 1;
+			pos >> step * 9 & ~Edge;
+			++step) {
+			relevantBishopBlocker[i] |= pos >> (step * 9); 
+		}
+	}
+}
+
+
 /********************
 *
 *	Rook
