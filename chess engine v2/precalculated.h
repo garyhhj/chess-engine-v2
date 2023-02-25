@@ -112,6 +112,27 @@ public:
 	uint64_t generateMagicNumCandidate() {
 		return generateRandomUint64() & generateRandomUint64() & generateRandomUint64();
 	}
+
+	//bitmask combination based on num 
+	uint64_t mapCombination(int num, uint64_t occupancy) {
+		int numBits = getNumBit(occupancy); 
+		
+		uint64_t res = 0x0ull; 
+
+		int currBit = 0x1; 
+		while (occupancy) {
+			uint64_t lsbBit = getLsbBit(occupancy); 
+
+			if (currBit & num) {
+				res |= lsbBit; 
+			}
+
+			currBit <<= 1; 
+			occupancy &= ~lsbBit; 
+		}
+
+		return res; 
+	}
 	
 private: 
 	uint64_t generateRandomUint64() {
@@ -151,7 +172,7 @@ private:
 *
 *********************/
 
-const int bishopOccupancyCount[64] = {
+const int relevantBishopBlockerBitCount[64] = {
 	6, 5, 5, 5, 5, 5, 5, 6,
 	5, 5, 5, 5, 5, 5, 5, 5,
 	5, 5, 7, 7, 7, 7, 5, 5,

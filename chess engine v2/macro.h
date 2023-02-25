@@ -40,7 +40,7 @@ constexpr void setBit(uint64_t& bitBoard, const uint64_t square);
 
 constexpr void popBit(uint64_t& bitBoard, const uint64_t square);
 
-constexpr uint64_t lsbBit(const uint64_t bitBoard);
+extern constexpr uint64_t getLsbBit(const uint64_t bitBoard);
 
 extern constexpr int getNumBit(uint64_t bitboard);
 

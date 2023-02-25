@@ -74,7 +74,7 @@ constexpr void popBit(uint64_t& bitBoard, const uint64_t square) {
 	bitBoard &= ~square;
 }
 
-constexpr uint64_t lsbBit(const uint64_t bitBoard) {
+constexpr uint64_t getLsbBit(const uint64_t bitBoard) {
 	return bitBoard & ~bitBoard + 1;
 }
 
