@@ -176,6 +176,7 @@ private:
 
 //first need to generate all relevent bishop bits 
 
+uint64_t bishopAttack[64][512]; //bishopAttack[index][magicIndex]
 uint64_t relevantBishopBlocker[64];
 
 constexpr void initRelevantBishopBlocker() {
@@ -254,20 +255,65 @@ constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t oc
 
 uint64_t testingMagicNumAtIndex(int index) {
 
-	//max number of bits for bishop is 9 
-	return 0x0ull; 
+	Magic magic;
+	const map bishopBlocker = relevantBishopBlocker[index];
+	const int bishopBlockerBits = getNumBit(relevantBishopBlocker[index]);
+
+	map visitedReference[512]{};
+	//precalculate some values for comparions later 
+	for (int i = 0; i < (0x1 << bishopBlockerBits); ++i) {
+		visitedReference[i] = magic.mapCombination(i, bishopBlocker);
+	}
+
+
+	for (int trial = 0; trial < 10000000; ++trial) {
+
+		bool validNum = true; 
+		map visited[512] = { 0x0ull };
+			
+		//generate a magic number 
+		const map magicNumCandidate = magic.generateMagicNumCandidate(); 
+
+		//iterate through combination of blocker 
+		for (int i = 0; i < (0x1 << bishopBlockerBits); ++i) {
+			const map combination = magic.mapCombination(i, bishopBlocker);
+
+			int magicIndex = (combination * magicNumCandidate) >> (64 - bishopBlockerBits);
+
+			if (visited[magicIndex] == 0x0 || visited[magicIndex] == visitedReference[i]) {
+				visited[magicIndex] == visitedReference[i]; 
+			}
+			else {
+				validNum = false;
+				break; 
+			}
+		}
+
+		if (validNum) return magicNumCandidate;
+		else continue; 
+	}
+
+	//invalid magicNum 
+	return 0x0; 
 }
 
 void testingMagicNumBishop() {
-	
+
+	map magicNums[64];
 	for (int i = 0; i < 64; ++i) {
-		map validMagicNumber = testingMagicNumAtIndex(i); 
+		map validMagicNumber = testingMagicNumAtIndex(i);
 		if (validMagicNumber == 0x0) {
-			//oof not working  
+			std::cout << "Didn't find valid magic number at index: " << i << std::endl;
+			break;
 		}
 		else {
-			//yay working  
+			magicNums[i] = validMagicNumber;
 		}
+	}
+
+	//print out magic number 
+	for (int i = 0; i < 64; ++i) {
+		std::cout << std::hex << "0x" << magicNums[i] << ",\n";
 	}
 }
 /********************
