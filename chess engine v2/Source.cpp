@@ -17,9 +17,8 @@ int main() {
 
 
 	initRelevantBishopBlocker();
-	//initBishopAttack(); 
+	initBishopAttack(); 
 
-	printBit(initBishopAttackRunTime(indexSquare[0], B7));
 
 	//std::string s; 
 	//for (int i = 0; i < 64; ++i) {
