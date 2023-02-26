@@ -178,6 +178,72 @@ private:
 
 uint64_t bishopAttack[64][512]; //bishopAttack[index][magicIndex]
 uint64_t relevantBishopBlocker[64];
+const map bishopMagicNum[] = {
+	0x40040822862081,
+	0xa168041010224880,
+	0x400102020020885,
+	0x212001220042403,
+	0x20900041108c,
+	0x400000049082100,
+	0x111110105100308,
+	0x22010108410402,
+	0x200c100228c10a80,
+	0x91020885040090,
+	0x80000c88900d0000,
+	0x2003002020400,
+	0x800e100284140002,
+	0x6311401040228,
+	0x2040440209102440,
+	0x1102923002200165,
+	0x1011020082020910,
+	0x8002080827804118,
+	0x44008082022100,
+	0x400812000041,
+	0x2000040c1811e404,
+	0x80a2940208000101,
+	0x2401008250002000,
+	0x34042a40048840,
+	0x1040028010500,
+	0x40100204c8121100,
+	0x881010200040a02,
+	0x40008020020260,
+	0x8008a080a1680200,
+	0x2010242100081,
+	0x8582400080500,
+	0xc224202004040400,
+	0x1824009005220100,
+	0x4004084641011041,
+	0x88004002011580,
+	0x840080802000,
+	0x42011000802400c,
+	0x1204100009104080,
+	0x1010010a020641,
+	0x20210124084600,
+	0xc01100020103c208,
+	0x2133000411821020,
+	0x10200202102200,
+	0x8021004820180000,
+	0x4009204404008019,
+	0x4018102100c40080,
+	0x340c6001040104,
+	0x9009020010c00,
+	0x2440908401081209,
+	0x48089808088404,
+	0x1220110080465,
+	0x408020210580380,
+	0x45c00800200,
+	0x1080801002004,
+	0x8002102c11004201,
+	0x81301010030940,
+	0x8c02008200901400,
+	0x2081a23101154,
+	0xa410900420520809,
+	0x4004242000030048,
+	0x204241a80000420,
+	0x211802044e048220,
+	0x310340810882000,
+	0x221204040c004600,
+};
 
 constexpr void initRelevantBishopBlocker() {
 	
@@ -221,14 +287,14 @@ constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t oc
 
 	// '/' diagonal 
 	for (int step = 1;
-		pos << step * 7 & ~Edge;
+		pos << step * 7 & ~AFile && pos << step * 7 & ~Row1;
 		++step) {
 		res |= pos << (step * 7);
 		if ((pos << (step * 7)) & occ) break; 
 	}
 
 	for (int step = 1;
-		pos >> step * 7 & ~Edge;
+		pos >> step * 7 & ~HFile && pos >> step * 7 & ~Row8;
 		++step) {
 		res |= pos >> (step * 7);
 		if ((pos >> (step * 7)) & occ) break; 
@@ -237,14 +303,14 @@ constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t oc
 
 	// '\' diagonal 
 	for (int step = 1;
-		pos << step * 9 & ~Edge;
+		pos << step * 9 & ~HFile && pos << step * 9 & ~Row1;
 		++step) {
 		res |= pos << (step * 9);
 		if ((pos << (step * 9)) & occ)  break; 
 	}
 
 	for (int step = 1;
-		pos >> step * 9 & ~Edge;
+		pos >> step * 9 & ~AFile && pos >> step * 9 & ~Row8;
 		++step) {
 		res |= pos >> (step * 9);
 		if ((pos >> (step * 9)) & occ) break; 
@@ -253,23 +319,26 @@ constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t oc
 	return res; 
 }
 
-uint64_t testingMagicNumAtIndex(int index) {
+uint64_t generatingMagicNumAtIndex(int index) {
 
 	Magic magic;
 	const map bishopBlocker = relevantBishopBlocker[index];
 	const int bishopBlockerBits = getNumBit(relevantBishopBlocker[index]);
 
-	map visitedReference[512]{};
+	map visitedReference[512];
+	map attackMapReference[512]; 
 	//precalculate some values for comparions later 
 	for (int i = 0; i < (0x1 << bishopBlockerBits); ++i) {
 		visitedReference[i] = magic.mapCombination(i, bishopBlocker);
+		attackMapReference[i] = initBishopAttackRunTime(indexSquare[index], visitedReference[i]); 
 	}
 
 
 	for (int trial = 0; trial < 10000000; ++trial) {
 
 		bool validNum = true; 
-		map visited[512] = { 0x0ull };
+		map visited[512];
+		for (int count = 0; count < 512; ++count) visited[count] = 0x0ull; 
 			
 		//generate a magic number 
 		const map magicNumCandidate = magic.generateMagicNumCandidate(); 
@@ -277,14 +346,16 @@ uint64_t testingMagicNumAtIndex(int index) {
 		//iterate through combination of blocker 
 		for (int i = 0; i < (0x1 << bishopBlockerBits); ++i) {
 			const map combination = magic.mapCombination(i, bishopBlocker);
-
 			int magicIndex = (combination * magicNumCandidate) >> (64 - bishopBlockerBits);
 
-			if (visited[magicIndex] == 0x0 || visited[magicIndex] == visitedReference[i]) {
-				visited[magicIndex] == visitedReference[i]; 
+			if (visited[magicIndex] == 0x0) {
+				visited[magicIndex] = attackMapReference[i];
+			}
+			else if (visited[magicIndex] == attackMapReference[i]) {
+				//do nothing  
 			}
 			else {
-				validNum = false;
+				validNum = false; 
 				break; 
 			}
 		}
@@ -294,15 +365,15 @@ uint64_t testingMagicNumAtIndex(int index) {
 	}
 
 	//invalid magicNum 
-	return 0x0; 
+	return 0x0ull; 
 }
 
-void testingMagicNumBishop() {
+void generatingMagicNumBishop() {
 
 	map magicNums[64];
 	for (int i = 0; i < 64; ++i) {
-		map validMagicNumber = testingMagicNumAtIndex(i);
-		if (validMagicNumber == 0x0) {
+		map validMagicNumber = generatingMagicNumAtIndex(i);
+		if (validMagicNumber == 0x0ull) {
 			std::cout << "Didn't find valid magic number at index: " << i << std::endl;
 			break;
 		}
@@ -313,9 +384,41 @@ void testingMagicNumBishop() {
 
 	//print out magic number 
 	for (int i = 0; i < 64; ++i) {
-		std::cout << std::hex << "0x" << magicNums[i] << ",\n";
+		std::cout << std::hex << "0x" << magicNums[i] << ", ";
+		if (!(i % 8)) std::cout << "\n";
 	}
 }
+
+void initBishopAttack() {
+	//initRelevantBishopBlocker must be called before this function 
+	//bishopAttack[index][magicindex]
+
+	Magic magic; 
+
+	for (int index = 0; index < 64; ++index) {
+		const map blockers = relevantBishopBlocker[index]; 
+		const int numBlockerBits = getNumBit(relevantBishopBlocker[index]); 
+	
+		//iterate through combinations 
+		for (int i = 0; i < (0x1 << numBlockerBits); ++i) {
+			const map combination = magic.mapCombination(i, blockers); 
+			int magicIndex = (combination * bishopMagicNum[i]) >> (64 - numBlockerBits); 
+
+			//sanity check for correct magic number generation 
+			const map attackMap = initBishopAttackRunTime(indexSquare[index], combination); 
+			if (bishopAttack[index][magicIndex] == 0x0 || bishopAttack[index][magicIndex] == attackMap) {
+				//success 
+				bishopAttack[index][magicIndex] = attackMap; 
+			}
+			else {
+				std::cout << "conflicting index at index: " << index << std::endl; 
+				return; 
+			}
+		}
+	
+	}
+}
+
 /********************
 *
 *	Rook
