@@ -172,10 +172,6 @@ private:
 *
 *********************/
 
-//to generate all combinations, not very practical to store so just bitmask the necessary bits 
-
-//first need to generate all relevent bishop bits 
-
 uint64_t bishopAttack[64][512]; //bishopAttack[index][magicIndex]
 uint64_t relevantBishopBlocker[64];
 const map bishopMagicNum[] = { 0x40040822862081,
@@ -368,6 +364,42 @@ void initBishopAttack() {
 *	Rook
 *
 *********************/
+
+uint64_t rookAttack[64][4096]; //rookAttack[index][magicIndex]
+uint64_t relevantRookBlocker[64];
+//const map rookMagicNum[64];
+
+
+constexpr void initRelevantRookBlocker() {
+
+
+	for (int i = 0; i < 64; ++i) {
+
+		const map pos = indexSquare[i];
+		
+		//up and down 
+		for (int step = 1; pos << 8 * step & ~Row8; ++step) {
+			relevantRookBlocker[i] |= pos << 8 * step; 
+		}
+
+		for (int step = 1; pos >> 8 * step & ~Row1; ++step) {
+			relevantRookBlocker[i] |= pos >> 8 * step; 
+		}
+
+
+		//left anf right 
+		for (int step = 1; pos << step & ~AFile && pos << step & ~HFile; ++step) {
+			relevantRookBlocker[i] |= pos << step; 
+		}
+		for (int step = 1; pos >> step & ~HFile && pos >> step & ~AFile; ++step) {
+			relevantRookBlocker[i] |= pos >> step; 
+		}
+		
+	}
+}
+
+
+
 
 /********************
 *

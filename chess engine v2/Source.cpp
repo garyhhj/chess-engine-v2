@@ -16,43 +16,33 @@ int main() {
 	initKingAttack();*/
 
 
-	initRelevantBishopBlocker();
-	initBishopAttack(); 
+	//initRelevantBishopBlocker();
+	//initBishopAttack(); 
+
+	const int rookOccupancyCount[64] = {
+	12, 11, 11, 11, 11, 11, 11, 12,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	11, 10, 10, 10, 10, 10, 10, 11,
+	12, 11, 11, 11, 11, 11, 11, 12,
+	};
+
+	initRelevantRookBlocker();
 
 
-	//std::string s; 
-	//for (int i = 0; i < 64; ++i) {
-	//	printBit(initBishopAttackRunTime(indexSquare[i], B7));
+	std::string s; 
 
-	//	std::cin >> s; 
-	//}
+	for (int i = 0; i < 64; ++i) {
+		printBit(relevantRookBlocker[i]); 
+		if (getNumBit(relevantRookBlocker[i]) != rookOccupancyCount[i]) {
+			std::cout << "oof something is wrong" << std::endl; 
+		}
 
-	
-
-	//std::string s; 
-	//Magic a; 
-
-	//for (int j = 0; j < 64; ++j) {
-	//	const bit pos = indexSquare[j];
-
-	//	const bit relBlockers = relevantBishopBlocker[j]; 
-	//	std::cout << "next position: " << j << std::endl; 
-	//	//loop through combination of each blocker 
-	//	int numBit = getNumBit(relBlockers); 
-	//	for (int i = 0; i < numBit; ++i) {
-	//		const bit comb = a.mapCombination(i, relBlockers); 
-
-	//		const bit attackRt = initBishopAttackRunTime(pos, comb); 
-
-	//		std::cout << "blockers, attacks:" << std::endl; 
-	//		printBit(comb);
-	//		printBit(attackRt); 
-	//		std::cout << std::endl; 
-	//	}
-
-
-	//}
-	//
+		std::cin >> s; 
+	}
 
 
 
