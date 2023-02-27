@@ -399,6 +399,37 @@ constexpr void initRelevantRookBlocker() {
 }
 
 
+//return attack map given occupancy 
+constexpr uint64_t initRookAttackRunTime(const uint64_t pos, const uint64_t occ) {
+
+	uint64_t res = 0x0ull;
+
+
+	//up and down 
+	for (int step = 1; 8 * step != 64 && pos << 8 * step; ++step) {
+		res |= pos << 8 * step;
+		if (pos << 8 * step & occ) break;
+	}
+	for (int step = 1; 8 * step != 64 && pos >> 8 * step; ++step) {
+		res |= pos >> 8 * step;
+		if (pos >> 8 * step & occ) break;
+	}
+
+	//left and right 
+	for (int step = 1; pos << step & ~HFile; ++step) {
+		res |= pos << step;
+		if (pos << step & occ) break;
+	}
+	for (int step = 1; pos >> step & ~AFile; ++step) {
+		res |= pos >> step;
+		if (pos >> step & occ) break;
+	}
+
+	return res;
+}
+
+
+
 
 
 /********************

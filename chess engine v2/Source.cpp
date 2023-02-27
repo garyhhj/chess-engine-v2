@@ -33,18 +33,17 @@ int main() {
 	initRelevantRookBlocker();
 
 
+	const map occ = E4; 
 	std::string s; 
 
-	for (int i = 0; i < 64; ++i) {
-		printBit(relevantRookBlocker[i]); 
-		if (getNumBit(relevantRookBlocker[i]) != rookOccupancyCount[i]) {
-			std::cout << "oof something is wrong" << std::endl; 
-		}
 
+	for (int i = 0; i < 64; ++i) {
+		printBit(initRookAttackRunTime(indexSquare[i], occ)); 
 		std::cin >> s; 
 	}
 
 
+	//now need to init rook run time 
 
 	//generatingMagicNumBishop(); 
 	
