@@ -265,8 +265,8 @@ uint64_t generatingMagicNumAtIndexBishop(int index) {
 	const map bishopBlocker = relevantBishopBlocker[index];
 	const int bishopBlockerBits = getNumBit(relevantBishopBlocker[index]);
 
-	map visitedReference[512];
-	map attackMapReference[512]; 
+	map visitedReference[512]{};
+	map attackMapReference[512]{};
 	//precalculate some values for comparions later 
 	for (int i = 0; i < (0x1 << bishopBlockerBits); ++i) {
 		visitedReference[i] = magic.mapCombination(i, bishopBlocker);
@@ -310,7 +310,7 @@ uint64_t generatingMagicNumAtIndexBishop(int index) {
 
 void generatingMagicNumBishop() {
 
-	map magicNums[64];
+	map magicNums[64]{};
 	for (int i = 0; i < 64; ++i) {
 		map validMagicNumber = generatingMagicNumAtIndexBishop(i);
 		if (validMagicNumber == 0x0ull) {
@@ -367,17 +367,19 @@ void initBishopAttack() {
 
 uint64_t rookAttack[64][4096]; //rookAttack[index][magicIndex]
 uint64_t relevantRookBlocker[64];
+
+//number taken from v1 
 const map rookMagicNum[64] = {
-	0x60800004203010,
-0x2000380201000008, 0x4409008012, 0x402002305c080008, 0x10c4048800000082, 0x80080000000, 0x30c140024400080, 0x801000802000, 0x8001810200420,
-0x780a080080080056, 0x204800e1010000, 0x40105202020100, 0x8002a200024200, 0x244440108208000, 0x4010010000080001, 0xc10140000002840, 0x8000000800a400,
-0x480040511122002, 0x128000100040, 0x9002041009000030, 0x108800020040010, 0x50000060400300, 0x2000041320800210, 0x2000630420000000, 0x5400880202010800,
-0x8000805c00400000, 0x10020480e410000, 0x10480100226009a8, 0x10040000000400, 0x8000488008200080, 0x8000850000040440, 0x240420005810, 0x9300070000204002,
-0x1000430100100082, 0x1001400000140840, 0x88c44004002000, 0x1208000001, 0x808008040002020, 0x500000280004004, 0x1a04002000001043, 0x9080540080300301,
-0x40a00200840082, 0x80402000100880, 0x3000a000010000, 0x801a0105000424, 0x2000100000402, 0x824c220000060680, 0x12000018200000a0, 0x6008011004000800,
-0x40180210122000c2, 0x5000500208000008, 0x42082000000030a, 0x4441004002904008, 0xa000c444a0925000, 0x400090400c004181, 0x2000020800220040, 0x206300a200c50600,
-0xac000030000082, 0x4080000040000800, 0x40801910d4004, 0x2008416400210, 0x8b40800050200, 0x1020210000040180, 0x102000028023100,
-}
+	0x1010549228402,
+0x2000011002080084, 0x11004802040005, 0x406002014300842, 0x104a00080440a012, 0x2001200095004009, 0x882004883210112, 0x100c020800417, 0x41048c0200,
+0x4106002144080600, 0x800a800a00040080, 0x426000420109a00, 0x8000680310008080, 0x822008060401600, 0x406400088200080, 0x202208001104100, 0x501224008e460001,
+0x4802010802640010, 0x400102040080104, 0x2011001008030004, 0x1001009000090020, 0x201e420080320020, 0x9869008040010020, 0x810308040028008, 0x220081020001c4,
+0x2000101704000a08, 0x216000802009004, 0x28820400800800, 0x2012002046001008, 0x60450231002000, 0x405024001002080, 0x800400030800084, 0x5060010824c,
+0x242100010012003c, 0x4800c0080120080, 0x9004040080080081, 0x1200b00100100, 0x800910100402000, 0x24a00040100040, 0x8500802080024000, 0x202020004004087,
+0x440021702248, 0x540080800c000200, 0x2088008004028088, 0x808008001002, 0x828020053000, 0x802000c0100222c0, 0x281808004c00020, 0x8006000225009044,
+0x9005001402000100, 0x40800600440080, 0x24808084000800, 0x200801002802800, 0xa2002056008042, 0x1003040008101, 0x401002080010240, 0x280104063000480,
+0x9000c0200058300, 0x400881020040012, 0x4580080007801400, 0xc800c0800100082, 0x80200080900088, 0x840002000405008, 0x80014000802034,
+};
 
 
 constexpr void initRelevantRookBlocker() {
@@ -386,25 +388,25 @@ constexpr void initRelevantRookBlocker() {
 	for (int i = 0; i < 64; ++i) {
 
 		const map pos = indexSquare[i];
-		
+
 		//up and down 
 		for (int step = 1; pos << 8 * step & ~Row8; ++step) {
-			relevantRookBlocker[i] |= pos << 8 * step; 
+			relevantRookBlocker[i] |= pos << 8 * step;
 		}
 
 		for (int step = 1; pos >> 8 * step & ~Row1; ++step) {
-			relevantRookBlocker[i] |= pos >> 8 * step; 
+			relevantRookBlocker[i] |= pos >> 8 * step;
 		}
 
 
 		//left anf right 
 		for (int step = 1; pos << step & ~AFile && pos << step & ~HFile; ++step) {
-			relevantRookBlocker[i] |= pos << step; 
+			relevantRookBlocker[i] |= pos << step;
 		}
 		for (int step = 1; pos >> step & ~HFile && pos >> step & ~AFile; ++step) {
-			relevantRookBlocker[i] |= pos >> step; 
+			relevantRookBlocker[i] |= pos >> step;
 		}
-		
+
 	}
 }
 
@@ -438,19 +440,19 @@ constexpr uint64_t initRookAttackRunTime(const uint64_t pos, const uint64_t occ)
 	return res;
 }
 
-
+//todo: find bug in generating magic number 
 uint64_t generatingMagicNumAtIndexRook(int index) {
 
 	Magic magic;
 	const map rookBlocker = relevantRookBlocker[index];
 	const int rookBlockerBits = getNumBit(relevantRookBlocker[index]);
 
-	map visitedReference[4096];
-	map attackMapReference[4096];
+	map visitedReference[4096]{};
+	map attackMapReference[4096]{};
 	//precalculate some values for comparions later 
 	for (int i = 0; i < (0x1 << rookBlockerBits); ++i) {
 		visitedReference[i] = magic.mapCombination(i, rookBlocker);
-		attackMapReference[i] = initBishopAttackRunTime(indexSquare[index], visitedReference[i]);
+		attackMapReference[i] = initRookAttackRunTime(indexSquare[index], visitedReference[i]);
 	}
 
 
@@ -490,7 +492,7 @@ uint64_t generatingMagicNumAtIndexRook(int index) {
 
 void generatingMagicNumRook() {
 
-	map magicNums[64];
+	map magicNums[64]{};
 	for (int i = 0; i < 64; ++i) {
 		map validMagicNumber = generatingMagicNumAtIndexRook(i);
 		if (validMagicNumber == 0x0ull) {
@@ -506,6 +508,37 @@ void generatingMagicNumRook() {
 	for (int i = 0; i < 64; ++i) {
 		std::cout << std::hex << "0x" << magicNums[i] << ", ";
 		if (!(i % 8)) std::cout << "\n";
+	}
+}
+
+
+void initRookAttack() {
+	//initRelevantBishopBlocker must be called before this function 
+	//bishopAttack[index][magicindex]
+
+	Magic magic;
+
+	for (int index = 0; index < 64; ++index) {
+		const map blockers = relevantRookBlocker[index];
+		const int numBlockerBits = getNumBit(relevantRookBlocker[index]);
+
+		//iterate through combinations 
+		for (int i = 0; i < (0x1 << numBlockerBits); ++i) {
+			const map combination = magic.mapCombination(i, blockers);
+			int magicIndex = (combination * rookMagicNum[index]) >> (64 - numBlockerBits);
+
+			//sanity check for correct magic number generation 
+			const map attackMap = initRookAttackRunTime(indexSquare[index], combination);
+			if (rookAttack[index][magicIndex] == 0x0 || rookAttack[index][magicIndex] == attackMap) {
+				//success 
+				rookAttack[index][magicIndex] = attackMap;
+			}
+			else {
+				std::cout << "conflicting index at index: " << index << std::endl;
+				return;
+			}
+		}
+
 	}
 }
 

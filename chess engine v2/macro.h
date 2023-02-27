@@ -55,7 +55,7 @@ constexpr int lsbBitIndex(uint64_t bitboard);
 *
 *********************/
 
-extern enum Squares : const bit{
+enum Squares : const bit{
 	A8 = 0x8000000000000000ull,
 	B8 = 0x4000000000000000ull,
 	C8 = 0x2000000000000000ull, 
@@ -141,7 +141,7 @@ extern const bit indexSquare[64];/* = {
 	A1, B1, C1, D1, E1, F1, G1, H1,
 };*/
 
-extern enum side : const int {
+enum side : const int {
 	white = 0,
 	black = 1,
 	both = 2, 

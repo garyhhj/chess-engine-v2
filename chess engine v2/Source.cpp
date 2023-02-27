@@ -22,11 +22,13 @@ int main() {
 
 
 	initRelevantRookBlocker();
-	generatingMagicNumRook(); 
+	//generatingMagicNumRook(); 
+	initRookAttack(); 
+
 
 	//now need to init rook run time 
 
-	
+	 
 
 
 }
