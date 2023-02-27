@@ -259,7 +259,7 @@ constexpr uint64_t initBishopAttackRunTime(const uint64_t pos, const uint64_t oc
 	return res; 
 }
 
-uint64_t generatingMagicNumAtIndex(int index) {
+uint64_t generatingMagicNumAtIndexBishop(int index) {
 
 	Magic magic;
 	const map bishopBlocker = relevantBishopBlocker[index];
@@ -312,7 +312,7 @@ void generatingMagicNumBishop() {
 
 	map magicNums[64];
 	for (int i = 0; i < 64; ++i) {
-		map validMagicNumber = generatingMagicNumAtIndex(i);
+		map validMagicNumber = generatingMagicNumAtIndexBishop(i);
 		if (validMagicNumber == 0x0ull) {
 			std::cout << "Didn't find valid magic number at index: " << i << std::endl;
 			break;
@@ -367,7 +367,17 @@ void initBishopAttack() {
 
 uint64_t rookAttack[64][4096]; //rookAttack[index][magicIndex]
 uint64_t relevantRookBlocker[64];
-//const map rookMagicNum[64];
+const map rookMagicNum[64] = {
+	0x60800004203010,
+0x2000380201000008, 0x4409008012, 0x402002305c080008, 0x10c4048800000082, 0x80080000000, 0x30c140024400080, 0x801000802000, 0x8001810200420,
+0x780a080080080056, 0x204800e1010000, 0x40105202020100, 0x8002a200024200, 0x244440108208000, 0x4010010000080001, 0xc10140000002840, 0x8000000800a400,
+0x480040511122002, 0x128000100040, 0x9002041009000030, 0x108800020040010, 0x50000060400300, 0x2000041320800210, 0x2000630420000000, 0x5400880202010800,
+0x8000805c00400000, 0x10020480e410000, 0x10480100226009a8, 0x10040000000400, 0x8000488008200080, 0x8000850000040440, 0x240420005810, 0x9300070000204002,
+0x1000430100100082, 0x1001400000140840, 0x88c44004002000, 0x1208000001, 0x808008040002020, 0x500000280004004, 0x1a04002000001043, 0x9080540080300301,
+0x40a00200840082, 0x80402000100880, 0x3000a000010000, 0x801a0105000424, 0x2000100000402, 0x824c220000060680, 0x12000018200000a0, 0x6008011004000800,
+0x40180210122000c2, 0x5000500208000008, 0x42082000000030a, 0x4441004002904008, 0xa000c444a0925000, 0x400090400c004181, 0x2000020800220040, 0x206300a200c50600,
+0xac000030000082, 0x4080000040000800, 0x40801910d4004, 0x2008416400210, 0x8b40800050200, 0x1020210000040180, 0x102000028023100,
+}
 
 
 constexpr void initRelevantRookBlocker() {
@@ -429,7 +439,75 @@ constexpr uint64_t initRookAttackRunTime(const uint64_t pos, const uint64_t occ)
 }
 
 
+uint64_t generatingMagicNumAtIndexRook(int index) {
 
+	Magic magic;
+	const map rookBlocker = relevantRookBlocker[index];
+	const int rookBlockerBits = getNumBit(relevantRookBlocker[index]);
+
+	map visitedReference[4096];
+	map attackMapReference[4096];
+	//precalculate some values for comparions later 
+	for (int i = 0; i < (0x1 << rookBlockerBits); ++i) {
+		visitedReference[i] = magic.mapCombination(i, rookBlocker);
+		attackMapReference[i] = initBishopAttackRunTime(indexSquare[index], visitedReference[i]);
+	}
+
+
+	for (int trial = 0; trial < 10000000; ++trial) {
+
+		bool validNum = true;
+		map visited[4096];
+		for (int count = 0; count < 4096; ++count) visited[count] = 0x0ull;
+
+		//generate a magic number 
+		const map magicNumCandidate = magic.generateMagicNumCandidate();
+
+		//iterate through combination of blocker 
+		for (int i = 0; i < (0x1 << rookBlockerBits); ++i) {
+			const map combination = magic.mapCombination(i, rookBlocker);
+			int magicIndex = (combination * magicNumCandidate) >> (64 - rookBlockerBits);
+
+			if (visited[magicIndex] == 0x0) {
+				visited[magicIndex] = attackMapReference[i];
+			}
+			else if (visited[magicIndex] == attackMapReference[i]) {
+				//do nothing  
+			}
+			else {
+				validNum = false;
+				break;
+			}
+		}
+
+		if (validNum) return magicNumCandidate;
+		else continue;
+	}
+
+	//invalid magicNum 
+	return 0x0ull;
+}
+
+void generatingMagicNumRook() {
+
+	map magicNums[64];
+	for (int i = 0; i < 64; ++i) {
+		map validMagicNumber = generatingMagicNumAtIndexRook(i);
+		if (validMagicNumber == 0x0ull) {
+			std::cout << "Didn't find valid magic number at index: " << i << std::endl;
+			break;
+		}
+		else {
+			magicNums[i] = validMagicNumber;
+		}
+	}
+
+	//print out magic number 
+	for (int i = 0; i < 64; ++i) {
+		std::cout << std::hex << "0x" << magicNums[i] << ", ";
+		if (!(i % 8)) std::cout << "\n";
+	}
+}
 
 
 /********************
