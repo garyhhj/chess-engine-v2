@@ -135,6 +135,9 @@
     <ClInclude Include="macro.h" />
     <ClInclude Include="precalculated.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="precalculated.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

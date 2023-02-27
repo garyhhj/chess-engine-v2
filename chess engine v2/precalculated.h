@@ -1,5 +1,8 @@
 #pragma once
 #include "macro.h"
+#include <fstream>
+#include <string>
+#include <iostream>
 
 /********************
 *
@@ -172,7 +175,7 @@ private:
 *
 *********************/
 
-namespace Bishop {
+namespace bishop {
 
 	uint64_t bishopAttack[64][512]; //bishopAttack[index][magicIndex]
 	uint64_t relevantBishopBlocker[64];
@@ -561,3 +564,52 @@ namespace rook {
 *	printing
 *
 *********************/
+
+namespace precalculation {
+
+	//prints preinitialized array into txt (to be copied into another file for compile time initialization)
+	std::string T = "static constexpr uint64_t"; 
+	std::string P = "[]";	
+	std::string Space = "\n\n"; 
+	void print() {
+
+		std::fstream fstr("precalculated.txt"); 
+
+		//pawn 
+		fstr << T << " pawnAttack[2][64] = \n";
+		fstr << "{ "; 
+		for (int side = 0; side < 2; ++side) {
+			fstr << "{"; 
+			for (int index = 0; index < 64; ++index) {
+				fstr << "0x" << std::hex << pawn::pawnAttack[side][index] << ", ";
+				if (!(index % 16)) fstr << "\n"; 
+			}
+			fstr << "}, \n"; 
+		}
+		fstr << "};\n";
+		fstr << Space; 
+
+		//knight 
+		fstr << T << " knightAttack[64] = \n"; 
+		fstr << "{ "; 
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << knight::knightAttack[index] << ", "; 
+			if (!(index % 16)) fstr << "\n"; 
+		}
+		fstr << "};\n";
+		fstr << Space; 
+
+		//king 
+		fstr << T << " kingAttack[64] = \n"; 
+		fstr << "{ "; 
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << king::kingAttack[index] << ", "; 
+			if (!(index % 16)) fstr << "\n";
+		}
+		fstr << "};\n"; 
+		fstr << Space; 
+
+	}
+
+
+}
