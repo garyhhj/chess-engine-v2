@@ -575,6 +575,7 @@ namespace precalculation {
 
 		std::fstream fstr("precalculated.txt"); 
 
+		//leaper pieces 
 		//pawn 
 		fstr << T << " pawnAttack[2][64] = \n";
 		fstr << "{ "; 
@@ -608,6 +609,103 @@ namespace precalculation {
 		}
 		fstr << "};\n"; 
 		fstr << Space; 
+
+
+		//slider pieces 
+		//bishop 
+
+		//bishop magic number 
+		fstr << T << " bishopMagicNum[64] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << bishop::bishopMagicNum[index] << ", ";
+			if (!(index % 16)) fstr << "\n";
+		}
+		fstr << "};\n";
+		fstr << Space;
+
+		//relevant bishop blocker
+		fstr << T << " relevantBishopBlocker[64] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << bishop::relevantBishopBlocker[index] << ", ";
+			if (!(index % 16)) fstr << "\n";
+		}
+		fstr << "};\n";
+		fstr << Space;
+
+		//bishop attack 
+		fstr << T << " bishopAttack[64][512] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "{";
+
+			int count = 0; 
+			for (int magicIndex = 511; magicIndex >= 0; --magicIndex) {
+				if (bishop::bishopAttack[index][magicIndex] == 0x0) {
+					++count; 
+				}
+				else {
+					break; 
+				}
+			}
+
+			for (int magicIndex = 0; magicIndex < 512 - count; ++magicIndex) {
+				fstr << "0x" << std::hex << bishop::bishopAttack[index][magicIndex] << ", ";
+				if (!(magicIndex % 16)) fstr << "\n";
+			}
+			fstr << "}, \n";
+		}
+		fstr << "};\n";
+		fstr << Space;
+
+
+		//rook
+
+		//rook magic number 
+		fstr << T << " rookMagicNum[64] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << rook::rookMagicNum[index] << ", ";
+			if (!(index % 16)) fstr << "\n";
+		}
+		fstr << "};\n";
+		fstr << Space;
+
+		//relevant rook blocker
+		fstr << T << " relevantBishopBlocker[64] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "0x" << std::hex << bishop::relevantBishopBlocker[index] << ", ";
+			if (!(index % 16)) fstr << "\n";
+		}
+		fstr << "};\n";
+		fstr << Space;
+
+		//rook attack 
+		fstr << T << " rookAttack[64][4096] = \n";
+		fstr << "{ ";
+		for (int index = 0; index < 64; ++index) {
+			fstr << "{";
+
+			int count = 0;
+			for (int magicIndex = 4095; magicIndex >= 0; --magicIndex) {
+				if (rook::rookAttack[index][magicIndex] == 0x0) {
+					++count;
+				}
+				else {
+					break;
+				}
+			}
+
+			for (int magicIndex = 0; magicIndex < 4096 - count; ++magicIndex) {
+				fstr << "0x" << std::hex << rook::rookAttack[index][magicIndex] << ", ";
+				if (!(magicIndex % 16)) fstr << "\n";
+			}
+			fstr << "}, \n";
+		}
+		fstr << "};\n";
+		fstr << Space;
 
 	}
 
