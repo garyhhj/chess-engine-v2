@@ -577,6 +577,13 @@ namespace precalculation {
 
 		//leaper pieces 
 		//pawn 
+		fstr << R"(/********************
+*
+*Pawn
+*
+*********************/)" << "\n\n";
+
+
 		fstr << T << " pawnAttack[2][64] = \n";
 		fstr << "{ "; 
 		for (int side = 0; side < 2; ++side) {
@@ -591,6 +598,11 @@ namespace precalculation {
 		fstr << Space; 
 
 		//knight 
+		fstr << R"(/********************
+*
+*Knight
+*
+*********************/)" << "\n\n";
 		fstr << T << " knightAttack[64] = \n"; 
 		fstr << "{ "; 
 		for (int index = 0; index < 64; ++index) {
@@ -601,6 +613,11 @@ namespace precalculation {
 		fstr << Space; 
 
 		//king 
+		fstr << R"(/********************
+*
+*King
+*
+*********************/)" << "\n\n";
 		fstr << T << " kingAttack[64] = \n"; 
 		fstr << "{ "; 
 		for (int index = 0; index < 64; ++index) {
@@ -613,6 +630,11 @@ namespace precalculation {
 
 		//slider pieces 
 		//bishop 
+		fstr << R"(/********************
+*
+*Bishop
+*
+*********************/)" << "\n\n";
 
 		//bishop magic number 
 		fstr << T << " bishopMagicNum[64] = \n";
@@ -661,6 +683,11 @@ namespace precalculation {
 
 
 		//rook
+		fstr << R"(/********************
+*
+*Rook
+*
+*********************/)" << "\n\n";
 
 		//rook magic number 
 		fstr << T << " rookMagicNum[64] = \n";
