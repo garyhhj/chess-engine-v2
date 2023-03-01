@@ -9,11 +9,9 @@
 
 
 
-
-
 int main() {
 
-	{
+	/*{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
 		string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
@@ -25,7 +23,9 @@ int main() {
 		Fen::parse(fenTricky);
 	}
 
-	Board::print(); 
+	Board::print(); */
+
+	test(); 
 
 	/*for (int i = 0; i < 12; ++i) {
 		std::cout << "piece: " << pieceChar[i] << "\n";
@@ -37,13 +37,9 @@ int main() {
 		std::cout << "occupancy: " << i << "\n"; 
 		printBit(Board::Get().occupancy[i]); 
 	}*/
+
+
 	//todo: 
-
-	
-	//parsing fen 
-	
-	//board state 
-	//chess board 
-
+	//movelist class with big five defined 
 
 }
