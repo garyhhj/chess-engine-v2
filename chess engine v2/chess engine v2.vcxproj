@@ -130,8 +130,11 @@
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="macro.cpp" />
+    <ClCompile Include="board.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="attackTable.h" />
+    <ClInclude Include="board.h" />
     <ClInclude Include="macro.h" />
     <ClInclude Include="precalculated.h" />
   </ItemGroup>

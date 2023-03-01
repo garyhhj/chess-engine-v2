@@ -1,5 +1,6 @@
 #include "macro.h"
 #include "attackTable.h"
+#include "board.h"; 
 
 #include <iostream>
 #include <bitset>
@@ -13,9 +14,8 @@
 
 int main() {
 
+	BoardState::debug(); 
 
-	 
-	
 	//todo: 
 
 	

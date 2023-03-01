@@ -157,3 +157,19 @@ const map Row8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
 
 const map Edge = AFile | HFile | Row1 | Row8; 
 
+enum piece : const int {
+	wPawn = 0,
+	wKnight = 1,
+	wKing = 2,
+	wBishop = 3,
+	wRook = 4, 
+	wQueen = 5, 
+
+	bPawn = 6, 
+	bKnight = 7, 
+	bKing = 8, 
+	bBishop = 9, 
+	bRook = 10, 
+	bQueen = 11, 
+};
+
