@@ -2,9 +2,9 @@
 #include "macro.h"
 #include <string>
 
-//singleton
 class BoardState {
 	friend class Fen; 
+	friend class Board; 
 public: 
 	BoardState() = default; 
 	BoardState(const BoardState&) = delete; 
@@ -18,7 +18,6 @@ private:
 
 	int side; 
 	map enpassant; 
-	//declare castling right with bool? and just have many of them 
 	bool castleRightWQ; 
 	bool castleRightWK; 
 	bool castleRightBQ; 
@@ -32,8 +31,11 @@ public:
 	Board(const Board&) = delete; 
 
 	static Board& Get(); 
-	
-private: 
+	static void print();
+
+private:
+public: 
+	void Iprint(); 
 	//leaper pieces 
 	map piece[12]; 
 	map occupancy[2]; 
@@ -45,13 +47,13 @@ class Fen {
 public: 
 	static Fen& Get(); 
 
-	static constexpr void clear(); 
-	static constexpr void parse(const std::string& fen);
-	static constexpr void parseStartPosition();
+	static void clear(); 
+	static void parse(const std::string& fen);
+	static void parseStartPosition();
 
 private: 
-	constexpr void Iclear(); 
-	constexpr void Iparse(const std::string& fen); 
-	constexpr void IparseStartPosition(); 
+	void Iclear(); 
+	void Iparse(const std::string& fen); 
+	void IparseStartPosition(); 
 
 };

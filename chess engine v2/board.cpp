@@ -37,6 +37,69 @@ Board& Board::Get() {
 	return instance; 
 }
 
+void Board::print() {
+	Get().Iprint(); 
+}
+
+void Board::Iprint() {
+
+	std::cout << "\n";
+	//board 
+	for (int row = 0; row < 8; ++row) {
+
+		std::cout << 8 - row << "   ";
+
+		for (int file = 0; file < 8; ++file) {
+
+			const int index = row * 8 + file;
+
+			//pieces 
+			for (int i = 0; i < 12; ++i) {
+				if (piece[i] & indexSquare[index]) {
+					std::cout << pieceChar[i];
+					break; 
+				}
+			}
+
+
+			
+			if (!(indexSquare[index] & (occupancy[white] | occupancy[black]))) {
+				std::cout << "0"; 
+			}
+			std::cout << " ";
+		}
+		std::cout << '\n';
+	}
+	std::cout << "\n";
+	std::cout << "    a b c d e f g h";
+	std::cout << "\n";
+
+	//enpassant 
+	std::cout << "enpassant: ";
+	if (BoardState::Get().enpassant) {
+		std::cout << 'A' + BoardState::Get().enpassant % 8;
+		std::cout << BoardState::Get().enpassant / 8;
+	}
+	else std::cout << "--"; 
+	std::cout << "\n"; 
+	
+	//castle rights 
+	std::cout << "castle right: "; 
+	if (BoardState::Get().castleRightWK) std::cout << "K";
+	else std::cout << "-";
+	if (BoardState::Get().castleRightWQ) std::cout << "Q";
+	else std::cout << "-"; 
+	if (BoardState::Get().castleRightBK) std::cout << "k";
+	else std::cout << "-"; 
+	if (BoardState::Get().castleRightBQ) std::cout << "q";
+	else std::cout << "-"; 
+	std::cout << "\n\n"; 
+
+	std::flush(std::cout);
+}
+
+
+
 /********************
 *
 *Fen
@@ -50,21 +113,21 @@ Fen& Fen::Get() {
 }
 
 
-constexpr void Fen::clear() {
+void Fen::clear() {
 	Get().Iclear(); 
 }
 
-constexpr void Fen::parse(const std::string& fen) {
+void Fen::parse(const std::string& fen) {
 	Get().clear(); 
 	Get().Iparse(fen); 
 }
 
-constexpr void Fen::parseStartPosition() {
+void Fen::parseStartPosition() {
 	Get().IparseStartPosition(); 
 }
 
 
-constexpr void Fen::Iclear() {
+void Fen::Iclear() {
 	//BoardState
 	BoardState::Get().side = white; 
 	BoardState::Get().enpassant = 0x0ull; 
@@ -83,7 +146,7 @@ constexpr void Fen::Iclear() {
 	}
 }
 
-constexpr void Fen::Iparse(const std::string& fen) {
+void Fen::Iparse(const std::string& fen) {
 	int index = 0; 
 
 	int positionIndex = 0; 
@@ -111,12 +174,12 @@ constexpr void Fen::Iparse(const std::string& fen) {
 				Board::Get().piece[bKing] |= indexSquare[positionIndex];
 				break;
 			}
-			
+
+			//set occupancy 
+			Board::Get().occupancy[black] |= indexSquare[positionIndex];
+
 			//increment index 
 			++positionIndex;
-			
-			//then set occupancy 
-			Board::Get().occupancy[black] |= indexSquare[positionIndex];
 		}
 			
 		
@@ -143,11 +206,12 @@ constexpr void Fen::Iparse(const std::string& fen) {
 				break;
 			}
 			
+			//set occupancy 
+			Board::Get().occupancy[white] |= indexSquare[positionIndex];
+
 			//increment index 
 			++positionIndex;
 			
-			//then set occupancy 
-			Board::Get().occupancy[white] |= indexSquare[positionIndex];
 		}
 
 		//number 
@@ -199,7 +263,8 @@ constexpr void Fen::Iparse(const std::string& fen) {
 	}
 
 }
-constexpr void Fen::IparseStartPosition() {
+
+void Fen::IparseStartPosition() {
 	parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ");
 }
 

@@ -173,3 +173,9 @@ enum piece : const int {
 	bQueen = 11, 
 };
 
+extern const char pieceChar[12];/* = {
+	'P', 'N', 'K', 'B', 'R', 'Q',
+	'p', 'n', 'k', 'b', 'r', 'q', 
+};*/
+
+

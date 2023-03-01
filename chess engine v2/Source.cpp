@@ -14,8 +14,19 @@
 
 int main() {
 
-	BoardState::debug(); 
+	Fen::parseStartPosition(); 
+	//Board::print(); 
 
+	/*for (int i = 0; i < 12; ++i) {
+		std::cout << "piece: " << pieceChar[i] << "\n";
+		printBit(Board::Get().piece[i]);
+		std::cout << "\n\n"; 
+	}
+
+	for (int i = 0; i < 2; ++i) {
+		std::cout << "occupancy: " << i << "\n"; 
+		printBit(Board::Get().occupancy[i]); 
+	}*/
 	//todo: 
 
 	
