@@ -1,6 +1,7 @@
 #include "macro.h"
 #include "attackTable.h"
 #include "board.h"; 
+#include "movelist.h"
 
 #include <iostream>
 #include <bitset>
@@ -25,7 +26,9 @@ int main() {
 
 	Board::print(); */
 
-	test(); 
+	Movelist ml; 
+
+	Movelist ml2 = ml;  
 
 	/*for (int i = 0; i < 12; ++i) {
 		std::cout << "piece: " << pieceChar[i] << "\n";

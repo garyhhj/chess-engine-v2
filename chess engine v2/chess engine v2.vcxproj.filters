@@ -19,6 +19,9 @@
     <Filter Include="Source Files\board">
       <UniqueIdentifier>{71fcd711-73f9-4d50-b162-0746091db7fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\movelist">
+      <UniqueIdentifier>{b0e57fcd-6f1a-448e-948e-d38444320f75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -29,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="board.cpp">
       <Filter>Source Files\board</Filter>
+    </ClCompile>
+    <ClCompile Include="movelist.cpp">
+      <Filter>Source Files\movelist</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="board.h">
       <Filter>Source Files\board</Filter>
+    </ClInclude>
+    <ClInclude Include="movelist.h">
+      <Filter>Source Files\movelist</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
