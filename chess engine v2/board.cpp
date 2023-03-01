@@ -60,8 +60,6 @@ void Board::Iprint() {
 					break; 
 				}
 			}
-
-
 			
 			if (!(indexSquare[index] & (occupancy[white] | occupancy[black]))) {
 				std::cout << "0"; 
@@ -73,6 +71,12 @@ void Board::Iprint() {
 	std::cout << "\n";
 	std::cout << "    a b c d e f g h";
 	std::cout << "\n";
+
+	//side 
+	std::cout << "side: "; 
+	if (BoardState::Get().side == white) std::cout << "white";
+	else std::cout << "black"; 
+	std::cout << "\n"; 
 
 	//enpassant 
 	std::cout << "enpassant: ";
