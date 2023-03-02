@@ -5,6 +5,7 @@
 class BoardState {
 	friend class Fen; 
 	friend class Board; 
+	friend class Movelist; 
 public: 
 	BoardState() = default; 
 	BoardState(const BoardState&) = delete; 
@@ -26,6 +27,7 @@ private:
 
 class Board {
 	friend class Fen; 
+	friend class Movelist; 
 public: 
 	Board() = default; 
 	Board(const Board&) = delete; 

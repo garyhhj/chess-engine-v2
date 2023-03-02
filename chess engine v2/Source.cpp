@@ -30,6 +30,7 @@ int main() {
 
 	Movelist ml2 = ml;  
 
+
 	/*for (int i = 0; i < 12; ++i) {
 		std::cout << "piece: " << pieceChar[i] << "\n";
 		printBit(Board::Get().piece[i]);
@@ -43,6 +44,8 @@ int main() {
 
 
 	//todo: 
-	//movelist class with big five defined 
+	//generate moves 
 
+	//generate legal moves 
+	//debruijin optimization for lsb bit index 
 }

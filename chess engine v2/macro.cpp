@@ -89,7 +89,7 @@ constexpr int getNumBit(uint64_t bitboard) {
 	return count;
 }
 
-constexpr int lsbBitIndex(uint64_t bitboard) {
+constexpr int getlsbBitIndex(uint64_t bitboard) {
 
 	//make sure bitboard is not zero 
 	if (bitboard) {
