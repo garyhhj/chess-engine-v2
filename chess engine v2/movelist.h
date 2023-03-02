@@ -6,12 +6,24 @@
 
 class Move {
 	Move(); 
-	Move(int sourceSquare, int targetSquare, int piece, int promotePiece, bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
+	Move(int sourceSquare, int targetSquare, int piece, int promotePiece, 
+		bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
 
 
 	void decode(); 
 
 private: 
+
+	constexpr int sourceSquare(); 
+	constexpr int targetSquare();
+	constexpr int piece();
+	constexpr int promotePiece();
+
+	constexpr bool captureFlag();
+	constexpr bool doublePushFlag(); 
+	constexpr bool enpassantFlag(); 
+	constexpr bool castlingFlag(); 
+
 	uint32_t move; 
 };
 
