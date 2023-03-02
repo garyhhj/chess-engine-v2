@@ -31,51 +31,61 @@ void Move::decode() {
 	std::cout << "move: ";
 
 	//sourceSquare 
-	//std::cout << 'A' + 
+	std::cout << "SS: "; 
+	std::cout << 'A' + Move::sourceSquare() % 8; 
+	std::cout << Move::sourceSquare() / 8; 
 
-	////sourceIndex
-	//cout << "(SI)" << positionStr[decodeMoveSourceIndex(move)] << " ";
+	//target Square 
+	std::cout << "TS: "; 
+	std::cout << 'A' + Move::targetSquare() % 8; 
+	std::cout << Move::targetSquare() / 8; 
 
-	////targetIndex 
-	//cout << "(TI)" << positionStr[decodeMoveTargetIndex(move)] << " ";
+	//piece
+	std::cout << pieceChar[Move::piece()]; 
 
-	////piece 
-	//cout << pieceStr[decodeMovePiece(move)] << " ";
+	//promote piece 
+	std::cout << pieceChar[Move::promotePiece()]; 
 
-	////padding 
-	//int padding = 8 - pieceStr[decodeMovePiece(move)].size();
-	//while (padding--) cout << " ";
+	//capture 
+	std::cout << (Move::captureFlag() ? 'c' : '-');
+	std::cout << " "; 
 
-	////promote piece 
-	//cout << pieceStr[decodeMovePromotePiece(move)] << " ";
+	//double push 
+	std::cout << (Move::doublePushFlag() ? "dp" : "--");
+	std::cout << " "; 
 
-	////padding 
-	//padding = 10 - pieceStr[decodeMovePromotePiece(move)].size();
-	//while (padding--) cout << " ";
-	//cout << "| ";
+	//enpassant 
+	std::cout << (Move::enpassantFlag() ? 'e' : '-');
+	std::cout << " "; 
 
-	////capture 
-	//if (decodeMoveCapture(move)) cout << "c ";
-	//else cout << "- ";
-
-	////double push 
-	//if (decodeMoveDoublePush(move)) {
-	//	cout << "dp ";
-	//}
-	//else cout << "-- ";
-
-	////enpassant 
-	//if (decodeMoveEnpassant(move)) cout << "e ";
-	//else cout << "- ";
-
-	////castle 
-	//if (decodeMoveCastle(move)) cout << "c";
-	//else cout << "-";
-
-	//cout << '\n';
+	//castle 
+	std::cout << (Move::castlingFlag() ? 'c' : '-'); 
+	std::cout << " "; 
 }
 
+/*
+		 binary move bits                               hexidecimal constants
 
+   0000 0000 0000 0000 0011 1111    source square       0x3f
+   0000 0000 0000 1111 1100 0000    target square       0xfc0
+   0000 0000 1111 0000 0000 0000    piece               0xf000
+   0000 1111 0000 0000 0000 0000    promoted piece      0xf0000
+   0001 0000 0000 0000 0000 0000    capture flag        0x100000
+   0010 0000 0000 0000 0000 0000    double push flag    0x200000
+   0100 0000 0000 0000 0000 0000    enpassant flag      0x400000
+   1000 0000 0000 0000 0000 0000    castling flag       0x800000
+*/
+
+
+constexpr int Move::sourceSquare() { return move & 0x3f; }
+constexpr int Move::targetSquare() { return move & 0xfc0 >> 6; }
+constexpr int Move::piece() { return move & 0xf000 >> 12; }
+constexpr int Move::promotePiece() { return move & 0xf0000 >> 16; }
+
+constexpr bool Move::captureFlag() { return move & 0x100000; }
+constexpr bool Move::doublePushFlag() { return move & 0x200000; }
+constexpr bool Move::enpassantFlag() { return move & 0x400000; }
+constexpr bool Move::castlingFlag() { return move & 0x800000; }
 
 /********************
 *
