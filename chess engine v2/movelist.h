@@ -1,6 +1,7 @@
 #pragma once
 #include "macro.h"
 #include "board.h"
+#include "attackTable.h"
 
 #include <stdint.h>
 #include <iostream>

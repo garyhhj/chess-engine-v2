@@ -145,7 +145,7 @@ constexpr void Movelist::moveGen(const Board& board, const BoardState& boardStat
 constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//wPawn 
 	//resulting white pawns 
-	board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
+	//board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
 	
 	//pawn push non promotion 
 	{
@@ -170,19 +170,43 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 		}
 	}
 
+	//pawn double push 
+	{
+		map pawns = (board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4;
+		while (pawns) {
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
+			
+			pawns &= pawns - 1; 
+		}
+	}
 
+	//pawn captures without promotion 
+	//iterate through pawns and check for captures? 
+	//current set of pawns would be on source square 
+	//create copy of current set of pawns and just iterate? 
 
+	//pawn captures with promotion 
+	
+	//knight moves 
+	{
+		map knights = board.Get().piece[wKnight]; 
+		while (knights) {
+			int b = getlsbBitIndex(knights); 
+			map attacks = knightAttack[getlsbBitIndex(knights)];
+			//iterate through knights 
+			while (attacks) {
+				Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
 
-	//promotion 
+				attacks &= attacks - 1; 
+			}
 
+			Movelist::pushBack(Move::makemove(getLsbBit(knights), 0x0ull, wKnight, wPawn, true, false, false, false)); 
 
-	//can use this for double pushing pawns 
-	(board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4;
-
-	//iterate through pawns and encode them into movelist with  push back 
-
-
-	//now to iterate through both of those maps and fill into moveGen 
+			knights &= knights - 1; 
+		}
+	}
+	//itetate through knights and then check? 
+	
 
 }
 
