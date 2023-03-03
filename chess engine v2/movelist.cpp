@@ -146,25 +146,34 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	//wPawn 
 	//resulting white pawns 
 	board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
-
-
-
-	//non promotion 
-	board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
 	
 	//pawn push non promotion 
 	{
 		map pawns = board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
-		while (pawns)
+		while (pawns){
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
 
 			pawns &= pawns - 1; 
 		}
 	}
 
+	//pawn push promotion 
+	{
+		map pawns = board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
+		while (pawns) {
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
+
+			pawns &= pawns - 1;
+		}
+	}
+
+
+
 
 	//promotion 
-	board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
 
 
 	//can use this for double pushing pawns 
