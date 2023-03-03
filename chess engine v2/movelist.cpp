@@ -205,19 +205,12 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	
 	//king moves 
 	{
-		//just one king 
-		//might be difficult to prune 
-		
-		//check if attacked after moving at those positions 
-
 		map attacks = kingAttack[getlsbBitIndex(Board::Get().occupancy[wKing])]; 
 		while (attacks) {
 			Movelist::pushBack(Move::makemove(Board::Get().occupancy[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false); 
 
 			attacks &= attacks - 1; 
 		}
-
-
 	}
 
 }

@@ -47,5 +47,12 @@ int main() {
 	//generate moves 
 
 	//generate legal moves 
-	//debruijin optimization for lsb bit index 
+	//debruijin optimization for lsb bit index  
+
+	//allow uint64_t be passed for encoding 
+
+	//check if position at board is attacked 
+
+	//easiest way is to check for attack by leaper piece by doing the reverse 
+	//then check slider pieces 
 }

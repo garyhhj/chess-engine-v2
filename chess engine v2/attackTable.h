@@ -1,5 +1,26 @@
 #pragma once 
 
+static constexpr uint64_t pawnAttack[2][64];
+static constexpr uint64_t knightAttack[64];
+static constexpr uint64_t kingAttack[64];
+
+static constexpr uint64_t bishopMagicNum[64];
+static constexpr uint64_t relevantBishopBlocker[64];
+static constexpr uint64_t bishopAttack[64][512];
+
+static constexpr uint64_t rookMagicNum[64];
+static constexpr uint64_t relevantRookBlocker[64];
+static constexpr uint64_t rookAttack[64][4096];
+
+
+static inline int bishopMagicIndex(const uint64_t occ, int index) {
+	return occ * bishopMagicNum[index] >> (64 - getNumBit(occ)); 
+}
+
+static inline int rookMagicIndex(const uint64_t occ, int index) {
+	return occ * rookMagicNum[index] >> (64 - getNumBit(occ)); 
+}
+
 /********************
 *
 *Pawn

@@ -103,6 +103,40 @@ void Board::Iprint() {
 }
 
 
+bool Board::attacked(const uint64_t square) {
+	return (BoardState::Get().side == white ? Board::Get().IattackedWhite(square) : Board::Get().IattackedBlack(square) ); 
+}
+
+//square is attack while white's turn 
+bool Board::IattackedWhite(const uint64_t square) {
+	const int index = getlsbBitIndex(square); 
+	return
+		//leapers
+		pawnAttack[white][index] & Board::Get().occupancy[bPawn] |
+		knightAttack[index] & Board::Get().occupancy[bKnight] |
+		kingAttack[index] & Board::Get().occupancy[bKing] |
+
+		//sliders 
+		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) |
+		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+}
+
+//square is attacked while black's turn 
+bool Board::IattackedBlack(const uint64_t square) {
+	const int index = getlsbBitIndex(square); 
+	return
+		//leapers
+		pawnAttack[black][index] & Board::Get().occupancy[wPawn] |
+		knightAttack[index] & Board::Get().occupancy[wKnight] |
+		kingAttack[index] & Board::Get().occupancy[wKing] |
+
+		//sliders 
+		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]) |
+		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
+}
+
+
+
 
 /********************
 *

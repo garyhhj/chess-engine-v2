@@ -1,5 +1,7 @@
 #pragma once
 #include "macro.h"
+#include "attackTable.h"
+
 #include <string>
 
 class BoardState {
@@ -34,9 +36,11 @@ public:
 
 	static Board& Get(); 
 	static void print();
+	bool attacked(const uint64_t square); 
 
 private:
-public: 
+	bool IattackedWhite(const uint64_t square); 
+	bool IattackedBlack(const uint64_t square);
 	void Iprint(); 
 	//leaper pieces 
 	map piece[12]; 
