@@ -5,29 +5,31 @@
 #include <stdint.h>
 #include <iostream>
 
-class Move {
-	Move(); 
-	Move(int sourceSquare, int targetSquare, int piece, int promotePiece, 
+typedef uint32_t move; 
+
+namespace Move {
+	move makemove(int sourceSquare, int targetSquare, int piece, int promotePiece,
 		bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
 
-	Move(uint64_t sourceSquare, uint64_t targetSquare, int piece, int promotePiece,
+	move makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int promotePiece,
 		bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
 
-	void decode(); 
-private: 
+	void decode(const move m);
 
-	constexpr int sourceSquare(); 
-	constexpr int targetSquare();
-	constexpr int piece();
-	constexpr int promotePiece();
 
-	constexpr bool captureFlag();
-	constexpr bool doublePushFlag(); 
-	constexpr bool enpassantFlag(); 
-	constexpr bool castlingFlag(); 
+	constexpr int sourceSquare(const move m); 
+	constexpr int targetSquare(const move m);
+	constexpr int piece(const move m);
+	constexpr int promotePiece(const move m);
+	
+	constexpr bool captureFlag(const move m);
+	constexpr bool doublePushFlag(const move m);
+	constexpr bool enpassantFlag(const move m);
+	constexpr bool castlingFlag(const move m);
 
-	uint32_t move; 
 };
+
+
 
 class Movelist {
 public: 
@@ -36,7 +38,7 @@ public:
 	Movelist& operator=(Movelist& rhs);
 	~Movelist(); 
 
-	consteval void pushBack(uint64_t move); 
+	consteval void pushBack(move m); 
 	void print(); 
 
 private:
@@ -45,6 +47,6 @@ private:
 	constexpr void moveGenWhite(const Board& board, const BoardState& boardState);
 	constexpr void moveGenBlack(const Board& board, const BoardState& boardState);
 
-	uint64_t* movelist;
+	move* movelist;
 	int index; 
 };
