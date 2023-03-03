@@ -146,6 +146,8 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	//wPawn 
 	//resulting white pawns 
 	//board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
+
+	//create attack map for pieces that can't be moved/pinned? 
 	
 	//pawn push non promotion 
 	{
@@ -191,22 +193,32 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	{
 		map knights = board.Get().piece[wKnight]; 
 		while (knights) {
-			int b = getlsbBitIndex(knights); 
 			map attacks = knightAttack[getlsbBitIndex(knights)];
-			//iterate through knights 
 			while (attacks) {
 				Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
 
 				attacks &= attacks - 1; 
 			}
-
-			Movelist::pushBack(Move::makemove(getLsbBit(knights), 0x0ull, wKnight, wPawn, true, false, false, false)); 
-
 			knights &= knights - 1; 
 		}
 	}
-	//itetate through knights and then check? 
 	
+	//king moves 
+	{
+		//just one king 
+		//might be difficult to prune 
+		
+		//check if attacked after moving at those positions 
+
+		map attacks = kingAttack[getlsbBitIndex(Board::Get().occupancy[wKing])]; 
+		while (attacks) {
+			Movelist::pushBack(Move::makemove(Board::Get().occupancy[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false); 
+
+			attacks &= attacks - 1; 
+		}
+
+
+	}
 
 }
 
