@@ -44,9 +44,9 @@ public:
 
 private:
 	void swap(Movelist& m1, Movelist& m2); 
-	constexpr void moveGen(const Board& board, const BoardState& boardState); 
-	constexpr void moveGenWhite(const Board& board, const BoardState& boardState);
-	constexpr void moveGenBlack(const Board& board, const BoardState& boardState);
+	void moveGen(const Board& board, const BoardState& boardState); 
+	void moveGenWhite(const Board& board, const BoardState& boardState);
+	void moveGenBlack(const Board& board, const BoardState& boardState);
 
 	move* movelist;
 	int index; 

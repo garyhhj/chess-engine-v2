@@ -1,25 +1,6 @@
 #pragma once 
+#include "macro.h"
 
-static constexpr uint64_t pawnAttack[2][64];
-static constexpr uint64_t knightAttack[64];
-static constexpr uint64_t kingAttack[64];
-
-static constexpr uint64_t bishopMagicNum[64];
-static constexpr uint64_t relevantBishopBlocker[64];
-static constexpr uint64_t bishopAttack[64][512];
-
-static constexpr uint64_t rookMagicNum[64];
-static constexpr uint64_t relevantRookBlocker[64];
-static constexpr uint64_t rookAttack[64][4096];
-
-
-static inline int bishopMagicIndex(const uint64_t occ, int index) {
-	return occ * bishopMagicNum[index] >> (64 - getNumBit(occ)); 
-}
-
-static inline int rookMagicIndex(const uint64_t occ, int index) {
-	return occ * rookMagicNum[index] >> (64 - getNumBit(occ)); 
-}
 
 /********************
 *
@@ -6975,3 +6956,4 @@ static constexpr uint64_t rookAttack[64][4096] =
 0x1010e, 0x1010106, 0x106, 0x102, 0x1010106, 0x10102, 0x102, 0x106, 0x10102, 0x1010106, 0x106, 0x102, 0x1010106, 0x10102, 0x102, 0x102,
 0x10102, 0x1010102, 0x102, 0x106, 0x1010102, 0x10106, 0x106, 0x102, 0x10106, 0x1010102, 0x102, 0x106, 0x1010102, 0x10106, 0x106, },
 };
+

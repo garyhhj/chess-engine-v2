@@ -3,6 +3,21 @@
 
 /********************
 *
+*Utils
+*
+*********************/
+
+static inline int bishopMagicIndex(const uint64_t occ, int index) {
+	return int(occ * bishopMagicNum[index]) >> (64 - getNumBit(occ));
+}
+
+static inline int rookMagicIndex(const uint64_t occ, int index) {
+	return int(occ * rookMagicNum[index]) >> (64 - getNumBit(occ));
+}
+
+
+/********************
+*
 *BoardState
 *singleton
 *
@@ -112,9 +127,9 @@ bool Board::IattackedWhite(const uint64_t square) {
 	const int index = getlsbBitIndex(square); 
 	return
 		//leapers
-		pawnAttack[white][index] & Board::Get().occupancy[bPawn] |
-		knightAttack[index] & Board::Get().occupancy[bKnight] |
-		kingAttack[index] & Board::Get().occupancy[bKing] |
+		pawnAttack[white][index] & Board::Get().piece[bPawn] |
+		knightAttack[index] & Board::Get().piece[bKnight] |
+		kingAttack[index] & Board::Get().piece[bKing] |
 
 		//sliders 
 		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) |
@@ -126,17 +141,68 @@ bool Board::IattackedBlack(const uint64_t square) {
 	const int index = getlsbBitIndex(square); 
 	return
 		//leapers
-		pawnAttack[black][index] & Board::Get().occupancy[wPawn] |
-		knightAttack[index] & Board::Get().occupancy[wKnight] |
-		kingAttack[index] & Board::Get().occupancy[wKing] |
+		pawnAttack[black][index] & Board::Get().piece[wPawn] |
+		knightAttack[index] & Board::Get().piece[wKnight] |
+		kingAttack[index] & Board::Get().piece[wKing] |
 
 		//sliders 
 		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]) |
 		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
 }
 
+const uint64_t Board::checkMask() {
+	return (BoardState::Get().side == white ? Board::Get().IcheckMaskWhite() : Board::Get().IcheckMaskBlack()); 
+}
+
+//return check mask for white's turn 
+const uint64_t Board::IcheckMaskWhite() {
+	if (!Board::attacked(Board::Get().piece[wKing])) return 0x0ull; 
+
+	const int index = getlsbBitIndex(Board::Get().piece[wKing]);
+	uint64_t res = 0x0ull;
+
+	//leaper pieces 
+	res |= (pawnAttack[white][index] & Board::Get().piece[bPawn]);
+	res |= (knightAttack[index] & Board::Get().piece[bKnight]);
+	res |= (kingAttack[index] & Board::Get().piece[bKing]);
+
+	//slider pieces 
 
 
+	//todo: make some sort of predefined table to allow faster creation of check masks for slider pieces 
+	//bishop (and queen) 
+	{
+		map bishopMask = bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
+		while (bishopMask) {
+			const int bishopIndex = getlsbBitIndex(bishopMask); 
+			
+			//if(bishopIndex - index)
+			
+
+			//some way to check quadrants 
+			
+			//perhaps by % 7 or 9 ? 
+
+			bishopMask &= bishopMask - 1; 
+		}
+	}
+
+	//rook (and queen) 
+	{
+		map rookMask = rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+		while (rookMask) {
+
+
+			rookMask &= rookMask - 1; 
+		}
+	}
+	
+
+	return res;
+}
+const uint64_t Board::IcheckMaskBlack() {
+	return 0x0ull; 
+}
 
 /********************
 *
@@ -294,10 +360,10 @@ void Fen::Iparse(const std::string& fen) {
 		++index;
 	}
 	if (index - enpassantStart == 2) {
-		int rank = fen[enpassantStart + 1] - '0';
-		int file = fen[enpassantStart] - 'a';
+		//int rank = fen[enpassantStart + 1] - '0';
+		//int file = fen[enpassantStart] - 'a';
 
-		BoardState::Get().enpassant = 8 * (8 - rank) + file;
+		//BoardState::Get().enpassant = 8 * (8 - rank) + file;
 	}
 
 }

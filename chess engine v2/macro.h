@@ -34,17 +34,17 @@ extern void printBit(const uint64_t bit);
 *
 *********************/
 
-constexpr bool getBit(const uint64_t bitBoard, const int index);
+extern constexpr bool getBit(const uint64_t bitBoard, const int index);
 
-constexpr void setBit(uint64_t& bitBoard, const uint64_t square);
+extern constexpr void setBit(uint64_t& bitBoard, const uint64_t square);
 
-constexpr void popBit(uint64_t& bitBoard, const uint64_t square);
+extern constexpr void popBit(uint64_t& bitBoard, const uint64_t square);
 
 extern constexpr uint64_t getLsbBit(const uint64_t bitBoard);
 
 extern constexpr int getNumBit(uint64_t bitboard);
 
-constexpr int lsbBitIndex(uint64_t bitboard);
+extern constexpr int getlsbBitIndex(uint64_t bitboard);
 
 
 /********************

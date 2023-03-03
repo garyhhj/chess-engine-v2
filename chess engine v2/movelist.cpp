@@ -136,13 +136,13 @@ void Movelist::swap(Movelist& m1, Movelist& m2) {
 /********************
 *Generate Moves
 *********************/
-constexpr void Movelist::moveGen(const Board& board, const BoardState& boardState) {
+void Movelist::moveGen(const Board& board, const BoardState& boardState) {
 	boardState.Get().side == white ? 
 		Movelist::moveGenWhite(board, boardState) : 
 		Movelist::moveGenBlack(board, boardState);
 }
 
-constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
+void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//wPawn 
 	//resulting white pawns 
 	//board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
@@ -205,9 +205,9 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	
 	//king moves 
 	{
-		map attacks = kingAttack[getlsbBitIndex(Board::Get().occupancy[wKing])]; 
+		map attacks = kingAttack[getlsbBitIndex(Board::Get().piece[wKing])]; 
 		while (attacks) {
-			Movelist::pushBack(Move::makemove(Board::Get().occupancy[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false); 
+			Movelist::pushBack(Move::makemove(Board::Get().piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
 
 			attacks &= attacks - 1; 
 		}
@@ -215,7 +215,7 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 
 }
 
-constexpr void Movelist::moveGenBlack(const Board& board, const BoardState& boardState) {
+void Movelist::moveGenBlack(const Board& board, const BoardState& boardState) {
 
 }
 

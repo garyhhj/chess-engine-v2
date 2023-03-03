@@ -37,10 +37,16 @@ public:
 	static Board& Get(); 
 	static void print();
 	bool attacked(const uint64_t square); 
+	const uint64_t checkMask(); 
 
 private:
 	bool IattackedWhite(const uint64_t square); 
 	bool IattackedBlack(const uint64_t square);
+	const uint64_t IcheckMaskWhite(); 
+	const uint64_t IcheckMaskBlack(); 
+
+
+
 	void Iprint(); 
 	//leaper pieces 
 	map piece[12]; 

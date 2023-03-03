@@ -1,6 +1,6 @@
 #include "macro.h"
 #include "attackTable.h"
-#include "board.h"; 
+#include "board.h"
 #include "movelist.h"
 
 #include <iostream>
@@ -26,22 +26,10 @@ int main() {
 
 	Board::print(); */
 
-	Movelist ml; 
 
-	Movelist ml2 = ml;  
+	int ind = -9; 
 
-
-	/*for (int i = 0; i < 12; ++i) {
-		std::cout << "piece: " << pieceChar[i] << "\n";
-		printBit(Board::Get().piece[i]);
-		std::cout << "\n\n"; 
-	}
-
-	for (int i = 0; i < 2; ++i) {
-		std::cout << "occupancy: " << i << "\n"; 
-		printBit(Board::Get().occupancy[i]); 
-	}*/
-
+	std::cout << ind % 9 << std::endl; 
 
 	//todo: 
 	//generate moves 
