@@ -1,5 +1,9 @@
 #include "movelist.h"
 
+static consteval auto compileTime(auto val) {
+	return val;
+}
+
 /********************
 *
 *Move
@@ -85,11 +89,11 @@ constexpr bool Move::castlingFlag(const move m) { return m & 0x800000; }
 *
 *********************/
 
-Movelist::Movelist() : movelist(new uint64_t[256]), index(0) {}
+Movelist::Movelist() : movelist(new move[256]), index(0) {}
 
 
 //rule of 3.5
-Movelist::Movelist(const Movelist& rhs) : movelist(new uint64_t[256]), index(rhs.index) {
+Movelist::Movelist(const Movelist& rhs) : movelist(new move[256]), index(rhs.index) {
 	std::cout << "copy constructor" << std::endl; 
 	for (int i = 0; i < index; ++i) {
 		movelist[i] = rhs.movelist[i]; 
@@ -109,7 +113,7 @@ Movelist::~Movelist() {
 	delete[] movelist; 
 }
 
-consteval void Movelist::pushBack(move m) {
+constexpr void Movelist::pushBack(const move m) {
 	movelist[index++] = m; 
 }
 
@@ -119,7 +123,7 @@ void Movelist::print() {
 
 
 void Movelist::swap(Movelist& m1, Movelist& m2) {
-	uint64_t* ptr = m1.movelist; 
+	move* ptr = m1.movelist; 
 	m1.movelist = m2.movelist; 
 	m2.movelist = ptr; 
 
@@ -151,10 +155,8 @@ constexpr void Movelist::moveGenWhite(const Board& board, const BoardState& boar
 	//pawn push non promotion 
 	{
 		map pawns = board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
-		while (pawns) {
-			Move move(); 
-
-			pushBack(move); 
+		while (pawns)
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
 
 			pawns &= pawns - 1; 
 		}

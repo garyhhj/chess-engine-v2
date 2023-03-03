@@ -38,7 +38,7 @@ public:
 	Movelist& operator=(Movelist& rhs);
 	~Movelist(); 
 
-	consteval void pushBack(move m); 
+	constexpr void pushBack(const move m); 
 	void print(); 
 
 private:
