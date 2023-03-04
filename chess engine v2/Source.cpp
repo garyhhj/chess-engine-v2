@@ -21,25 +21,57 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+		string fentemp= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/r11rKBNR w KQkq - 0 1 ";
 
 		Fen::parse(fentemp);
 	}
 
 	Board::print(); 
 
-	//set up board with parse fen 
+	map mask = Board::Get().checkMask(); 
 
-	if (Board::Get().attacked(E1)) {
-		std::cout << "meoww" << std::endl; 
-	}
-	else {
-		std::cout << "woof" << std::endl; 
-	}
 
+	/*map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black]; 
+
+	std::cout << "occ" << std::endl; 
+	printBit(occ); 
+
+	int index = getlsbBitIndex(E1); 
+
+
+	int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index])); 
+
+	printBit(rookAttack[index][magicIndex]); */
+	
+
+
+	////set up board with parse fen
 	//map mask = Board::Get().checkMask(); 
-	//printBit(mask); 
+	//
+	//printBit(mask);
+	/*std::string s; 
 
+	for (int i = 0; i < 64; ++i) {
+		std::cout << i << std::endl; 
+		printBit(relevantRookBlocker[i]); 
+
+		std::cin >> s; 
+	}*/
+
+
+	
+
+
+	/*  8   r n b q k b n r
+		7   p p p p p p p p
+		6   0 0 0 0 0 0 0 0
+		5   0 0 0 0 0 0 0 0
+		4   0 0 0 0 0 0 0 0
+		3   0 0 0 0 0 0 0 0
+		2   P P n p P P P P
+		1   r 0 0 0 K B N R
+
+		    a b c d e f g h*/
 	//todo: 
 	//generate moves 
 
@@ -53,6 +85,11 @@ int main() {
 	//easiest way is to check for attack by leaper piece by doing the reverse 
 	//then check slider pieces 
 
+	//double stacked rooks breaks check mask 
 	//test attacked 
 	//test checkmask and write a checkmask for black 
+
+	//how to deal with stacked rook and bishop when implementing attack mask 
+
+	//test and fix direction for checkmask 
 }

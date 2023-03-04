@@ -8,13 +8,28 @@
 *********************/
 
 static inline int bishopMagicIndex(const uint64_t occ, int index) {
-	return int(occ & relevantBishopBlocker[index] * bishopMagicNum[index]) >> (64 - getNumBit(occ & relevantBishopBlocker[index]));
+	return int(occ & relevantBishopBlocker[index] * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index]));
 }
 
 static inline int rookMagicIndex(const uint64_t occ, int index) {
-	return int(occ & relevantRookBlocker[index] * rookMagicNum[index]) >> (64 - getNumBit(occ & relevantRookBlocker[index]));
+	return ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+
+
+	//return int((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
 }
 
+//
+//map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
+//
+//std::cout << "occ" << std::endl;
+//printBit(occ);
+//
+//int index = getlsbBitIndex(E1);
+//
+//
+//int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+//
+//printBit(rookAttack[index][magicIndex]);
 
 /********************
 *
@@ -128,25 +143,14 @@ bool Board::IattackedWhite(const uint64_t square) {
 
 
 	return
+		//leapers
 		pawnAttack[white][index] & Board::Get().piece[bPawn] |
 		knightAttack[index] & Board::Get().piece[bKnight] |
 		kingAttack[index] & Board::Get().piece[bKing] |
-
-		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
-
-
-
-
-
-		////leapers
-		//pawnAttack[white][index] & Board::Get().piece[bPawn] |
-		//knightAttack[index] & Board::Get().piece[bKnight] |
-		//kingAttack[index] & Board::Get().piece[bKing] |
-
-
-		////sliders 
-		//bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) |
-		//rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+		
+		//sliders
+		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) | 
+		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
 }
 
 //square is attacked while black's turn 
@@ -169,7 +173,7 @@ const uint64_t Board::checkMask() {
 
 //return check mask for white's turn 
 const uint64_t Board::IcheckMaskWhite() {
-	if (!Board::attacked(Board::Get().piece[wKing])) return 0x0ull; 
+	//if (!Board::attacked(Board::Get().piece[wKing])) return 0x0ull; 
 
 	const int index = getlsbBitIndex(Board::Get().piece[wKing]);
 	uint64_t res = 0x0ull;
@@ -186,6 +190,7 @@ const uint64_t Board::IcheckMaskWhite() {
 	//bishop (and queen) 
 	{
 		map bishopMask = bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
+		res |= bishopMask; 
 		while (bishopMask) {
 			const int bishopIndex = getlsbBitIndex(bishopMask); 
 			
@@ -222,39 +227,73 @@ const uint64_t Board::IcheckMaskWhite() {
 
 	//rook (and queen) 
 	{
-		map rookMask = rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+
+		const map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
+
+
+
+
+		int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+
+		std::cout << "index: " << index << std::endl; 
+
+		map mask = rookAttack[index][rookMagicIndex(occ, index)];
+		std::cout << "mask: " << std::endl; 
+		printBit(mask); 
+		map rookMask = rookAttack[index][rookMagicIndex(occ, index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+
+		std::cout << "rookmask:" << std::endl; 
+		printBit(rookMask); 
+
 		while (rookMask) {
-			const int rookIndex = getlsbBitIndex(rookMask);
+			const int rookIndex = getlsbBitIndex(rookMask); 
+			map mask2 = rookAttack[rookIndex][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], rookIndex)];
+			std::cout << "mask2" << std::endl; 
+			printBit(mask2); 
+			
+			res |= (mask & mask2); 
 
-			//up and left 
-			if (rookIndex > index && !((rookIndex - index) % 8)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] << 8 * step & ~rookMask; ++step) {
-					res |= Board::Get().piece[wKing] << 8 * step;
-				}
-			}
-			else if (rookIndex > index && ((rookIndex - index) % 8)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] << step & ~rookMask; ++step) {
-					res |= Board::Get().piece[wKing] << step; 
-				}
-			}
-
-			//down and right 
-			else if (rookIndex < index && !((index - rookIndex) % 8)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] >> 8 * step & ~rookMask; ++step) {
-					res |= Board::Get().piece[wKing] >> 8 * step; 
-				}
-			}
-			else if (rookIndex < index && ((index - rookIndex) % 8)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] >> step & ~rookMask; ++step) {
-					res |= Board::Get().piece[wKing] >> step; 
-				}
-			}
 			rookMask &= rookMask - 1; 
 		}
+
+		
+		//
+		////res |= rookMask; 
+		//while (rookMask) {
+		//	const int rookIndex = getlsbBitIndex(rookMask);
+
+		//	//up and left 
+		//	if (rookIndex < index && !((index - rookIndex) % 8)) {
+		//		for (int step = 1;
+		//			Board::Get().piece[wKing] << 8 * step & ~rookMask; ++step) {
+		//			res |= Board::Get().piece[wKing] << 8 * step;
+		//		}
+		//	}
+		//	else if (rookIndex < index && ((rookIndex - index) % 8)) {
+		//		for (int step = 1;
+		//			Board::Get().piece[wKing] << step & ~rookMask; ++step) {
+		//			res |= Board::Get().piece[wKing] << step; 
+		//		}
+		//	}
+
+		//	//down and right 
+		//	else if (rookIndex > index && !((index - rookIndex) % 8)) {
+		//		for (int step = 1;
+		//			Board::Get().piece[wKing] >> 8 * step & ~rookMask; ++step) {
+		//			res |= Board::Get().piece[wKing] >> 8 * step; 
+		//		}
+		//	}
+		//	else if (rookIndex > index && ((index - rookIndex) % 8)) {
+		//		for (int step = 1;
+		//			Board::Get().piece[wKing] >> step & ~rookMask; ++step) {
+		//			res |= Board::Get().piece[wKing] >> step; 
+		//		}
+		//	}
+		//	rookMask &= rookMask - 1; 
+		//}
+
+
+		//perhps iterate through magic index of rook and then and both to find common bits 
 	}
 
 	return res;

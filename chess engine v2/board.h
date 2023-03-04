@@ -40,6 +40,7 @@ public:
 	const uint64_t checkMask(); 
 
 private:
+public: 
 	bool IattackedWhite(const uint64_t square); 
 	bool IattackedBlack(const uint64_t square);
 	const uint64_t IcheckMaskWhite(); 

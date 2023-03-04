@@ -222,3 +222,4 @@ void Movelist::moveGenBlack(const Board& board, const BoardState& boardState) {
 
 
 
+
