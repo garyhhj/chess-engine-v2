@@ -176,13 +176,33 @@ const uint64_t Board::IcheckMaskWhite() {
 		while (bishopMask) {
 			const int bishopIndex = getlsbBitIndex(bishopMask); 
 			
-			//if(bishopIndex - index)
-			
+			// upper left and right 
+			if (bishopIndex < index && !((index - bishopIndex) % 9)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] << 9 * step & ~bishopMask; ++step) {
+					res |= Board::Get().piece[wKing] << 9 * step;
+				}
+			}
+			else if (bishopIndex < index && !((index - bishopIndex) % 7)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] << 7 * step & ~bishopMask; ++step) {
+					res |= Board::Get().piece[wKing] << 7 * step; 
+				}		
+			}
 
-			//some way to check quadrants 
-			
-			//perhaps by % 7 or 9 ? 
-
+			//bottom left and right 
+			else if (bishopIndex > index && !((bishopIndex - index) % 7)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] >> 7 * step & ~bishopMask; ++step) {
+					res |= Board::Get().piece[wKing] >> 7 * step; 
+				}
+			}
+			else if (bishopIndex > index && !((bishopIndex - index) % 9)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] >> 9 * step & ~bishopMask; ++step) {
+					res |= Board::Get().piece[wKing] >> 9 * step; 
+				}
+			}
 			bishopMask &= bishopMask - 1; 
 		}
 	}
@@ -191,7 +211,35 @@ const uint64_t Board::IcheckMaskWhite() {
 	{
 		map rookMask = rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
 		while (rookMask) {
+			const int rookIndex = getlsbBitIndex(rookMask);
 
+			//up and left 
+			if (rookIndex > index && !((rookIndex - index) % 8)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] << 8 * step & ~rookMask; ++step) {
+					res |= Board::Get().piece[wKing] << 8 * step;
+				}
+			}
+			else if (rookIndex > index && ((rookIndex - index) % 8)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] << step & ~rookMask; ++step) {
+					res |= Board::Get().piece[wKing] << step; 
+				}
+			}
+
+			//down and right 
+			else if (rookIndex < index && !((index - rookIndex) % 8)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] >> 8 * step & ~rookMask; ++step) {
+					res |= Board::Get().piece[wKing] >> 8 * step; 
+				}
+			}
+			else if (rookIndex < index && ((index - rookIndex) % 8)) {
+				for (int step = 1;
+					Board::Get().piece[wKing] >> step & ~rookMask; ++step) {
+					res |= Board::Get().piece[wKing] >> step; 
+				}
+			}
 
 			rookMask &= rookMask - 1; 
 		}
