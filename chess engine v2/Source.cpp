@@ -12,7 +12,7 @@
 
 int main() {
 
-	/*{
+	{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
 		string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
@@ -20,16 +20,25 @@ int main() {
 		string fenK = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1";
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
-		
-		Fen::parse(fenTricky);
+			
+		string fentemp= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+
+		Fen::parse(fentemp);
 	}
 
-	Board::print(); */
+	Board::print(); 
 
+	//set up board with parse fen 
 
-	int ind = -9; 
+	if (Board::Get().attacked(E1)) {
+		std::cout << "meoww" << std::endl; 
+	}
+	else {
+		std::cout << "woof" << std::endl; 
+	}
 
-	std::cout << ind % 9 << std::endl; 
+	//map mask = Board::Get().checkMask(); 
+	//printBit(mask); 
 
 	//todo: 
 	//generate moves 
@@ -43,4 +52,7 @@ int main() {
 
 	//easiest way is to check for attack by leaper piece by doing the reverse 
 	//then check slider pieces 
+
+	//test attacked 
+	//test checkmask and write a checkmask for black 
 }

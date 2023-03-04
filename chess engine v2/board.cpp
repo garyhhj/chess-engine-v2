@@ -8,11 +8,11 @@
 *********************/
 
 static inline int bishopMagicIndex(const uint64_t occ, int index) {
-	return int(occ * bishopMagicNum[index]) >> (64 - getNumBit(occ));
+	return int(occ & relevantBishopBlocker[index] * bishopMagicNum[index]) >> (64 - getNumBit(occ & relevantBishopBlocker[index]));
 }
 
 static inline int rookMagicIndex(const uint64_t occ, int index) {
-	return int(occ * rookMagicNum[index]) >> (64 - getNumBit(occ));
+	return int(occ & relevantRookBlocker[index] * rookMagicNum[index]) >> (64 - getNumBit(occ & relevantRookBlocker[index]));
 }
 
 
@@ -125,15 +125,28 @@ bool Board::attacked(const uint64_t square) {
 //square is attack while white's turn 
 bool Board::IattackedWhite(const uint64_t square) {
 	const int index = getlsbBitIndex(square); 
+
+
 	return
-		//leapers
 		pawnAttack[white][index] & Board::Get().piece[bPawn] |
 		knightAttack[index] & Board::Get().piece[bKnight] |
 		kingAttack[index] & Board::Get().piece[bKing] |
 
-		//sliders 
-		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) |
-		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
+
+
+
+
+
+		////leapers
+		//pawnAttack[white][index] & Board::Get().piece[bPawn] |
+		//knightAttack[index] & Board::Get().piece[bKnight] |
+		//kingAttack[index] & Board::Get().piece[bKing] |
+
+
+		////sliders 
+		//bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) |
+		//rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
 }
 
 //square is attacked while black's turn 
@@ -240,11 +253,9 @@ const uint64_t Board::IcheckMaskWhite() {
 					res |= Board::Get().piece[wKing] >> step; 
 				}
 			}
-
 			rookMask &= rookMask - 1; 
 		}
 	}
-	
 
 	return res;
 }
