@@ -8,7 +8,7 @@
 *********************/
 
 static inline int bishopMagicIndex(const uint64_t occ, int index) {
-	return int(occ & relevantBishopBlocker[index] * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index]));
+	return ((occ & relevantBishopBlocker[index]) * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index]));
 }
 
 static inline int rookMagicIndex(const uint64_t occ, int index) {
@@ -176,125 +176,48 @@ const uint64_t Board::IcheckMaskWhite() {
 	//if (!Board::attacked(Board::Get().piece[wKing])) return 0x0ull; 
 
 	const int index = getlsbBitIndex(Board::Get().piece[wKing]);
+	const uint64_t occ = Board::Get().occupancy[white] | Board::Get().occupancy[black]; 
 	uint64_t res = 0x0ull;
+	int numChecks = 0; 
 
 	//leaper pieces 
 	res |= (pawnAttack[white][index] & Board::Get().piece[bPawn]);
 	res |= (knightAttack[index] & Board::Get().piece[bKnight]);
 	res |= (kingAttack[index] & Board::Get().piece[bKing]);
+	if (res) numChecks += 1; 
 
 	//slider pieces 
-
-
-	//todo: make some sort of predefined table to allow faster creation of check masks for slider pieces 
 	//bishop (and queen) 
 	{
-		map bishopMask = bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
-		res |= bishopMask; 
-		while (bishopMask) {
-			const int bishopIndex = getlsbBitIndex(bishopMask); 
-			
-			// upper left and right 
-			if (bishopIndex < index && !((index - bishopIndex) % 9)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] << 9 * step & ~bishopMask; ++step) {
-					res |= Board::Get().piece[wKing] << 9 * step;
-				}
-			}
-			else if (bishopIndex < index && !((index - bishopIndex) % 7)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] << 7 * step & ~bishopMask; ++step) {
-					res |= Board::Get().piece[wKing] << 7 * step; 
-				}		
-			}
+		map mask = bishopAttack[index][bishopMagicIndex(occ, index)];
+		map bishopMask = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]);
+		if (bishopMask) numChecks += 1; 
+		res |= bishopMask;
 
-			//bottom left and right 
-			else if (bishopIndex > index && !((bishopIndex - index) % 7)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] >> 7 * step & ~bishopMask; ++step) {
-					res |= Board::Get().piece[wKing] >> 7 * step; 
-				}
-			}
-			else if (bishopIndex > index && !((bishopIndex - index) % 9)) {
-				for (int step = 1;
-					Board::Get().piece[wKing] >> 9 * step & ~bishopMask; ++step) {
-					res |= Board::Get().piece[wKing] >> 9 * step; 
-				}
-			}
-			bishopMask &= bishopMask - 1; 
+		while (bishopMask) {
+			res |= (mask & bishopAttack[getlsbBitIndex(bishopMask)][bishopMagicIndex(occ, getlsbBitIndex(bishopMask))]);
+
+			bishopMask &= bishopMask - 1;
 		}
 	}
 
 	//rook (and queen) 
 	{
-
-		const map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
-
-
-
-
-		int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
-
-		std::cout << "index: " << index << std::endl; 
-
 		map mask = rookAttack[index][rookMagicIndex(occ, index)];
-		std::cout << "mask: " << std::endl; 
-		printBit(mask); 
 		map rookMask = rookAttack[index][rookMagicIndex(occ, index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
-
-		std::cout << "rookmask:" << std::endl; 
-		printBit(rookMask); 
+		if (rookMask) numChecks += 1; 
+		res |= rookMask; 
 
 		while (rookMask) {
-			const int rookIndex = getlsbBitIndex(rookMask); 
-			map mask2 = rookAttack[rookIndex][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], rookIndex)];
-			std::cout << "mask2" << std::endl; 
-			printBit(mask2); 
-			
-			res |= (mask & mask2); 
+			res |= (mask & rookAttack[getlsbBitIndex(rookMask)][rookMagicIndex(occ, getlsbBitIndex(rookMask))]);
 
 			rookMask &= rookMask - 1; 
 		}
-
-		
-		//
-		////res |= rookMask; 
-		//while (rookMask) {
-		//	const int rookIndex = getlsbBitIndex(rookMask);
-
-		//	//up and left 
-		//	if (rookIndex < index && !((index - rookIndex) % 8)) {
-		//		for (int step = 1;
-		//			Board::Get().piece[wKing] << 8 * step & ~rookMask; ++step) {
-		//			res |= Board::Get().piece[wKing] << 8 * step;
-		//		}
-		//	}
-		//	else if (rookIndex < index && ((rookIndex - index) % 8)) {
-		//		for (int step = 1;
-		//			Board::Get().piece[wKing] << step & ~rookMask; ++step) {
-		//			res |= Board::Get().piece[wKing] << step; 
-		//		}
-		//	}
-
-		//	//down and right 
-		//	else if (rookIndex > index && !((index - rookIndex) % 8)) {
-		//		for (int step = 1;
-		//			Board::Get().piece[wKing] >> 8 * step & ~rookMask; ++step) {
-		//			res |= Board::Get().piece[wKing] >> 8 * step; 
-		//		}
-		//	}
-		//	else if (rookIndex > index && ((index - rookIndex) % 8)) {
-		//		for (int step = 1;
-		//			Board::Get().piece[wKing] >> step & ~rookMask; ++step) {
-		//			res |= Board::Get().piece[wKing] >> step; 
-		//		}
-		//	}
-		//	rookMask &= rookMask - 1; 
-		//}
-
-
-		//perhps iterate through magic index of rook and then and both to find common bits 
 	}
+
+	//double check 
+	if (numChecks == 2) BoardState::Get().doubleCheck = true;
+	else BoardState::Get().doubleCheck = false; 
 
 	return res;
 }

@@ -25,6 +25,8 @@ private:
 	bool castleRightWK; 
 	bool castleRightBQ; 
 	bool castleRightBK; 
+
+	bool doubleCheck; 
 };
 
 class Board {
