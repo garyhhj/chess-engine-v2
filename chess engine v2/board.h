@@ -40,7 +40,7 @@ public:
 	static void print();
 	bool attacked(const uint64_t square); 
 	const uint64_t checkMask(); 
-	const uint64_t pinMask(); 
+	const uint64_t pinMaskDiagonal();
 
 private:
 public: 
@@ -48,8 +48,8 @@ public:
 	bool IattackedBlack(const uint64_t square);
 	const uint64_t IcheckMaskWhite(); 
 	const uint64_t IcheckMaskBlack(); 
-	const uint64_t IpinMaskWhite(); 
-	const uint64_t IpinMaskBlack(); 
+	const uint64_t IpinMaskDiagonalWhite(); 
+	const uint64_t IpinMaskDiagonalBlack(); 
 
 
 
