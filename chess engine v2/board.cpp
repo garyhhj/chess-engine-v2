@@ -222,7 +222,52 @@ const uint64_t Board::IcheckMaskWhite() {
 	return res;
 }
 const uint64_t Board::IcheckMaskBlack() {
-	return 0x0ull; 
+
+	const int index = getlsbBitIndex(Board::Get().piece[bKing]);
+	const uint64_t occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
+	uint64_t res = 0x0ull;
+	int numChecks = 0;
+
+	//leaper pieces 
+	res |= (pawnAttack[black][index] & Board::Get().piece[wPawn]);
+	res |= (knightAttack[index] & Board::Get().piece[wKnight]);
+	res |= (kingAttack[index] & Board::Get().piece[wKing]);
+	if (res) numChecks += 1;
+
+	//slider pieces 
+	//bishop (and queen) 
+	{
+		map mask = bishopAttack[index][bishopMagicIndex(occ, index)];
+		map bishopMask = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]);
+		if (bishopMask) numChecks += 1;
+		res |= bishopMask;
+
+		while (bishopMask) {
+			res |= (mask & bishopAttack[getlsbBitIndex(bishopMask)][bishopMagicIndex(occ, getlsbBitIndex(bishopMask))]);
+
+			bishopMask &= bishopMask - 1;
+		}
+	}
+
+	//rook (and queen) 
+	{
+		map mask = rookAttack[index][rookMagicIndex(occ, index)];
+		map rookMask = rookAttack[index][rookMagicIndex(occ, index)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
+		if (rookMask) numChecks += 1;
+		res |= rookMask;
+
+		while (rookMask) {
+			res |= (mask & rookAttack[getlsbBitIndex(rookMask)][rookMagicIndex(occ, getlsbBitIndex(rookMask))]);
+
+			rookMask &= rookMask - 1;
+		}
+	}
+
+	//double check 
+	if (numChecks == 2) BoardState::Get().doubleCheck = true;
+	else BoardState::Get().doubleCheck = false;
+
+	return res;
 }
 
 /********************
@@ -260,6 +305,9 @@ void Fen::Iclear() {
 	BoardState::Get().castleRightWK = false; 
 	BoardState::Get().castleRightBQ = false; 
 	BoardState::Get().castleRightBK = false; 
+
+	BoardState::Get().doubleCheck = false;
+
 
 	//Board
 	for (int i = 0; i < 12; ++i) {
@@ -348,14 +396,17 @@ void Fen::Iparse(const std::string& fen) {
 
 		//increment index 
 	}
+	++index;
+	//std::cout << "index: " << index << std::endl;
 
 	//side t0 move 
 	if (fen[index] == 'b') BoardState::Get().side = black;
 	else BoardState::Get().side = white;
 	index += 2; 
 
+	//std::cout << "index: " << index << std::endl; 
+	
 	//castling rights 
-
 	while (fen[index] != ' ') {
 		switch (fen[index]) {
 		case 'K':
