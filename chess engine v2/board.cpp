@@ -50,7 +50,8 @@ void BoardState::debug() {
 
 void BoardState::Idebug() {
 	std::cout << "side: " << side << "\n" <<
-		"enpassant: " << enpassant << "\n";
+		"enpassant: " << enpassant << "\n" <<
+		"doublecheck: " << (BoardState::Get().doubleCheck ? "true" : "false") << "\n"; 
 	std::flush(std::cout);
 }
 
@@ -269,6 +270,63 @@ const uint64_t Board::IcheckMaskBlack() {
 
 	return res;
 }
+
+const uint64_t Board::pinMask() {
+	return (BoardState::Get().side == white ? Board::Get().IpinMaskWhite() : Board::Get().IpinMaskBlack()); 
+}
+
+//pin mask during white's turn (when white is about to make move) 
+const uint64_t Board::IpinMaskWhite() {
+	std::cout << "pinmask white" << std::endl; 
+
+	const int index = getlsbBitIndex(Board::Get().piece[wKing]); 
+	const uint64_t occ = Board::Get().occupancy[white] | Board::Get().occupancy[black]; 
+	uint64_t res = 0x0ull; 
+
+	//potential bishop pin 
+	map potentialBishopPinnedPiece = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::Get().occupancy[white]); 
+
+	//iterate through each potential pin and then create a pin mask 
+	while (potentialBishopPinnedPiece) {
+		const int bishopIndex = getlsbBitIndex(potentialBishopPinnedPiece); 
+		
+		//potential bits are just bishop and queen of the other color for the second 
+		map potentialBishopPinAttacker = bishopAttack[bishopIndex][bishopMagicIndex(occ, bishopIndex)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]); 
+		while (potentialBishopPinAttacker) {
+			const int attackerIndex = getlsbBitIndex(potentialBishopPinAttacker); 
+			const map uocc = occ & ~indexSquare[bishopIndex]; 
+
+			if (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & Board::Get().piece[wKing]) {
+				res |= (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & bishopAttack[index][bishopMagicIndex(uocc, index)]);
+				res |= indexSquare[attackerIndex];
+			}
+
+			potentialBishopPinAttacker &= potentialBishopPinAttacker - 1; 
+		}
+
+		potentialBishopPinnedPiece &= potentialBishopPinnedPiece - 1; 
+	}
+
+	return res; 
+
+	//shouldn't pin mask be specific to each piece? 
+
+
+	//mask with potential pin is the one that can be attacked by the wKing through attackBishop 
+
+	//how do we tell that the potential pin is an acutal pin 
+
+	//that piece must be able to attack another piece of another color from that position 
+	//and then when removed that piece being attacked must be able to attack the king 
+
+	//pin mask only need to consider rooks and bishops 
+}
+
+const uint64_t Board::IpinMaskBlack() {
+	return 0x0ull;
+}
+
+
 
 /********************
 *
