@@ -41,6 +41,7 @@ public:
 	bool attacked(const uint64_t square); 
 	const uint64_t checkMask(); 
 	const uint64_t pinMaskDiagonal();
+	const uint64_t pinMaskHorizontal(); 
 
 private:
 public: 
@@ -50,8 +51,8 @@ public:
 	const uint64_t IcheckMaskBlack(); 
 	const uint64_t IpinMaskDiagonalWhite(); 
 	const uint64_t IpinMaskDiagonalBlack(); 
-
-
+	const uint64_t IpinMaskHorizontalWhite();
+	const uint64_t IpinMaskHorizontalBlack(); 
 
 	void Iprint(); 
 	//leaper pieces 
