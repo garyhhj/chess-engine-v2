@@ -287,13 +287,13 @@ const uint64_t Board::IpinMaskDiagonalWhite() {
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialBishopPinnedPiece) {
-		const int bishopIndex = getlsbBitIndex(potentialBishopPinnedPiece); 
+		const int pinnedIndex = getlsbBitIndex(potentialBishopPinnedPiece); 
 		
 		//potential bits are just bishop and queen of the other color for the second 
-		map potentialBishopPinAttacker = bishopAttack[bishopIndex][bishopMagicIndex(occ, bishopIndex)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]); 
+		map potentialBishopPinAttacker = bishopAttack[pinnedIndex][bishopMagicIndex(occ, pinnedIndex)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]); 
 		while (potentialBishopPinAttacker) {
 			const int attackerIndex = getlsbBitIndex(potentialBishopPinAttacker); 
-			const map uocc = occ & ~indexSquare[bishopIndex]; 
+			const map uocc = occ & ~indexSquare[pinnedIndex]; 
 
 			if (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & Board::Get().piece[wKing]) {
 				res |= (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & bishopAttack[index][bishopMagicIndex(uocc, index)]);
@@ -320,13 +320,13 @@ const uint64_t Board::IpinMaskDiagonalBlack() {
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialBishopPinnedPiece) {
-		const int bishopIndex = getlsbBitIndex(potentialBishopPinnedPiece);
+		const int pinnedIndex = getlsbBitIndex(potentialBishopPinnedPiece);
 
 		//potential bits are just bishop and queen of the other color for the second 
-		map potentialBishopPinAttacker = bishopAttack[bishopIndex][bishopMagicIndex(occ, bishopIndex)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]);
+		map potentialBishopPinAttacker = bishopAttack[pinnedIndex][bishopMagicIndex(occ, pinnedIndex)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]);
 		while (potentialBishopPinAttacker) {
 			const int attackerIndex = getlsbBitIndex(potentialBishopPinAttacker);
-			const map uocc = occ & ~indexSquare[bishopIndex];
+			const map uocc = occ & ~indexSquare[pinnedIndex];
 
 			if (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & Board::Get().piece[wKing]) {
 				res |= (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & bishopAttack[index][bishopMagicIndex(uocc, index)]);
@@ -342,12 +342,12 @@ const uint64_t Board::IpinMaskDiagonalBlack() {
 	return res;
 }
 
-const uint64_t Board::pinMaskHorizontal() {
-	return (BoardState::Get().side == white ? Board::Get().IpinMaskHorizontalWhite() : Board::Get().IpinMaskHorizontalBlack()); 
+const uint64_t Board::pinMaskHV() {
+	return (BoardState::Get().side == white ? Board::Get().IpinMaskHVWhite() : Board::Get().IpinMaskHVBlack()); 
 }
 
 //horizontal/veritcal pinmask during white's turn 
-const uint64_t Board::IpinMaskHorizontalWhite() {
+const uint64_t Board::IpinMaskHVWhite() {
 	const int index = getlsbBitIndex(Board::Get().piece[wKing]);
 	const uint64_t occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
 	uint64_t res = 0x0ull;
@@ -357,13 +357,13 @@ const uint64_t Board::IpinMaskHorizontalWhite() {
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialRookPinnedPiece) {
-		const int rookIndex = getlsbBitIndex(potentialRookPinnedPiece);
+		const int pinnedIndex = getlsbBitIndex(potentialRookPinnedPiece);
 
 		//potential bits are just bishop and queen of the other color for the second 
-		map potentialRookPinAttacker = rookAttack[rookIndex][bishopMagicIndex(occ, rookIndex)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]);
+		map potentialRookPinAttacker = rookAttack[pinnedIndex][rookMagicIndex(occ, pinnedIndex)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]);
 		while (potentialRookPinAttacker) {
 			const int attackerIndex = getlsbBitIndex(potentialRookPinAttacker);
-			const map uocc = occ & ~indexSquare[rookIndex];
+			const map uocc = occ & ~indexSquare[pinnedIndex];
 
 			if (rookAttack[attackerIndex][rookMagicIndex(uocc, attackerIndex)] & Board::Get().piece[wKing]) {
 				res |= (rookAttack[attackerIndex][rookMagicIndex(uocc, attackerIndex)] & rookAttack[index][rookMagicIndex(uocc, index)]);
@@ -380,7 +380,7 @@ const uint64_t Board::IpinMaskHorizontalWhite() {
 }
 
 //return horizontal/veritcal pin mask during black's turn 
-const uint64_t Board::IpinMaskHorizontalBlack() {
+const uint64_t Board::IpinMaskHVBlack() {
 	const int index = getlsbBitIndex(Board::Get().piece[bKing]);
 	const uint64_t occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
 	uint64_t res = 0x0ull;
@@ -390,13 +390,13 @@ const uint64_t Board::IpinMaskHorizontalBlack() {
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialRookPinnedPiece) {
-		const int rookIndex = getlsbBitIndex(potentialRookPinnedPiece);
+		const int pinnedIndex = getlsbBitIndex(potentialRookPinnedPiece);
 
 		//potential bits are just bishop and queen of the other color for the second 
-		map potentialRookPinAttacker = rookAttack[rookIndex][bishopMagicIndex(occ, rookIndex)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
+		map potentialRookPinAttacker = rookAttack[pinnedIndex][rookMagicIndex(occ, pinnedIndex)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
 		while (potentialRookPinAttacker) {
 			const int attackerIndex = getlsbBitIndex(potentialRookPinAttacker);
-			const map uocc = occ & ~indexSquare[rookIndex];
+			const map uocc = occ & ~indexSquare[pinnedIndex];
 
 			if (rookAttack[attackerIndex][rookMagicIndex(uocc, attackerIndex)] & Board::Get().piece[bKing]) {
 				res |= (rookAttack[attackerIndex][rookMagicIndex(uocc, attackerIndex)] & rookAttack[index][rookMagicIndex(uocc, index)]);
