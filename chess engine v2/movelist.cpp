@@ -199,21 +199,20 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//wPawn 
 
 	//pawn pushes, target square must be in king check mask 
-	
 	//pawn pushes are verticle this means that all diagonally pinned pawns cannot move 
 	//horizontally pinned pawns can only push if the resulting square is also in the check mask 
 	
 	//pawn push non promotion 
 	{
 		//non HV pinned 
-		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
+		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
 		while (pawns) {
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
 			pawns &= pawns - 1; 
 		}
 
 		//HV pinned 
-		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
+		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
 		while (pawns){
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
 			pawns &= pawns - 1; 
@@ -223,7 +222,7 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//pawn push promotion 
 	{
 		//non HV pinned 
-		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
+		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
 		while (pawns) {
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
@@ -234,7 +233,7 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 		}
 
 		//HV pinned 
-		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
+		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
 		while (pawns) {
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
@@ -247,10 +246,19 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 
 	//pawn double push 
 	{
-		map pawns = (board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4;
+		//non HV pinned 
+		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
 		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
-			
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
+
+			pawns &= pawns - 1;
+		}
+
+		//HV pinned 
+		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
+		while (pawns) {
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
+
 			pawns &= pawns - 1; 
 		}
 	}
