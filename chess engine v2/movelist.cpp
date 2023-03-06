@@ -266,7 +266,7 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	
 	//knight moves 
 	
-	//target square must be incheck mask 
+	//target square must be in check mask 
 	//separate into diagonally or HV pinned and not pinned 
 	//pinned knights cannot move 
 	
@@ -286,11 +286,14 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	}
 	
 	//king moves 
+	//check if square is safe before moving 
+	//pins and check mask do no apply to the king 
 	{
 		map attacks = kingAttack[getlsbBitIndex(Board::Get().piece[wKing])]; 
 		while (attacks) {
-			Movelist::pushBack(Move::makemove(Board::Get().piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
-
+			if (!Board::Get().attacked(getLsbBit(attacks))) {
+				Movelist::pushBack(Move::makemove(Board::Get().piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false));
+			}
 			attacks &= attacks - 1; 
 		}
 	}
