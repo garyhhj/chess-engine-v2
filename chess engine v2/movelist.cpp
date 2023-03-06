@@ -263,18 +263,19 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 		}
 	}
 
-	//pawn captures without promotion 
-	//iterate through pawns and check for captures? 
-	//current set of pawns would be on source square 
-	//create copy of current set of pawns and just iterate? 
-
-	//pawn captures with promotion 
 	
 	//knight moves 
+	
+	//target square must be incheck mask 
+	//separate into diagonally or HV pinned and not pinned 
+	//pinned knights cannot move 
+	
 	{
-		map knights = board.Get().piece[wKnight]; 
+		//source squares 
+		map knights = board.Get().piece[wKnight] & ~pinMaskDiagonal & ~pinMaskHV; 
 		while (knights) {
-			map attacks = knightAttack[getlsbBitIndex(knights)];
+			//target squares 
+			map attacks = knightAttack[getlsbBitIndex(knights)] & checkMask;
 			while (attacks) {
 				Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
 
