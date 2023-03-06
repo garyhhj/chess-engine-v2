@@ -21,7 +21,7 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp = "4q3/4r3/8/8/7b/8/PPPPPPPP/RNBQKN1r w KQkq - 0 1 ";
+		string fentemp = "4q3/4r3/8/8/7b/8/PPPPPPPP/RNBQK2r w KQkq - 0 1 ";
 
 
 		//for (int i = 0; i < fentemp.size(); ++i) {
@@ -44,7 +44,7 @@ int main() {
 
 	Board::print(); 
 
-	map mask = Board::Get().pinMaskHV();
+	map mask = Board::Get().checkMask();
 	printBit(mask); 
 	BoardState::debug(); 
 
@@ -101,7 +101,6 @@ int main() {
 	//generate legal moves 
 	//debruijin optimization for lsb bit index  
 
-	//test hv pin mask 
 	//start generating moves 
 
 	

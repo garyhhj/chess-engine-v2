@@ -143,6 +143,70 @@ void Movelist::moveGen(const Board& board, const BoardState& boardState) {
 }
 
 void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
+
+	//get the check mask 
+	//get the pin masks 
+	const map checkMask = Board::Get().checkMask(); 
+	//const bool doubleCheck = BoardState::Get().doubleCheck; 
+	
+	const map pinMaskHV = Board::Get().pinMaskHV(); 
+	const map pinMaskDiagonal = Board::Get().pinMaskDiagonal(); 
+
+	//start generating moves 
+	//now generate moves 
+
+
+	//for checkMask... it means that the pieces must be resulting in the checkmask 
+	//if there are double checks, then can only move king  
+
+	//for pin masks... it means that the pinned piece can only move within the pinned area 
+	//prevent pawn captures, certain bishop diagonals, and certain rook moves in pinned pieces 
+	//for leaper pieces, can just not let them move (except king) /but king won't be pinned, it will be checked 
+	//for slider pieces, if same pin as move eg. bishop and diagonal, allow movement and only check against diagonal 
+	//for slider pieces, if different pin, then it cannot be moved 
+
+	//anyways write it piece by piece and lets see what happens 
+
+	//double check - can only move king 
+	if (BoardState::Get().doubleCheck) {
+
+		const int kingIndex = getlsbBitIndex(Board::Get().piece[wKing]); 
+
+		//do something that checks other attacked square 
+
+		//king move noncapture 
+		map potentialKingMoveNonCapture = kingAttack[kingIndex] & ~(Board::Get().occupancy[black] & Board::Get().occupancy[white]); 
+		while (potentialKingMoveNonCapture) {
+			//need to check the square for attack... if no attack then can add to stuff 
+			if (!Board::Get().attacked(getLsbBit(potentialKingMoveNonCapture))) {
+				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, false, false, false, false)); 
+			}
+			potentialKingMoveNonCapture &= potentialKingMoveNonCapture - 1; 
+		}
+
+
+		//king move capture 
+		map potentialKingMoveCapture = kingAttack[kingIndex] & Board::Get().occupancy[black];
+		while (potentialKingMoveCapture) {
+			//need to check the square for attack... if no attack then can add to stuff 
+			if (!Board::Get().attacked(getLsbBit(potentialKingMoveCapture))) {
+				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, true, false, false, false));
+			}
+
+
+			potentialKingMoveCapture &= potentialKingMoveCapture - 1; 
+		}
+
+
+
+		//move to another square 
+		//then I need to check if the other square is being attacked? 
+		
+
+		return;
+	}
+
+
 	//wPawn 
 	//resulting white pawns 
 	//board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
