@@ -167,17 +167,15 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 
 	//anyways write it piece by piece and lets see what happens 
 
+
 	//double check - can only move king 
 	if (BoardState::Get().doubleCheck) {
-
 		const int kingIndex = getlsbBitIndex(Board::Get().piece[wKing]); 
-
-		//do something that checks other attacked square 
 
 		//king move noncapture 
 		map potentialKingMoveNonCapture = kingAttack[kingIndex] & ~(Board::Get().occupancy[black] & Board::Get().occupancy[white]); 
 		while (potentialKingMoveNonCapture) {
-			//need to check the square for attack... if no attack then can add to stuff 
+			//target square not attacked 
 			if (!Board::Get().attacked(getLsbBit(potentialKingMoveNonCapture))) {
 				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, false, false, false, false)); 
 			}
@@ -188,44 +186,55 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 		//king move capture 
 		map potentialKingMoveCapture = kingAttack[kingIndex] & Board::Get().occupancy[black];
 		while (potentialKingMoveCapture) {
-			//need to check the square for attack... if no attack then can add to stuff 
+			//target square not attacked 
 			if (!Board::Get().attacked(getLsbBit(potentialKingMoveCapture))) {
 				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, true, false, false, false));
 			}
-
-
 			potentialKingMoveCapture &= potentialKingMoveCapture - 1; 
 		}
-
-
-
-		//move to another square 
-		//then I need to check if the other square is being attacked? 
-		
-
 		return;
 	}
 
 
 	//wPawn 
-	//resulting white pawns 
-	//board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]); 
 
-	//create attack map for pieces that can't be moved/pinned? 
+	//pawn pushes, target square must be in king check mask 
+	
+	//pawn pushes are verticle this means that all diagonally pinned pawns cannot move 
+	//horizontally pinned pawns can only push if the resulting square is also in the check mask 
 	
 	//pawn push non promotion 
 	{
-		map pawns = board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
+		//non HV pinned 
+		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
+		while (pawns) {
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			pawns &= pawns - 1; 
+		}
+
+		//HV pinned 
+		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8;
 		while (pawns){
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
-
 			pawns &= pawns - 1; 
 		}
 	}
 
 	//pawn push promotion 
 	{
-		map pawns = board.Get().piece[wPawn] << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
+		//non HV pinned 
+		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
+		while (pawns) {
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
+
+			pawns &= pawns - 1;
+		}
+
+		//HV pinned 
+		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8;
 		while (pawns) {
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
