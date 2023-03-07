@@ -12,8 +12,9 @@ public:
 	BoardState() = default; 
 	BoardState(const BoardState&) = delete; 
 
-	static BoardState& Get();
-	static void debug();
+	//static BoardState& Get();
+	//static void debug();
+	void debug(); 
 
 private: 
 	void Idebug();

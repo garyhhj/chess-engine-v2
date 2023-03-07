@@ -105,6 +105,11 @@ int main() {
 	//need to create multiple copies of boardstates for make move/perft testing 
 	//better to change this now before taking longer to change later 
 
+	//swap out get with board/boardstate 
+
+	//need to remake singleton after by removing singleton 
+	//make get not return any single instance but that instance 
+
 	//debruijin optimization for lsb bit index  
 	//make move function (make sure to change board state/enpassant flag) 
 

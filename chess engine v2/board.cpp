@@ -34,24 +34,18 @@ static inline int rookMagicIndex(const uint64_t occ, int index) {
 /********************
 *
 *BoardState
-*singleton
 *
 *********************/
 
-BoardState& BoardState::Get() {
-	static BoardState instance;
-	return instance;
-}
-
 void BoardState::debug() {
-	Get().Idebug();
+	Idebug();
 }
 
 
 void BoardState::Idebug() {
-	std::cout << "side: " << side << "\n" <<
-		"enpassant: " << enpassant << "\n" <<
-		"doublecheck: " << (BoardState::Get().doubleCheck ? "true" : "false") << "\n"; 
+	std::cout << "side: " << BoardState::side << "\n" <<
+		"enpassant: " <<  char('A' + getlsbBitIndex(BoardState::enpassant) % 8) << 8 - getlsbBitIndex(BoardState::enpassant) / 8 << "\n" <<
+		"doublecheck: " << (BoardState::doubleCheck ? "true" : "false") << "\n"; 
 	std::flush(std::cout);
 }
 
