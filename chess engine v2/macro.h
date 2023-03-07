@@ -153,7 +153,9 @@ const map GFile = G8 | G7 | G6 | G5 | G4 | G3 | G2 | G1;
 const map HFile = H8 | H7 | H6 | H5 | H4 | H3 | H2 | H1;
 
 const map Row1 = A1 | B1 | C1 | D1 | E1 | F1 | G1 | H1; 
+const map Row2 = A2 | B2 | C2 | D2 | E2 | F2 | G2 | H2;
 const map Row4 = A4 | B4 | C4 | D4 | E4 | F4 | G4 | H4;
+const map Row7 = A7 | B7 | C7 | D7 | E7 | F7 | G7 | H7;
 const map Row8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
 
 const map Edge = AFile | HFile | Row1 | Row8; 
