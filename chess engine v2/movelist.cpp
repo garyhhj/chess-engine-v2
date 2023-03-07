@@ -24,13 +24,13 @@ static consteval auto compileTime(auto val) {
 */
 
 move Move::makemove(int sourceSquare, int targetSquare, int piece, int promotePiece, bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag) {
-	return (sourceSquare & 0x3f) | (targetSquare << 6 & 0xfc0) | (piece << 12 & 0xf000) | (promotePiece << 16 & 0xf0000) |
+	return (sourceSquare & 0x3f) | ((targetSquare << 6) & 0xfc0) | ((piece << 12) & 0xf000) | ((promotePiece << 16) & 0xf0000) |
 		(captureFlag ? 0x1 << 20 : 0x0) | (doublePushFlag ? 0x1 << 21 : 0x0) | (enpassantFlag ? 0x1 << 22 : 0x0) | (castlingFlag ? 0x1 << 23 : 0x0);
 
 }
 
 move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int promotePiece, bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag) {
-	return (getlsbBitIndex(sourceSquare) & 0x3f) | (getlsbBitIndex(targetSquare) << 6 & 0xfc0) | (piece << 12 & 0xf000) | (promotePiece << 16 & 0xf0000) |
+	return (getlsbBitIndex(sourceSquare) & 0x3f) | ((getlsbBitIndex(targetSquare) << 6) & 0xfc0) | ((piece << 12) & 0xf000) | ((promotePiece << 16) & 0xf0000) |
 		(captureFlag ? 0x1 << 20 : 0x0) | (doublePushFlag ? 0x1 << 21 : 0x0) | (enpassantFlag ? 0x1 << 22 : 0x0) | (castlingFlag ? 0x1 << 23 : 0x0);
 }
 
@@ -42,19 +42,25 @@ void Move::decode(const move m) {
 
 	//sourceSquare 
 	std::cout << "SS: "; 
-	std::cout << 'A' + Move::sourceSquare(m) % 8; 
-	std::cout << Move::sourceSquare(m) / 8; 
+	//std::cout << Move::sourceSquare(m) << std::endl; 
+
+	//this is wrong and needs to change 
+
+	//A8 is 0
+	//H1 is 63 
+	std::cout << char('A' + Move::sourceSquare(m) % 8); 
+	std::cout << 8 - Move::sourceSquare(m) / 8 << " ";
 
 	//target Square 
 	std::cout << "TS: "; 
-	std::cout << 'A' + Move::targetSquare(m) % 8; 
-	std::cout << Move::targetSquare(m) / 8; 
+	std::cout << char('A' + Move::targetSquare(m) % 8); 
+	std::cout << 8 - Move::targetSquare(m) / 8 << " ";
 
 	//piece
-	std::cout << pieceChar[Move::piece(m)]; 
+	std::cout << pieceChar[Move::piece(m)] << " ";
 
 	//promote piece 
-	std::cout << pieceChar[Move::promotePiece(m)]; 
+	std::cout << pieceChar[Move::promotePiece(m)] << " ";
 
 	//capture 
 	std::cout << (Move::captureFlag(m) ? 'c' : '-');
@@ -74,9 +80,9 @@ void Move::decode(const move m) {
 }
 
 constexpr int Move::sourceSquare(const move m) { return m & 0x3f; }
-constexpr int Move::targetSquare(const move m) { return m & 0xfc0 >> 6; }
-constexpr int Move::piece(const move m) { return m & 0xf000 >> 12; }
-constexpr int Move::promotePiece(const move m) { return m & 0xf0000 >> 16; }
+constexpr int Move::targetSquare(const move m) { return (m & 0xfc0) >> 6; }
+constexpr int Move::piece(const move m) { return (m & 0xf000) >> 12; }
+constexpr int Move::promotePiece(const move m) { return (m & 0xf0000) >> 16; }
 
 constexpr bool Move::captureFlag(const move m) { return m & 0x100000; }
 constexpr bool Move::doublePushFlag(const move m) { return m & 0x200000; }
@@ -118,7 +124,13 @@ constexpr void Movelist::pushBack(const move m) {
 }
 
 void Movelist::print() {
-	
+	std::cout << "printing movelist" << std::endl; 
+	std::cout << "index: " << index << std::endl; 
+
+	for (int i = 0; i < Movelist::index; ++i) {
+		Move::decode(Movelist::movelist[i]); 
+		std::cout << "\n"; 
+	}
 }
 
 
@@ -144,6 +156,7 @@ void Movelist::moveGen(const Board& board, const BoardState& boardState) {
 
 void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 
+	std::cout << "move gen white" << std::endl; 
 	//get the check mask 
 	//get the pin masks 
 	const map checkMask = Board::Get().checkMask(); 
@@ -151,6 +164,15 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	
 	const map pinMaskHV = Board::Get().pinMaskHV(); 
 	const map pinMaskDiagonal = Board::Get().pinMaskDiagonal(); 
+
+	std::cout << "checkMask: " << std::endl; 
+	printBit(checkMask); 
+
+	std::cout << "pinMaskHV: " << std::endl; 
+	printBit(pinMaskHV); 
+
+	std::cout << "pinMaskDiagonal: " << std::endl; 
+	printBit(pinMaskDiagonal); 
 
 	//start generating moves 
 	//now generate moves 
@@ -170,6 +192,7 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 
 	//double check - can only move king 
 	if (BoardState::Get().doubleCheck) {
+		std::cout << "generating moves for doublecheck" << std::endl; 
 		const int kingIndex = getlsbBitIndex(Board::Get().piece[wKing]); 
 
 		//king move noncapture 
@@ -205,63 +228,84 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//pawn push non promotion 
 	{
 		//non HV pinned 
-		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
+		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8) & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & ~checkMask;
+		std::cout << "nonHV pinned" << std::endl; 
+		//printBit(board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV); //bits that can move 
+		//printBit((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8);
+		//printBit(~(board.Get().occupancy[white] | board.Get().occupancy[black]));
+		//printBit(~Row8); 
+		//printBit(checkMask); 
+		printBit(pawns); 
+
 		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) >> 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			std::cout << "source/target squares: " << std::endl; 
+			printBit(getLsbBit(pawns) >> 8); 
+			std::cout << "lsbbitindex: " << getlsbBitIndex(getLsbBit(pawns) >> 8) << std::endl;
+			printBit(getLsbBit(pawns)); 
+			std::cout << "lsbbitindex: " << getlsbBitIndex(getLsbBit(pawns)) << std::endl;
+
+			printBit(indexSquare[47]);
+			printBit(indexSquare[55]); 
+
+
 			pawns &= pawns - 1; 
 		}
 
 		//HV pinned 
-		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
+		/*pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
+		std::cout << "HV pinned" << std::endl; 
+		printBit(pawns); 
+		
 		while (pawns){
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
 			pawns &= pawns - 1; 
-		}
+		}*/
 	}
 
 	//pawn push promotion 
-	{
-		//non HV pinned 
-		map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
-		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
+	//{
+	//	//non HV pinned 
+	//	map pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
+	//	while (pawns) {
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
 
-			pawns &= pawns - 1;
-		}
+	//		pawns &= pawns - 1;
+	//	}
 
-		//HV pinned 
-		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
-		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
+	//	//HV pinned 
+	//	pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row8 & checkMask;
+	//	while (pawns) {
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wKnight, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wRook, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wBishop, false, false, false, false));
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wQueen, false, false, false, false));
 
-			pawns &= pawns - 1;
-		}
-	}
+	//		pawns &= pawns - 1;
+	//	}
+	//}
 
 	//pawn double push 
-	{
-		//non HV pinned 
-		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
-		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
+	//{
+	//	//non HV pinned 
+	//	map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
+	//	while (pawns) {
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
 
-			pawns &= pawns - 1;
-		}
+	//		pawns &= pawns - 1;
+	//	}
 
-		//HV pinned 
-		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
-		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
+	//	//HV pinned 
+	//	pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & ~(board.Get().occupancy[white] | board.Get().occupancy[black])) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & Row4 & checkMask;
+	//	while (pawns) {
+	//		Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 16, getLsbBit(pawns), wPawn, wPawn, false, true, false, false));
 
-			pawns &= pawns - 1; 
-		}
-	}
+	//		pawns &= pawns - 1; 
+	//	}
+	//}
 
 	
 	//knight moves 
@@ -270,33 +314,34 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//separate into diagonally or HV pinned and not pinned 
 	//pinned knights cannot move 
 	
-	{
-		//source squares 
-		map knights = board.Get().piece[wKnight] & ~pinMaskDiagonal & ~pinMaskHV; 
-		while (knights) {
-			//target squares 
-			map attacks = knightAttack[getlsbBitIndex(knights)] & checkMask;
-			while (attacks) {
-				Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
+	//{
+	//	//source squares 
+	//	map knights = board.Get().piece[wKnight] & ~pinMaskDiagonal & ~pinMaskHV; 
+	//	while (knights) {
+	//		//target squares 
+	//		map attacks = knightAttack[getlsbBitIndex(knights)] & checkMask;
+	//		while (attacks) {
+	//			Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false)); 
 
-				attacks &= attacks - 1; 
-			}
-			knights &= knights - 1; 
-		}
-	}
+	//			attacks &= attacks - 1; 
+	//		}
+	//		knights &= knights - 1; 
+	//	}
+	//}
 	
 	//king moves 
 	//check if square is safe before moving 
 	//pins and check mask do no apply to the king 
-	{
-		map attacks = kingAttack[getlsbBitIndex(Board::Get().piece[wKing])]; 
-		while (attacks) {
-			if (!Board::Get().attacked(getLsbBit(attacks))) {
-				Movelist::pushBack(Move::makemove(Board::Get().piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false));
-			}
-			attacks &= attacks - 1; 
-		}
-	}
+	
+	//{
+	//	map attacks = kingAttack[getlsbBitIndex(Board::Get().piece[wKing])]; 
+	//	while (attacks) {
+	//		if (!Board::Get().attacked(getLsbBit(attacks))) {
+	//			Movelist::pushBack(Move::makemove(Board::Get().piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & Board::Get().occupancy[black], false, false, false));
+	//		}
+	//		attacks &= attacks - 1; 
+	//	}
+	//}
 
 }
 
