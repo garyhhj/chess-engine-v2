@@ -34,13 +34,6 @@ int main() {
 		Fen::parse(fentemp);
 	}
 
-	//std::string s; 
-	//for (int i = 0; i < 64; ++i) {
-	//	std::cout << "i: " << i << std::endl; 
-	//	std::cout << "lsbbitindex: " << getlsbBitIndex(indexSquare[i]) << std::endl; 
-	//	printBit(indexSquare[i]); 
-	//	std::cin >> s; 
-	//}
 
 	Board::print(); 
 
@@ -48,6 +41,8 @@ int main() {
 	ml.moveGen(Board::Get(), BoardState::Get()); 
 	
 	ml.print(); 
+
+
 
 	//map mask = Board::Get().checkMask();
 	//printBit(mask); 
@@ -102,14 +97,18 @@ int main() {
 		    a b c d e f g h*/
 	//todo: 
 	//generate moves 
+	//slider pieces 
+	//enpassant 
+	//castling 
+	
+	//might need to get rid of singleton for board and board state 
+	//need to create multiple copies of boardstates for make move/perft testing 
+	//better to change this now before taking longer to change later 
 
-	//generate legal moves 
 	//debruijin optimization for lsb bit index  
 	//make move function (make sure to change board state/enpassant flag) 
 
-	//testing leaper piece move generation 
 
-	//need to test each piece /part inidividually 
 	
 	
 
