@@ -187,12 +187,10 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//for slider pieces, if same pin as move eg. bishop and diagonal, allow movement and only check against diagonal 
 	//for slider pieces, if different pin, then it cannot be moved 
 
-	//anyways write it piece by piece and lets see what happens 
 
 
 	//double check - can only move king 
 	if (BoardState::Get().doubleCheck) {
-		std::cout << "generating moves for doublecheck" << std::endl; 
 		const int kingIndex = getlsbBitIndex(Board::Get().piece[wKing]); 
 
 		//king move noncapture 
@@ -228,39 +226,20 @@ void Movelist::moveGenWhite(const Board& board, const BoardState& boardState) {
 	//pawn push non promotion 
 	{
 		//non HV pinned 
-		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8) & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & ~checkMask;
-		std::cout << "nonHV pinned" << std::endl; 
-		//printBit(board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV); //bits that can move 
-		//printBit((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8);
-		//printBit(~(board.Get().occupancy[white] | board.Get().occupancy[black]));
-		//printBit(~Row8); 
-		//printBit(checkMask); 
-		printBit(pawns); 
-
+		map pawns = ((board.Get().piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8) & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
 		while (pawns) {
 			Movelist::pushBack(Move::makemove(getLsbBit(pawns) >> 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
-			std::cout << "source/target squares: " << std::endl; 
-			printBit(getLsbBit(pawns) >> 8); 
-			std::cout << "lsbbitindex: " << getlsbBitIndex(getLsbBit(pawns) >> 8) << std::endl;
-			printBit(getLsbBit(pawns)); 
-			std::cout << "lsbbitindex: " << getlsbBitIndex(getLsbBit(pawns)) << std::endl;
-
-			printBit(indexSquare[47]);
-			printBit(indexSquare[55]); 
-
-
+			
 			pawns &= pawns - 1; 
 		}
 
 		//HV pinned 
-		/*pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
-		std::cout << "HV pinned" << std::endl; 
-		printBit(pawns); 
-		
+		pawns = (board.Get().piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.Get().occupancy[white] | board.Get().occupancy[black]) & ~Row8 & checkMask;
 		while (pawns){
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) << 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			Movelist::pushBack(Move::makemove(getLsbBit(pawns) >> 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+		
 			pawns &= pawns - 1; 
-		}*/
+		}
 	}
 
 	//pawn push promotion 

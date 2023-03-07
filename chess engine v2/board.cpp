@@ -220,7 +220,8 @@ const uint64_t Board::IcheckMaskWhite() {
 	if (numChecks == 2) BoardState::Get().doubleCheck = true;
 	else BoardState::Get().doubleCheck = false; 
 
-	return res;
+	if (res == 0x0ull) return ~res;
+	else return res; 
 }
 const uint64_t Board::IcheckMaskBlack() {
 
