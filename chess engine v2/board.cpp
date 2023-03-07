@@ -18,18 +18,6 @@ static inline int rookMagicIndex(const uint64_t occ, int index) {
 	//return int((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
 }
 
-//
-//map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black];
-//
-//std::cout << "occ" << std::endl;
-//printBit(occ);
-//
-//int index = getlsbBitIndex(E1);
-//
-//
-//int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
-//
-//printBit(rookAttack[index][magicIndex]);
 
 /********************
 *
@@ -37,16 +25,51 @@ static inline int rookMagicIndex(const uint64_t occ, int index) {
 *
 *********************/
 
+BoardState::BoardState() 
+	: side(new int{}), enpassant(new map{}), 
+	castleRightWQ(new bool{}), castleRightWK(new bool{}), castleRightBQ(new bool{}), castleRightBK(new bool{}), 
+	doubleCheck(new bool{}) {}
+
+BoardState::BoardState(const BoardState& rhs) 
+	: side(new int{*(rhs.side)}), enpassant(new map{*(rhs.enpassant)}), 
+	castleRightWQ(new bool{*(rhs.castleRightWK)}), castleRightWK(new bool{*(rhs.castleRightWK)}), 
+	castleRightBQ(new bool{*(rhs.castleRightBQ)}), castleRightBK(new bool{*(rhs.castleRightBK)}), 
+	doubleCheck(new bool{*(rhs.doubleCheck)}) {}
+
+
+BoardState& BoardState::operator=(BoardState rhs) noexcept {
+	BoardState::swap(*this, rhs);
+
+
+	rhs.side == nullptr; 
+	rhs.enpassant = nullptr; 
+	rhs.castleRightWQ = nullptr;
+	rhs.castleRightWK = nullptr;
+	rhs.castleRightBQ = nullptr;
+	rhs.castleRightBK = nullptr;
+
+	rhs.doubleCheck = nullptr;
+}
+
 void BoardState::debug() {
 	Idebug();
 }
 
-
 void BoardState::Idebug() {
-	std::cout << "side: " << BoardState::side << "\n" <<
-		"enpassant: " <<  char('A' + getlsbBitIndex(BoardState::enpassant) % 8) << 8 - getlsbBitIndex(BoardState::enpassant) / 8 << "\n" <<
-		"doublecheck: " << (BoardState::doubleCheck ? "true" : "false") << "\n"; 
+	std::cout << "side: " << *BoardState::side << "\n" <<
+		"enpassant: " <<  char('A' + getlsbBitIndex(*BoardState::enpassant) % 8) << 8 - getlsbBitIndex(*BoardState::enpassant) / 8 << "\n" <<
+		"doublecheck: " << (*BoardState::doubleCheck ? "true" : "false") << "\n"; 
 	std::flush(std::cout);
+}
+
+void BoardState::swap(BoardState& lhs, BoardState& rhs) {
+	std::swap(lhs.side, rhs.side); 
+	std::swap(lhs.enpassant, rhs.enpassant); 
+	std::swap(lhs.castleRightWK, rhs.castleRightWK);
+	std::swap(lhs.castleRightWQ, rhs.castleRightWQ);
+	std::swap(lhs.castleRightBK, rhs.castleRightBK); 
+	std::swap(lhs.castleRightBQ, rhs.castleRightBQ); 
+	std::swap(lhs.doubleCheck, rhs.doubleCheck); 
 }
 
 
@@ -421,43 +444,43 @@ Fen& Fen::Get() {
 }
 
 
-void Fen::clear() {
-	Get().Iclear(); 
+void Fen::clear(Board& board, BoardState& boardState) {
+	Get().Iclear(board, boardState); 
 }
 
-void Fen::parse(const std::string& fen) {
-	Get().clear(); 
-	Get().Iparse(fen); 
+void Fen::parse(const std::string& fen, Board& board, BoardState& boardState) {
+	Get().clear(board, boardState); 
+	Get().Iparse(fen, board, boardState); 
 }
 
-void Fen::parseStartPosition() {
-	Get().IparseStartPosition(); 
+void Fen::parseStartPosition(Board& board, BoardState& boardState) {
+	Get().IparseStartPosition(board, boardState); 
 }
 
 
-void Fen::Iclear() {
+void Fen::Iclear(Board& board, BoardState& boardState) {
 	//BoardState
-	BoardState::Get().side = white; 
-	BoardState::Get().enpassant = 0x0ull; 
-	BoardState::Get().castleRightWQ = false;
-	BoardState::Get().castleRightWK = false; 
-	BoardState::Get().castleRightBQ = false; 
-	BoardState::Get().castleRightBK = false; 
+	boardState.side = white; 
+	boardState.enpassant = 0x0ull; 
+	boardState.castleRightWQ = false;
+	boardState.castleRightWK = false;
+	boardState.castleRightBQ = false;
+	boardState.castleRightBK = false;
 
-	BoardState::Get().doubleCheck = false;
+	boardState.doubleCheck = false;
 
 
 	//Board
 	for (int i = 0; i < 12; ++i) {
-		Board::Get().piece[i] = 0x0ull; 
+		board.piece[i] = 0x0ull; 
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		Board::Get().occupancy[i] = 0x0ull; 
+		board.occupancy[i] = 0x0ull; 
 	}
 }
 
-void Fen::Iparse(const std::string& fen) {
+void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	int index = 0; 
 
 	int positionIndex = 0; 

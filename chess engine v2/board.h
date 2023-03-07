@@ -9,25 +9,25 @@ class BoardState {
 	friend class Board; 
 	friend class Movelist; 
 public: 
-	BoardState() = default; 
-	BoardState(const BoardState&) = delete; 
+	BoardState();
+	BoardState(const BoardState& rhs); 
+	BoardState& operator=(BoardState rhs) noexcept; //uses swap idiom 
 
-	//static BoardState& Get();
-	//static void debug();
 	void debug(); 
 
 private: 
+	void swap(BoardState& lhs, BoardState& rhs); 
 	void Idebug();
 
 
-	int side; 
-	map enpassant; 
-	bool castleRightWQ; 
-	bool castleRightWK; 
-	bool castleRightBQ; 
-	bool castleRightBK; 
+	int* side; 
+	map* enpassant; 
+	bool* castleRightWQ; 
+	bool* castleRightWK; 
+	bool* castleRightBQ; 
+	bool* castleRightBK; 
 
-	bool doubleCheck; 
+	bool* doubleCheck; 
 };
 
 class Board {
@@ -37,7 +37,7 @@ public:
 	Board() = default; 
 	Board(const Board&) = delete; 
 
-	static Board& Get(); 
+	//static Board& Get(); 
 	static void print();
 	bool attacked(const uint64_t square); 
 	const uint64_t checkMask(); 
@@ -45,7 +45,6 @@ public:
 	const uint64_t pinMaskHV(); 
 
 private:
-public: 
 	bool IattackedWhite(const uint64_t square); 
 	bool IattackedBlack(const uint64_t square);
 	const uint64_t IcheckMaskWhite(); 
@@ -67,13 +66,13 @@ class Fen {
 public: 
 	static Fen& Get(); 
 
-	static void clear(); 
-	static void parse(const std::string& fen);
-	static void parseStartPosition();
+	static void clear(Board& board, BoardState& boardState); 
+	static void parse(const std::string& fen, Board& board, BoardState& boardState);
+	static void parseStartPosition(Board& board, BoardState& boardState);
 
 private: 
-	void Iclear(); 
-	void Iparse(const std::string& fen); 
-	void IparseStartPosition(); 
+	void Iclear(Board& board, BoardState& boardState);
+	void Iparse(const std::string& fen, Board& board, BoardState& boardState);
+	void IparseStartPosition(Board& board, BoardState& boardState);
 
 };

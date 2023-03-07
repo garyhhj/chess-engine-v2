@@ -31,16 +31,15 @@ int main() {
 		//std::flush(std::cout); 
 
 
-		Fen::parse(fentemp);
+		//Fen::parse(fentemp);
 	}
 
-
-	Board::print(); 
+	//Board::print(); 
 
 	Movelist ml;
-	ml.moveGen(Board::Get(), BoardState::Get()); 
+	//ml.moveGen(Board::Get(), BoardState::Get()); 
 	
-	ml.print(); 
+	//ml.print(); 
 
 
 
