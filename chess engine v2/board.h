@@ -40,15 +40,15 @@ public:
 
 	void print(const BoardState& boardState);
 	bool attacked(const uint64_t square, const BoardState& boardState);
-	const uint64_t checkMask(const BoardState& boardState); 
-	const uint64_t pinMaskDiagonal();
-	const uint64_t pinMaskHV(); 
+	const uint64_t checkMask(BoardState& boardState); 
+	const uint64_t pinMaskDiagonal(const BoardState& boardState);
+	const uint64_t pinMaskHV(const BoardState& boardState); 
 
 private:
 	bool IattackedWhite(const uint64_t square);
 	bool IattackedBlack(const uint64_t square);
-	const uint64_t IcheckMaskWhite(); 
-	const uint64_t IcheckMaskBlack(); 
+	const uint64_t IcheckMaskWhite(BoardState& boardState);
+	const uint64_t IcheckMaskBlack(BoardState& boardState);
 	const uint64_t IpinMaskDiagonalWhite(); 
 	const uint64_t IpinMaskDiagonalBlack(); 
 	const uint64_t IpinMaskHVWhite();
