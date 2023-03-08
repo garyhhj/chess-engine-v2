@@ -34,18 +34,18 @@ class Board {
 	friend class Fen; 
 	friend class Movelist; 
 public: 
-	Board() = default; 
-	Board(const Board&) = delete; 
+	Board(); 
+	Board(const Board& rhs);
+	Board& operator=(Board& rhs); 
 
-	//static Board& Get(); 
-	static void print();
-	bool attacked(const uint64_t square); 
-	const uint64_t checkMask(); 
+	void print(const BoardState& boardState);
+	bool attacked(const uint64_t square, const BoardState& boardState);
+	const uint64_t checkMask(const BoardState& boardState); 
 	const uint64_t pinMaskDiagonal();
 	const uint64_t pinMaskHV(); 
 
 private:
-	bool IattackedWhite(const uint64_t square); 
+	bool IattackedWhite(const uint64_t square);
 	bool IattackedBlack(const uint64_t square);
 	const uint64_t IcheckMaskWhite(); 
 	const uint64_t IcheckMaskBlack(); 
@@ -54,10 +54,10 @@ private:
 	const uint64_t IpinMaskHVWhite();
 	const uint64_t IpinMaskHVBlack(); 
 
-	void Iprint(); 
+	void Iprint(const BoardState& boardState);
 	//leaper pieces 
-	map piece[12]; 
-	map occupancy[2]; 
+	map* piece; //always size 12 
+	map* occupancy; //always size 2 
 };
 
 

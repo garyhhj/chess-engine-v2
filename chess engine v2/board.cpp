@@ -76,20 +76,28 @@ void BoardState::swap(BoardState& lhs, BoardState& rhs) {
 /********************
 *
 *Board
-*singleton
 *
 *********************/
 
-Board& Board::Get() {
-	static Board instance; 
-	return instance; 
+Board::Board() : piece(new map[12]), occupancy(new map[2]) {}
+
+Board::Board(const Board& rhs) 
+	: piece(new map[12]{rhs.piece[0], rhs.piece[1], rhs.piece[2], rhs.piece[3], rhs.piece[4], rhs.piece[5], rhs.piece[6], rhs.piece[7], rhs.piece[8], rhs.piece[9], rhs.piece[10], rhs.piece[11]}),
+	occupancy(new map[2]{rhs.occupancy[0], rhs.occupancy[1]}) {};
+
+Board& Board::operator=(Board& rhs) {
+	std::swap(this->piece, rhs.piece); 
+	std::swap(this->occupancy, rhs.occupancy); 
+
+	rhs.piece = nullptr; 
+	rhs.occupancy = nullptr; 
 }
 
-void Board::print() {
-	Get().Iprint(); 
+void Board::print(const BoardState& boardState) {
+	Iprint(boardState);
 }
 
-void Board::Iprint() {
+void Board::Iprint(const BoardState& boardState) {
 
 	std::cout << "\n";
 	//board 
@@ -122,28 +130,28 @@ void Board::Iprint() {
 
 	//side 
 	std::cout << "side: "; 
-	if (BoardState::Get().side == white) std::cout << "white";
+	if (*(boardState.side) == white) std::cout << "white";
 	else std::cout << "black"; 
 	std::cout << "\n"; 
 
 	//enpassant 
 	std::cout << "enpassant: ";
-	if (BoardState::Get().enpassant) {
-		std::cout << 'A' + BoardState::Get().enpassant % 8;
-		std::cout << BoardState::Get().enpassant / 8;
+	if (*boardState.enpassant) {
+		std::cout << 'A' + *boardState.enpassant % 8;
+		std::cout << *boardState.enpassant / 8;
 	}
 	else std::cout << "--"; 
 	std::cout << "\n"; 
 	
 	//castle rights 
 	std::cout << "castle right: "; 
-	if (BoardState::Get().castleRightWK) std::cout << "K";
+	if (*boardState.castleRightWK) std::cout << "K";
 	else std::cout << "-";
-	if (BoardState::Get().castleRightWQ) std::cout << "Q";
+	if (*boardState.castleRightWQ) std::cout << "Q";
 	else std::cout << "-"; 
-	if (BoardState::Get().castleRightBK) std::cout << "k";
+	if (*boardState.castleRightBK) std::cout << "k";
 	else std::cout << "-"; 
-	if (BoardState::Get().castleRightBQ) std::cout << "q";
+	if (*boardState.castleRightBQ) std::cout << "q";
 	else std::cout << "-"; 
 	std::cout << "\n\n"; 
 
@@ -151,8 +159,8 @@ void Board::Iprint() {
 }
 
 
-bool Board::attacked(const uint64_t square) {
-	return (BoardState::Get().side == white ? Board::Get().IattackedWhite(square) : Board::Get().IattackedBlack(square) ); 
+bool Board::attacked(const uint64_t square, const BoardState& boardState) {
+	return (*boardState.side == white ? Board::IattackedWhite(square) : Board::IattackedBlack(square) ); 
 }
 
 //square is attack while white's turn 
@@ -162,13 +170,13 @@ bool Board::IattackedWhite(const uint64_t square) {
 
 	return
 		//leapers
-		pawnAttack[white][index] & Board::Get().piece[bPawn] |
-		knightAttack[index] & Board::Get().piece[bKnight] |
-		kingAttack[index] & Board::Get().piece[bKing] |
+		pawnAttack[white][index] & Board::piece[bPawn] |
+		knightAttack[index] & Board::piece[bKnight] |
+		kingAttack[index] & Board::piece[bKing] |
 		
 		//sliders
-		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bBishop] | Board::Get().piece[bQueen]) | 
-		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[bRook] | Board::Get().piece[bQueen]); 
+		bishopAttack[index][bishopMagicIndex(Board::occupancy[white] | Board::occupancy[black], index)] & (Board::piece[bBishop] | Board::piece[bQueen]) | 
+		rookAttack[index][rookMagicIndex(Board::occupancy[white] | Board::occupancy[black], index)] & (Board::piece[bRook] | Board::piece[bQueen]); 
 }
 
 //square is attacked while black's turn 
@@ -176,13 +184,13 @@ bool Board::IattackedBlack(const uint64_t square) {
 	const int index = getlsbBitIndex(square); 
 	return
 		//leapers
-		pawnAttack[black][index] & Board::Get().piece[wPawn] |
-		knightAttack[index] & Board::Get().piece[wKnight] |
-		kingAttack[index] & Board::Get().piece[wKing] |
+		pawnAttack[black][index] & Board::piece[wPawn] |
+		knightAttack[index] & Board::piece[wKnight] |
+		kingAttack[index] & Board::piece[wKing] |
 
 		//sliders 
-		bishopAttack[index][bishopMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wBishop] | Board::Get().piece[wQueen]) |
-		rookAttack[index][rookMagicIndex(Board::Get().occupancy[white] | Board::Get().occupancy[black], index)] & (Board::Get().piece[wRook] | Board::Get().piece[wQueen]);
+		bishopAttack[index][bishopMagicIndex(Board::occupancy[white] | Board::occupancy[black], index)] & (Board::piece[wBishop] | Board::piece[wQueen]) |
+		rookAttack[index][rookMagicIndex(Board::occupancy[white] | Board::occupancy[black], index)] & (Board::piece[wRook] | Board::piece[wQueen]);
 }
 
 const uint64_t Board::checkMask() {
