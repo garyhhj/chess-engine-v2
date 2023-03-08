@@ -70,7 +70,7 @@ void BoardState::debug() {
 }
 
 void BoardState::Idebug() {
-	std::cout << "side: " << *BoardState::side << "\n" <<
+	std::cout << "side: " << (*BoardState::side == white ? "white" : "black") << "\n" <<
 		"enpassant: " <<  char('A' + getlsbBitIndex(*BoardState::enpassant) % 8) << 8 - getlsbBitIndex(*BoardState::enpassant) / 8 << "\n" <<
 		"doublecheck: " << (*BoardState::doubleCheck ? "true" : "false") << "\n"; 
 	std::flush(std::cout);
@@ -623,10 +623,8 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 		++index;
 	}
 	if (index - enpassantStart == 2) {
-		int mapIndex = (fen[enpassantStart] - 'a') + 8 * ('8' - fen[uint64_t(enpassantStart) + 1]);
+		const int mapIndex = (fen[enpassantStart] - 'a') + 8 * ('8' - fen[uint64_t(enpassantStart) + 1]);
 		*boardState.enpassant = indexSquare[mapIndex];
-
-		printBit(indexSquare[mapIndex]); 
 	}
 
 }

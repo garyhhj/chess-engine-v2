@@ -374,7 +374,7 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		map knights = board.piece[wKnight] & ~pinMaskDiagonal & ~pinMaskHV; 
 		while (knights) {
 			//target squares 
-			map attacks = knightAttack[getlsbBitIndex(knights)] & checkMask;
+			map attacks = knightAttack[getlsbBitIndex(knights)] & checkMask & ~board.occupancy[white];
 			while (attacks) {
 				Movelist::pushBack(Move::makemove(getLsbBit(knights), getLsbBit(attacks), wKnight, wPawn, getLsbBit(attacks) & board.occupancy[black], false, false, false)); 
 
