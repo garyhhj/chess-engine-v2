@@ -469,14 +469,14 @@ void Fen::parseStartPosition(Board& board, BoardState& boardState) {
 
 void Fen::Iclear(Board& board, BoardState& boardState) {
 	//BoardState
-	boardState.side = white; 
-	boardState.enpassant = 0x0ull; 
-	boardState.castleRightWQ = false;
-	boardState.castleRightWK = false;
-	boardState.castleRightBQ = false;
-	boardState.castleRightBK = false;
+	*boardState.side = white; 
+	*boardState.enpassant = 0x0ull; 
+	*boardState.castleRightWQ = false;
+	*boardState.castleRightWK = false;
+	*boardState.castleRightBQ = false;
+	*boardState.castleRightBK = false;
 
-	boardState.doubleCheck = false;
+	*boardState.doubleCheck = false;
 
 
 	//Board
@@ -499,27 +499,27 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 		if ('a' <= fen[index] && fen[index] <= 'z') {
 			switch (fen[index]) {
 			case 'p':
-				Board::Get().piece[bPawn] |= indexSquare[positionIndex];
+				board.piece[bPawn] |= indexSquare[positionIndex];
 				break;
 			case 'n':
-				Board::Get().piece[bKnight] |= indexSquare[positionIndex];
+				board.piece[bKnight] |= indexSquare[positionIndex];
 				break;
 			case 'b':
-				Board::Get().piece[bBishop] |= indexSquare[positionIndex];
+				board.piece[bBishop] |= indexSquare[positionIndex];
 				break;
 			case 'r':
-				Board::Get().piece[bRook] |= indexSquare[positionIndex];
+				board.piece[bRook] |= indexSquare[positionIndex];
 				break;
 			case 'q':
-				Board::Get().piece[bQueen] |= indexSquare[positionIndex];
+				board.piece[bQueen] |= indexSquare[positionIndex];
 				break;
 			case 'k':
-				Board::Get().piece[bKing] |= indexSquare[positionIndex];
+				board.piece[bKing] |= indexSquare[positionIndex];
 				break;
 			}
 
 			//set occupancy 
-			Board::Get().occupancy[black] |= indexSquare[positionIndex];
+			board.occupancy[black] |= indexSquare[positionIndex];
 
 			//increment index 
 			++positionIndex;
@@ -530,27 +530,27 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 		else if ('A' <= fen[index] && fen[index] <= 'Z') {
 			switch (fen[index]) {
 			case 'P':
-				Board::Get().piece[wPawn] |= indexSquare[positionIndex];
+				board.piece[wPawn] |= indexSquare[positionIndex];
 				break;
 			case 'N':
-				Board::Get().piece[wKnight] |= indexSquare[positionIndex];
+				board.piece[wKnight] |= indexSquare[positionIndex];
 				break;
 			case 'B':
-				Board::Get().piece[wBishop] |= indexSquare[positionIndex];
+				board.piece[wBishop] |= indexSquare[positionIndex];
 				break;
 			case 'R':
-				Board::Get().piece[wRook] |= indexSquare[positionIndex];
+				board.piece[wRook] |= indexSquare[positionIndex];
 				break;
 			case 'Q':
-				Board::Get().piece[wQueen] |= indexSquare[positionIndex];
+				board.piece[wQueen] |= indexSquare[positionIndex];
 				break;
 			case 'K':
-				Board::Get().piece[wKing] |= indexSquare[positionIndex];
+				board.piece[wKing] |= indexSquare[positionIndex];
 				break;
 			}
 			
 			//set occupancy 
-			Board::Get().occupancy[white] |= indexSquare[positionIndex];
+			board.occupancy[white] |= indexSquare[positionIndex];
 
 			//increment index 
 			++positionIndex;
@@ -570,8 +570,8 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	//std::cout << "index: " << index << std::endl;
 
 	//side t0 move 
-	if (fen[index] == 'b') BoardState::Get().side = black;
-	else BoardState::Get().side = white;
+	if (fen[index] == 'b') *boardState.side = black;
+	else *boardState.side = white;
 	index += 2; 
 
 	//std::cout << "index: " << index << std::endl; 
@@ -580,16 +580,16 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	while (fen[index] != ' ') {
 		switch (fen[index]) {
 		case 'K':
-			BoardState::Get().castleRightWK = true;
+			*boardState.castleRightWK = true;
 			break;
 		case 'Q':
-			BoardState::Get().castleRightWQ = true;
+			*boardState.castleRightWQ = true;
 			break;
 		case 'k':
-			BoardState::Get().castleRightBK = true;
+			*boardState.castleRightBK = true;
 			break;
 		case 'q':
-			BoardState::Get().castleRightBQ = true;
+			*boardState.castleRightBQ = true;
 			break;
 		}
 		++index;
@@ -610,8 +610,8 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 
 }
 
-void Fen::IparseStartPosition() {
-	parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ");
+void Fen::IparseStartPosition(Board& board, BoardState& boardState) {
+	parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ", board, boardState);
 }
 
 
