@@ -35,9 +35,7 @@ move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int
 }
 
 void Move::decode(const move m) {
-	//print out everything in order?
 	
-	using namespace std;
 	std::cout << "move: ";
 
 	//sourceSquare 

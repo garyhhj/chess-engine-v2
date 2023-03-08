@@ -158,8 +158,8 @@ void Board::Iprint(const BoardState& boardState) const{
 	//enpassant 
 	std::cout << "enpassant: ";
 	if (*boardState.enpassant) {
-		std::cout << 'A' + *boardState.enpassant % 8;
-		std::cout << *boardState.enpassant / 8;
+		std::cout << char('A' + getlsbBitIndex(*boardState.enpassant) % 8);
+		std::cout << 8 - getlsbBitIndex(*boardState.enpassant) / 8;
 	}
 	else std::cout << "--"; 
 	std::cout << "\n"; 
@@ -623,10 +623,10 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 		++index;
 	}
 	if (index - enpassantStart == 2) {
-		//int rank = fen[enpassantStart + 1] - '0';
-		//int file = fen[enpassantStart] - 'a';
+		int mapIndex = (fen[enpassantStart] - 'a') + 8 * ('8' - fen[uint64_t(enpassantStart) + 1]);
+		*boardState.enpassant = indexSquare[mapIndex];
 
-		//BoardState::Get().enpassant = 8 * (8 - rank) + file;
+		printBit(indexSquare[mapIndex]); 
 	}
 
 }

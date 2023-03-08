@@ -12,6 +12,9 @@
 
 int main() {
 
+	Board board; 
+	BoardState boardState; 
+
 	{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
@@ -31,16 +34,14 @@ int main() {
 		//std::flush(std::cout); 
 
 
-		//Fen::parse(fentemp);
+		Fen::parse(fenK, board, boardState);
 	}
+
+	board.print(boardState); 
+	boardState.debug(); 
 
 	//Board::print();
 
-	Board b;
-	BoardState bs; 
-	const map lol = b.checkMask(bs);
-
-	Movelist ml;
 	//ml.moveGen(Board::Get(), BoardState::Get()); 
 	
 	//ml.print(); 
@@ -104,14 +105,10 @@ int main() {
 	//enpassant 
 	//castling 
 	
-	//might need to get rid of singleton for board and board state 
-	//need to create multiple copies of boardstates for make move/perft testing 
-	//better to change this now before taking longer to change later 
 
-	//swap out get with board/boardstate 
+	//test out current functions for generating moves after refactoring 
 
-	//need to remake singleton after by removing singleton 
-	//make get not return any single instance but that instance 
+	//fix fen parse to correctly handle enpassant square 
 
 	//debruijin optimization for lsb bit index  
 	//make move function (make sure to change board state/enpassant flag) 
