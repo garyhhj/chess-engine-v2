@@ -450,6 +450,42 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 
 			bishops &= bishops - 1;
 		}
+	}
+
+	//rook moves 
+	//diagonally pinned rook cannot move 
+	//HV pinned rook can move along the pin 
+	{
+		//non HV pinned 
+		map rooks = board.piece[wRook] & ~pinMaskDiagonal & ~pinMaskHV; 
+		while (rooks) {
+			map targetSquares = rookAttack[getlsbBitIndex(rooks)][rookMagicIndex(occ, getlsbBitIndex(rooks))] & checkMask & ~board.occupancy[white]; 
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(rooks), getLsbBit(targetSquares), wRook, wPawn, getLsbBit(targetSquares)& board.occupancy[black], false, false, false)); 
+
+				targetSquares &= targetSquares - 1; 
+			}
+
+			rooks &= rooks - 1; 
+		}
+		
+		//HV pinned 
+		rooks = board.piece[wRook] & ~pinMaskDiagonal & pinMaskHV; 
+		while (rooks) {
+			map targetSquares = rookAttack[getlsbBitIndex(rooks)][rookMagicIndex(occ, getlsbBitIndex(rooks))] & checkMask & ~board.occupancy[white] & pinMaskHV; 
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(rooks), getLsbBit(targetSquares), wRook, wPawn, getLsbBit(targetSquares)& board.occupancy[black], false, false, false));
+
+				targetSquares &= targetSquares - 1; 
+			}
+
+			rooks &= rooks - 1; 
+		}
+	}
+
+	//queen moves 
+	//same as rook and bishop moves 
+	{
 
 	}
 
