@@ -1,8 +1,27 @@
 #include "movelist.h"
 
+
+/********************
+*
+*Utils
+*
+*********************/
+
 static consteval auto compileTime(auto val) {
 	return val;
 }
+
+static inline int bishopMagicIndex(const uint64_t occ, int index) {
+	return ((occ & relevantBishopBlocker[index]) * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index]));
+}
+
+static inline int rookMagicIndex(const uint64_t occ, int index) {
+	return ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+
+
+	//return int((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+}
+
 
 /********************
 *
@@ -163,6 +182,8 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	
 	const map pinMaskHV = board.pinMaskHV(boardState); 
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState); 
+
+	const map occ = board.occupancy[white] | board.occupancy[black]; 
 
 	std::cout << "checkMask: " << std::endl; 
 	printBit(checkMask); 
@@ -398,6 +419,38 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 			}
 			attacks &= attacks - 1; 
 		}
+	}
+
+	//bishop moves 
+	//hv pinned bishop cannot move 
+	//diagonally pinned bishop can move along the pin 
+	{
+		//non diagonally pinned 
+		map bishops = board.piece[wBishop] & ~pinMaskHV & ~pinMaskDiagonal;
+		while (bishops) {
+			map targetSquares = bishopAttack[getlsbBitIndex(bishops)][bishopMagicIndex(occ, getlsbBitIndex(bishops))] & checkMask & ~board.occupancy[white];
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(bishops), getLsbBit(targetSquares), wBishop, wPawn, getLsbBit(targetSquares)& board.occupancy[black], false, false, false)); 
+
+				targetSquares &= targetSquares - 1; 
+			}
+
+			bishops &= bishops - 1; 
+		}
+
+		//diagonally pinned 
+		bishops = board.piece[wBishop] & ~pinMaskHV & pinMaskDiagonal; 
+		while (bishops) {
+			map targetSquares = bishopAttack[getlsbBitIndex(bishops)][bishopMagicIndex(occ, getlsbBitIndex(bishops))] & checkMask & ~board.occupancy[white] & pinMaskDiagonal;
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(bishops), getLsbBit(targetSquares), wBishop, wPawn, getLsbBit(targetSquares) & board.occupancy[black], false, false, false));
+
+				targetSquares &= targetSquares - 1;
+			}
+
+			bishops &= bishops - 1;
+		}
+
 	}
 
 }
