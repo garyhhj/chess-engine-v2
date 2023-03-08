@@ -34,7 +34,11 @@ int main() {
 		//Fen::parse(fentemp);
 	}
 
-	//Board::print(); 
+	//Board::print();
+
+	Board b;
+	BoardState bs; 
+	const map lol = b.checkMask(bs);
 
 	Movelist ml;
 	//ml.moveGen(Board::Get(), BoardState::Get()); 

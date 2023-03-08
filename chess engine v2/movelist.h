@@ -39,14 +39,14 @@ public:
 	Movelist& operator=(Movelist& rhs);
 	~Movelist(); 
 
-	void moveGen(const Board& board, const BoardState& boardState);
+	void moveGen(const Board& board, BoardState& boardState);
 	constexpr void pushBack(const move m); 
 	void print(); 
 
 private:
 	void swap(Movelist& m1, Movelist& m2); 
-	void moveGenWhite(const Board& board, const BoardState& boardState);
-	void moveGenBlack(const Board& board, const BoardState& boardState);
+	void moveGenWhite(const Board& board, BoardState& boardState);
+	void moveGenBlack(const Board& board, BoardState& boardState);
 
 	move* movelist;
 	int index; 

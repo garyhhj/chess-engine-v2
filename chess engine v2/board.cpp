@@ -49,6 +49,8 @@ BoardState& BoardState::operator=(BoardState rhs) noexcept {
 	rhs.castleRightBK = nullptr;
 
 	rhs.doubleCheck = nullptr;
+
+	return *this; 
 }
 
 BoardState::~BoardState() {
@@ -103,6 +105,8 @@ Board& Board::operator=(Board& rhs) {
 
 	rhs.piece = nullptr; 
 	rhs.occupancy = nullptr; 
+
+	return *this; 
 }
 
 Board::~Board() {
@@ -110,11 +114,11 @@ Board::~Board() {
 	delete[] Board::occupancy; 
 }
 
-void Board::print(const BoardState& boardState) {
+void Board::print(const BoardState& boardState) const {
 	Iprint(boardState);
 }
 
-void Board::Iprint(const BoardState& boardState) {
+void Board::Iprint(const BoardState& boardState) const{
 
 	std::cout << "\n";
 	//board 
@@ -176,12 +180,12 @@ void Board::Iprint(const BoardState& boardState) {
 }
 
 
-bool Board::attacked(const uint64_t square, const BoardState& boardState) {
+bool Board::attacked(const uint64_t square, const BoardState& boardState) const{
 	return (*boardState.side == white ? Board::IattackedWhite(square) : Board::IattackedBlack(square) ); 
 }
 
 //square is attack while white's turn 
-bool Board::IattackedWhite(const uint64_t square) {
+bool Board::IattackedWhite(const uint64_t square) const{
 	const int index = getlsbBitIndex(square); 
 
 
@@ -197,7 +201,7 @@ bool Board::IattackedWhite(const uint64_t square) {
 }
 
 //square is attacked while black's turn 
-bool Board::IattackedBlack(const uint64_t square) {
+bool Board::IattackedBlack(const uint64_t square) const{
 	const int index = getlsbBitIndex(square); 
 	return
 		//leapers
@@ -210,12 +214,12 @@ bool Board::IattackedBlack(const uint64_t square) {
 		rookAttack[index][rookMagicIndex(Board::occupancy[white] | Board::occupancy[black], index)] & (Board::piece[wRook] | Board::piece[wQueen]);
 }
 
-const uint64_t Board::checkMask(BoardState& boardState) {
+const uint64_t Board::checkMask(BoardState& boardState) const{
 	return (*boardState.side == white ? Board::IcheckMaskWhite(boardState) : Board::IcheckMaskBlack(boardState)); 
 }
 
 //return check mask for white's turn 
-const uint64_t Board::IcheckMaskWhite(BoardState& boardState) {
+const uint64_t Board::IcheckMaskWhite(BoardState& boardState) const{
 	//if (!Board::attacked(Board::Get().piece[wKing])) return 0x0ull; 
 
 	const int index = getlsbBitIndex(Board::piece[wKing]);
@@ -265,7 +269,7 @@ const uint64_t Board::IcheckMaskWhite(BoardState& boardState) {
 	if (res == 0x0ull) return ~res;
 	else return res; 
 }
-const uint64_t Board::IcheckMaskBlack(BoardState& boardState) {
+const uint64_t Board::IcheckMaskBlack(BoardState& boardState) const{
 
 	const int index = getlsbBitIndex(Board::piece[bKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
@@ -315,12 +319,12 @@ const uint64_t Board::IcheckMaskBlack(BoardState& boardState) {
 	else return res;
 }
 
-const uint64_t Board::pinMaskDiagonal(const BoardState& boardState) {
+const uint64_t Board::pinMaskDiagonal(const BoardState& boardState) const{
 	return (*boardState.side == white ? Board::IpinMaskDiagonalWhite() : Board::IpinMaskDiagonalBlack()); 
 }
 
 //pin mask during white's turn (when white is about to make move) 
-const uint64_t Board::IpinMaskDiagonalWhite() {
+const uint64_t Board::IpinMaskDiagonalWhite() const{
 
 	const int index = getlsbBitIndex(Board::piece[wKing]); 
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black]; 
@@ -353,7 +357,7 @@ const uint64_t Board::IpinMaskDiagonalWhite() {
 	return res; 
 }
 
-const uint64_t Board::IpinMaskDiagonalBlack() {
+const uint64_t Board::IpinMaskDiagonalBlack() const{
 	
 	const int index = getlsbBitIndex(Board::piece[bKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
@@ -386,12 +390,12 @@ const uint64_t Board::IpinMaskDiagonalBlack() {
 	return res;
 }
 
-const uint64_t Board::pinMaskHV(const BoardState& boardState) {
+const uint64_t Board::pinMaskHV(const BoardState& boardState) const{
 	return (*boardState.side == white ? Board::IpinMaskHVWhite() : Board::IpinMaskHVBlack()); 
 }
 
 //horizontal/veritcal pinmask during white's turn 
-const uint64_t Board::IpinMaskHVWhite() {
+const uint64_t Board::IpinMaskHVWhite() const{
 	const int index = getlsbBitIndex(Board::piece[wKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
 	uint64_t res = 0x0ull;
@@ -424,7 +428,7 @@ const uint64_t Board::IpinMaskHVWhite() {
 }
 
 //return horizontal/veritcal pin mask during black's turn 
-const uint64_t Board::IpinMaskHVBlack() {
+const uint64_t Board::IpinMaskHVBlack() const{
 	const int index = getlsbBitIndex(Board::piece[bKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
 	uint64_t res = 0x0ull;

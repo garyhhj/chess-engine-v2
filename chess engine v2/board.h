@@ -41,23 +41,24 @@ public:
 	Board& operator=(Board& rhs); //uses swap idom 
 	~Board(); 
 
-	void print(const BoardState& boardState);
-	bool attacked(const uint64_t square, const BoardState& boardState);
-	const uint64_t checkMask(BoardState& boardState); 
-	const uint64_t pinMaskDiagonal(const BoardState& boardState);
-	const uint64_t pinMaskHV(const BoardState& boardState); 
+	void print(const BoardState& boardState) const;
+	bool attacked(const uint64_t square, const BoardState& boardState) const;
+	const uint64_t checkMask(BoardState& boardState) const; 
+	const uint64_t pinMaskDiagonal(const BoardState& boardState) const;
+	const uint64_t pinMaskHV(const BoardState& boardState) const; 
 
 private:
-	bool IattackedWhite(const uint64_t square);
-	bool IattackedBlack(const uint64_t square);
-	const uint64_t IcheckMaskWhite(BoardState& boardState);
-	const uint64_t IcheckMaskBlack(BoardState& boardState);
-	const uint64_t IpinMaskDiagonalWhite(); 
-	const uint64_t IpinMaskDiagonalBlack(); 
-	const uint64_t IpinMaskHVWhite();
-	const uint64_t IpinMaskHVBlack(); 
+	void Iprint(const BoardState& boardState) const;
 
-	void Iprint(const BoardState& boardState);
+	bool IattackedWhite(const uint64_t square) const;
+	bool IattackedBlack(const uint64_t square) const;
+	const uint64_t IcheckMaskWhite(BoardState& boardState) const;
+	const uint64_t IcheckMaskBlack(BoardState& boardState) const;
+	const uint64_t IpinMaskDiagonalWhite() const; 
+	const uint64_t IpinMaskDiagonalBlack() const; 
+	const uint64_t IpinMaskHVWhite() const;
+	const uint64_t IpinMaskHVBlack() const; 
+
 	//leaper pieces 
 	map* piece; //always size 12 
 	map* occupancy; //always size 2 
