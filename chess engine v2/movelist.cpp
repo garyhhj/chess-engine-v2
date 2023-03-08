@@ -486,7 +486,65 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	//queen moves 
 	//same as rook and bishop moves 
 	{
+		//diagonals 
+		//non diagonally pinned 
+		map queens = board.piece[wQueen] & ~pinMaskHV & ~pinMaskDiagonal;
+		while (queens) {
+			map targetSquares = bishopAttack[getlsbBitIndex(queens)][bishopMagicIndex(occ, getlsbBitIndex(queens))] & checkMask & ~board.occupancy[white];
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(queens), getLsbBit(targetSquares), wQueen, wPawn, getLsbBit(targetSquares) & board.occupancy[black], false, false, false));
 
+				targetSquares &= targetSquares - 1;
+			}
+
+			queens &= queens - 1;
+		}
+
+		//diagonally pinned 
+		queens = board.piece[wBishop] & ~pinMaskHV & pinMaskDiagonal;
+		while (queens) {
+			map targetSquares = bishopAttack[getlsbBitIndex(queens)][bishopMagicIndex(occ, getlsbBitIndex(queens))] & checkMask & ~board.occupancy[white] & pinMaskDiagonal;
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(queens), getLsbBit(targetSquares), wQueen, wPawn, getLsbBit(targetSquares) & board.occupancy[black], false, false, false));
+
+				targetSquares &= targetSquares - 1;
+			}
+
+			queens &= queens - 1;
+		}
+
+
+		//HVs 
+		//non HV pinned 
+		queens = board.piece[wQueen] & ~pinMaskDiagonal & ~pinMaskHV;
+		while (queens) {
+			map targetSquares = rookAttack[getlsbBitIndex(queens)][rookMagicIndex(occ, getlsbBitIndex(queens))] & checkMask & ~board.occupancy[white];
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(queens), getLsbBit(targetSquares), wQueen, wPawn, getLsbBit(targetSquares) & board.occupancy[black], false, false, false));
+
+				targetSquares &= targetSquares - 1;
+			}
+
+			queens &= queens - 1;
+		}
+
+		//HV pinned 
+		queens = board.piece[wRook] & ~pinMaskDiagonal & pinMaskHV;
+		while (queens) {
+			map targetSquares = rookAttack[getlsbBitIndex(queens)][rookMagicIndex(occ, getlsbBitIndex(queens))] & checkMask & ~board.occupancy[white] & pinMaskHV;
+			while (targetSquares) {
+				Movelist::pushBack(Move::makemove(getLsbBit(queens), getLsbBit(targetSquares), wRook, wPawn, getLsbBit(targetSquares) & board.occupancy[black], false, false, false));
+
+				targetSquares &= targetSquares - 1;
+			}
+
+			queens &= queens - 1;
+		}
+	}
+
+	//castle moves 
+	{
+		
 	}
 
 }
