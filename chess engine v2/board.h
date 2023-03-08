@@ -12,6 +12,8 @@ public:
 	BoardState();
 	BoardState(const BoardState& rhs); 
 	BoardState& operator=(BoardState rhs) noexcept; //uses swap idiom 
+	~BoardState(); 
+	
 
 	void debug(); 
 
@@ -36,7 +38,8 @@ class Board {
 public: 
 	Board(); 
 	Board(const Board& rhs);
-	Board& operator=(Board& rhs); 
+	Board& operator=(Board& rhs); //uses swap idom 
+	~Board(); 
 
 	void print(const BoardState& boardState);
 	bool attacked(const uint64_t square, const BoardState& boardState);

@@ -51,6 +51,18 @@ BoardState& BoardState::operator=(BoardState rhs) noexcept {
 	rhs.doubleCheck = nullptr;
 }
 
+BoardState::~BoardState() {
+	delete BoardState::side;
+	delete BoardState::enpassant;
+
+	delete BoardState::castleRightBK;
+	delete BoardState::castleRightBQ;
+	delete BoardState::castleRightWK;
+	delete BoardState::castleRightWQ;
+	delete BoardState::doubleCheck;
+}
+
+
 void BoardState::debug() {
 	Idebug();
 }
@@ -91,6 +103,11 @@ Board& Board::operator=(Board& rhs) {
 
 	rhs.piece = nullptr; 
 	rhs.occupancy = nullptr; 
+}
+
+Board::~Board() {
+	delete[] Board::piece; 
+	delete[] Board::occupancy; 
 }
 
 void Board::print(const BoardState& boardState) {
