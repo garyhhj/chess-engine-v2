@@ -542,9 +542,31 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		}
 	}
 
+	
 	//castle moves 
+	//Neither the king nor the rook has previously moved. - kept track through castle flag 
+	//There are no pieces between the king and the rook. - check occupancy 
+	//The king is not currently in check. - check if all bits in check mask is 1... therefore 0xffff....  
+	//The king does not pass through or finish on a square that is attacked by an enemy piece. - check attacked on certain squares 
 	{
-		
+		if (boardState.castleRightWK && !(occ & (F1 | G1)) && checkMask == ~0x0ull && !board.attacked(F1, boardState) && !board.attacked(G1, boardState)) {
+			Movelist::pushBack(Move::makemove(map(E1), map(G1), wKing, wPawn, false, false, false, true)); 
+		}
+
+		if (boardState.castleRightWQ && !(occ & (D1 | C1 | B1)) && checkMask == ~0x0ull && !board.attacked(D1, boardState) && !board.attacked(C1, boardState)) {
+			Movelist::pushBack(Move::makemove(map(E1), map(C1), wKing, wPawn, false, false, false, true)); 
+		}
+
+		//  8   r n b q k b n r
+		//	7   p p p p r p p p
+		//	6   0 0 0 0 0 0 0 0
+		//	5   0 0 0 0 0 0 0 0
+		//	4   0 0 0 0 0 0 0 b
+		//	3   0 0 0 0 0 0 0 0
+		//	2   0 0 0 0 R R 0 0
+		//	1   0 N 0 Q K 0 N 0
+
+		//		a b c d e f g h
 	}
 
 }

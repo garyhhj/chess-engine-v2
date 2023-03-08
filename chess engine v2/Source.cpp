@@ -24,7 +24,7 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp = "rnbqkbnr/pppprppp/8/8/7b/8/4RR2/1N1QK1N1 w KQkq - 0 1 ";
+		string fentemp = "rnbqkbnr/pppprppp/8/8/7b/8/4RR2/R3K2R w KQkq - 0 1 ";
 
 
 		//for (int i = 0; i < fentemp.size(); ++i) {
@@ -45,20 +45,8 @@ int main() {
 
 	ml.print(); 
 
-
-	//ml.moveGen(Board::Get(), BoardState::Get()); 
 	
-	//ml.print(); 
-
-
-
-	//map mask = Board::Get().checkMask();
-	//printBit(mask); 
-	//BoardState::debug(); 
-
-	/*map mask = Board::Get().checkMask(); 
-	printBit(mask); 
-	BoardState::debug(); */
+	
 
 	//print to test debug 
 
