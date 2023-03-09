@@ -1,8 +1,9 @@
 #pragma once
 #include "macro.h"
 #include "attackTable.h"
-
 #include <string>
+
+class Movelist; 
 
 class BoardState {
 	friend class Fen; 
@@ -47,6 +48,8 @@ public:
 	const uint64_t pinMaskDiagonal(const BoardState& boardState) const;
 	const uint64_t pinMaskHV(const BoardState& boardState) const; 
 
+	void makemove(move move, BoardState& boardState); 
+
 private:
 	void Iprint(const BoardState& boardState) const;
 
@@ -58,6 +61,9 @@ private:
 	const uint64_t IpinMaskDiagonalBlack() const; 
 	const uint64_t IpinMaskHVWhite() const;
 	const uint64_t IpinMaskHVBlack() const; 
+	void Imakemovewhite(move move, BoardState& boardState);
+	void Imakemoveblack(move move, BoardState& boardState);
+
 
 	//leaper pieces 
 	map* piece; //always size 12 

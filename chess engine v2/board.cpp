@@ -634,3 +634,43 @@ void Fen::IparseStartPosition(Board& board, BoardState& boardState) {
 }
 
 
+void Board::makemove(move move, BoardState& boardState) {
+	*boardState.side == white ? Board::Imakemovewhite(move, boardState) : Board::Imakemoveblack(move, boardState); 
+}
+
+void Board::Imakemovewhite(move move, BoardState& boardState) {
+
+	//const int piece = Move::piece(move);
+	//popBit(Board::piece[piece], Move::sourceSquare(move));
+	//setBit(Board::piece[piece], Move::targetSquare(move));
+
+	////promotions
+	//if (Move::promotePiece(move) != wPawn) {
+	//	popBit(Board::piece[piece], Move::targetSquare(move));
+	//	setBit(Board::piece[Move::promotePiece(move)], Move::targetSquare(move));
+	//}
+
+	//
+	//if (Move::captureFlag(move)) {
+	//	//remove captured black piece 
+	//}
+
+	//
+
+	//constexpr bool captureFlag(const move m);
+	//constexpr bool doublePushFlag(const move m);
+	//constexpr bool enpassantFlag(const move m);
+	//constexpr bool castlingFlag(const move m);
+
+
+	//iterate through the other side and remove bit from bitboard if it is a capture regardless? 
+
+
+
+	//change boardState
+}
+
+
+void Board::Imakemoveblack(move move, BoardState& boardState) {
+
+}

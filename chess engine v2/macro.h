@@ -26,6 +26,35 @@ consteval auto compileTime(auto val);
 
 extern void printBit(const uint64_t bit);
 
+/********************
+*
+*	Move
+*
+*********************/
+
+typedef uint32_t move;
+
+namespace Move {
+	move makemove(int sourceSquare, int targetSquare, int piece, int promotePiece,
+		bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
+
+	move makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int promotePiece,
+		bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag);
+
+	void decode(const move m);
+
+
+	constexpr int sourceSquare(const move m);
+	constexpr int targetSquare(const move m);
+	constexpr int piece(const move m);
+	constexpr int promotePiece(const move m);
+
+	constexpr bool captureFlag(const move m);
+	constexpr bool doublePushFlag(const move m);
+	constexpr bool enpassantFlag(const move m);
+	constexpr bool castlingFlag(const move m);
+
+};
 
 
 /********************
@@ -155,6 +184,7 @@ const map HFile = H8 | H7 | H6 | H5 | H4 | H3 | H2 | H1;
 const map Row1 = A1 | B1 | C1 | D1 | E1 | F1 | G1 | H1; 
 const map Row2 = A2 | B2 | C2 | D2 | E2 | F2 | G2 | H2;
 const map Row4 = A4 | B4 | C4 | D4 | E4 | F4 | G4 | H4;
+const map Row5 = A5 | B5 | C5 | D5 | E5 | F5 | G5 | H5;
 const map Row7 = A7 | B7 | C7 | D7 | E7 | F7 | G7 | H7;
 const map Row8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
 

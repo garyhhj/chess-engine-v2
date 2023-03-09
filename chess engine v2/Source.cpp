@@ -24,7 +24,8 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp = "rnbqkbnr/pppprppp/8/8/7b/8/4RR2/R3K2R w KQkq - 0 1 ";
+		string fentemp = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1 ";
+
 
 
 		//for (int i = 0; i < fentemp.size(); ++i) {
@@ -92,7 +93,18 @@ int main() {
 
 		    a b c d e f g h*/
 	//todo: 
-	//write move generate for black side 
+	
+	//two options, one is to test each of move generation for black individually 
+
+	//another is to write make move and perft test 
+
+	//then use perft test to filter out bugs 
+
+	//I am more down with make move and perft test 
+
+	//make move function for the board class? 
+
+	//how will perft test work? 
 
 
 

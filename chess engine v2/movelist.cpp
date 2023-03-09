@@ -1,6 +1,7 @@
 #include "movelist.h"
 
 
+
 /********************
 *
 *Utils
@@ -22,89 +23,6 @@ static inline int rookMagicIndex(const uint64_t occ, int index) {
 	//return int((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
 }
 
-
-/********************
-*
-*Move
-*
-*********************/
-
-/*
-		 binary move bits                               hexidecimal constants
-
-   0000 0000 0000 0000 0011 1111    source square       0x3f
-   0000 0000 0000 1111 1100 0000    target square       0xfc0
-   0000 0000 1111 0000 0000 0000    piece               0xf000
-   0000 1111 0000 0000 0000 0000    promoted piece      0xf0000
-   0001 0000 0000 0000 0000 0000    capture flag        0x100000
-   0010 0000 0000 0000 0000 0000    double push flag    0x200000
-   0100 0000 0000 0000 0000 0000    enpassant flag      0x400000
-   1000 0000 0000 0000 0000 0000    castling flag       0x800000
-*/
-
-move Move::makemove(int sourceSquare, int targetSquare, int piece, int promotePiece, bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag) {
-	return (sourceSquare & 0x3f) | ((targetSquare << 6) & 0xfc0) | ((piece << 12) & 0xf000) | ((promotePiece << 16) & 0xf0000) |
-		(captureFlag ? 0x1 << 20 : 0x0) | (doublePushFlag ? 0x1 << 21 : 0x0) | (enpassantFlag ? 0x1 << 22 : 0x0) | (castlingFlag ? 0x1 << 23 : 0x0);
-
-}
-
-move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int promotePiece, bool captureFlag, bool doublePushFlag, bool enpassantFlag, bool castlingFlag) {
-	return (getlsbBitIndex(sourceSquare) & 0x3f) | ((getlsbBitIndex(targetSquare) << 6) & 0xfc0) | ((piece << 12) & 0xf000) | ((promotePiece << 16) & 0xf0000) |
-		(captureFlag ? 0x1 << 20 : 0x0) | (doublePushFlag ? 0x1 << 21 : 0x0) | (enpassantFlag ? 0x1 << 22 : 0x0) | (castlingFlag ? 0x1 << 23 : 0x0);
-}
-
-void Move::decode(const move m) {
-	
-	std::cout << "move: ";
-
-	//sourceSquare 
-	std::cout << "SS: "; 
-	//std::cout << Move::sourceSquare(m) << std::endl; 
-
-	//this is wrong and needs to change 
-
-	//A8 is 0
-	//H1 is 63 
-	std::cout << char('A' + Move::sourceSquare(m) % 8); 
-	std::cout << 8 - Move::sourceSquare(m) / 8 << " ";
-
-	//target Square 
-	std::cout << "TS: "; 
-	std::cout << char('A' + Move::targetSquare(m) % 8); 
-	std::cout << 8 - Move::targetSquare(m) / 8 << " ";
-
-	//piece
-	std::cout << pieceChar[Move::piece(m)] << " ";
-
-	//promote piece 
-	std::cout << pieceChar[Move::promotePiece(m)] << " ";
-
-	//capture 
-	std::cout << (Move::captureFlag(m) ? 'c' : '-');
-	std::cout << " "; 
-
-	//double push 
-	std::cout << (Move::doublePushFlag(m) ? "dp" : "--");
-	std::cout << " "; 
-
-	//enpassant 
-	std::cout << (Move::enpassantFlag(m) ? 'e' : '-');
-	std::cout << " "; 
-
-	//castle 
-	std::cout << (Move::castlingFlag(m) ? 'c' : '-'); 
-	std::cout << " "; 
-}
-
-constexpr int Move::sourceSquare(const move m) { return m & 0x3f; }
-constexpr int Move::targetSquare(const move m) { return (m & 0xfc0) >> 6; }
-constexpr int Move::piece(const move m) { return (m & 0xf000) >> 12; }
-constexpr int Move::promotePiece(const move m) { return (m & 0xf0000) >> 16; }
-
-constexpr bool Move::captureFlag(const move m) { return m & 0x100000; }
-constexpr bool Move::doublePushFlag(const move m) { return m & 0x200000; }
-constexpr bool Move::enpassantFlag(const move m) { return m & 0x400000; }
-constexpr bool Move::castlingFlag(const move m) { return m & 0x800000; }
 
 /********************
 *
