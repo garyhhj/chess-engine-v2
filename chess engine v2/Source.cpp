@@ -34,7 +34,7 @@ int main() {
 		//std::flush(std::cout); 
 
 
-		Fen::parse(fentemp, board, boardState);
+		Fen::parse(fenK, board, boardState);
 	}
 
 	board.print(boardState); 
@@ -92,18 +92,12 @@ int main() {
 
 		    a b c d e f g h*/
 	//todo: 
-	//generate moves 
-	//slider pieces 
-	//enpassant 
-	//castling 
-	
-
-	//test out current functions for generating moves after refactoring 
+	//write move generate for black side 
 
 
 
 	//debruijin optimization for lsb bit index  
-	//make move function (make sure to change board state/enpassant flag) 
+	//make move function (make sure to change board state/enpassant flag/castling flags) 
 
 
 	
