@@ -59,15 +59,19 @@ constexpr void Movelist::pushBack(const move m) {
 }
 
 void Movelist::print() {
-	std::cout << "printing movelist" << std::endl; 
-	std::cout << "index: " << index << std::endl; 
+	std::cout << "printing movelist" << std::endl;
+	std::cout << "num moves: " << index << std::endl;
 
 	for (int i = 0; i < Movelist::index; ++i) {
-		Move::decode(Movelist::movelist[i]); 
-		std::cout << "\n"; 
+		//padding/move index 
+		std::cout << "move: " << i;
+		if (i < 10) std::cout << " ";
+		std::cout << " "; 
+
+		Move::decode(Movelist::movelist[i]);
+		std::cout << "\n";
 	}
 }
-
 
 void Movelist::swap(Movelist& m1, Movelist& m2) {
 	move* ptr = m1.movelist; 
@@ -79,6 +83,9 @@ void Movelist::swap(Movelist& m1, Movelist& m2) {
 	m2.index = temp; 
 }
 
+move Movelist::getMove(const int index) {
+	return Movelist::movelist[index]; 
+}
 
 /********************
 *Generate Moves

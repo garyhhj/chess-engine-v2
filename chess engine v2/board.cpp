@@ -640,34 +640,63 @@ void Board::makemove(move move, BoardState& boardState) {
 
 void Board::Imakemovewhite(move move, BoardState& boardState) {
 
-	//const int piece = Move::piece(move);
-	//popBit(Board::piece[piece], Move::sourceSquare(move));
-	//setBit(Board::piece[piece], Move::targetSquare(move));
+	const int piece = Move::piece(move);
+	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
+	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
+	popBit(Board::occupancy[white], indexSquare[Move::sourceSquare(move)]);
+	setBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)]);
 
-	////promotions
-	//if (Move::promotePiece(move) != wPawn) {
-	//	popBit(Board::piece[piece], Move::targetSquare(move));
-	//	setBit(Board::piece[Move::promotePiece(move)], Move::targetSquare(move));
-	//}
+	//promotions
+	if (Move::promotePiece(move) != wPawn) {
+		popBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
+		setBit(Board::piece[Move::promotePiece(move)], indexSquare[Move::targetSquare(move)]);
+	}
+	
+	//captures
+	if (Move::captureFlag(move)) {
+		popBit(Board::piece[bPawn], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bKnight], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bKing], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bBishop], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bRook], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bQueen], indexSquare[Move::targetSquare(move)]);
 
-	//
-	//if (Move::captureFlag(move)) {
-	//	//remove captured black piece 
-	//}
+		popBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)]);
+	}
 
-	//
+	//doublepush 
+	if (Move::doublePushFlag(move)) {
+		*boardState.enpassant = (indexSquare[Move::targetSquare(move)] >> 8); 
+	}
 
-	//constexpr bool captureFlag(const move m);
-	//constexpr bool doublePushFlag(const move m);
-	//constexpr bool enpassantFlag(const move m);
-	//constexpr bool castlingFlag(const move m);
+	//enpassant 
+	if (Move::enpassantFlag(move)) {
+		popBit(Board::piece[bPawn], indexSquare[Move::targetSquare(move)] >> 8); 
+		popBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)] >> 8); 
+	}
 
+	//castlingFlag
+	if (Move::castlingFlag(move)) {
 
-	//iterate through the other side and remove bit from bitboard if it is a capture regardless? 
+		if (Board::piece[wKing] == G1) {
+			popBit(Board::piece[wRook], H1); 
+			setBit(Board::piece[wRook], F1); 
+			popBit(Board::occupancy[white], H1);
+			setBit(Board::occupancy[white], F1);
+		}
+		else if (Board::piece[wKing] == C1) {
+			popBit(Board::piece[wRook], A1); 
+			setBit(Board::piece[wRook], D1);
+			popBit(Board::occupancy[white], A1);
+			setBit(Board::occupancy[white], D1);
+		}
 
+		*boardState.castleRightWK = false; 
+		*boardState.castleRightWQ = false; 
+	}
 
-
-	//change boardState
+	//change side 
+	*boardState.side = black; 
 }
 
 

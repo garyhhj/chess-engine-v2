@@ -82,8 +82,6 @@ move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int
 
 void Move::decode(const move m) {
 
-	std::cout << "move: ";
-
 	//sourceSquare 
 	std::cout << "SS: ";
 	//std::cout << Move::sourceSquare(m) << std::endl; 

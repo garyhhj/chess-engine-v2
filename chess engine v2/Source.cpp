@@ -35,7 +35,7 @@ int main() {
 		//std::flush(std::cout); 
 
 
-		Fen::parse(fenK, board, boardState);
+		Fen::parse(fenStart, board, boardState);
 	}
 
 	board.print(boardState); 
@@ -43,8 +43,12 @@ int main() {
 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
-
 	ml.print(); 
+
+	board.makemove(ml.getMove(8), boardState); 
+
+	std::cout << "after making move" << std::endl; 
+	board.print(boardState); 
 
 	
 	
