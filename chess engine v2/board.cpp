@@ -701,5 +701,71 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 
 
 void Board::Imakemoveblack(move move, BoardState& boardState) {
+	const int piece = Move::piece(move);
+	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
+	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
+	popBit(Board::occupancy[black], indexSquare[Move::sourceSquare(move)]);
+	setBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)]);
 
+	//promotions
+	if (Move::promotePiece(move) != wPawn) {
+		popBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
+		setBit(Board::piece[Move::promotePiece(move)], indexSquare[Move::targetSquare(move)]);
+	}
+
+	//captures
+	if (Move::captureFlag(move)) {
+		popBit(Board::piece[wPawn], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wKnight], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wKing], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wBishop], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wRook], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wQueen], indexSquare[Move::targetSquare(move)]);
+
+		popBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)]);
+	}
+
+	//doublepush 
+	if (Move::doublePushFlag(move)) {
+		*boardState.enpassant = (indexSquare[Move::targetSquare(move)] << 8);
+	}
+
+	//enpassant 
+	if (Move::enpassantFlag(move)) {
+		popBit(Board::piece[wPawn], indexSquare[Move::targetSquare(move)] << 8);
+		popBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)] << 8);
+	}
+	/*  8   r n b q k b n r
+		7   p p p p p p p p
+		6   0 0 0 0 0 0 0 0
+		5   0 0 0 0 0 0 0 0
+		4   0 0 0 0 0 0 0 0
+		3   0 0 0 0 0 0 0 0
+		2   P P n p P P P P
+		1   r 0 0 0 K B N R
+
+			a b c d e f g h*/
+
+	//castlingFlag
+	if (Move::castlingFlag(move)) {
+
+		if (Board::piece[bKing] == G8) {
+			popBit(Board::piece[bRook], H8);
+			setBit(Board::piece[bRook], F8);
+			popBit(Board::occupancy[black], H8);
+			setBit(Board::occupancy[black], F8);
+		}
+		else if (Board::piece[bKing] == C8) {
+			popBit(Board::piece[bRook], A8);
+			setBit(Board::piece[bRook], D8);
+			popBit(Board::occupancy[black], A8);
+			setBit(Board::occupancy[black], D8);
+		}
+
+		*boardState.castleRightBK = false;
+		*boardState.castleRightBQ = false;
+	}
+
+	//change side 
+	*boardState.side = white;
 }
