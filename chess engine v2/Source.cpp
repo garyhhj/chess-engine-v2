@@ -7,7 +7,7 @@
 #include <iostream>
 #include <bitset>
 #include <map>
-
+#include <chrono>
 //write some stuff for perft test 
 
 
@@ -32,7 +32,16 @@ int main() {
 
 
 
-	perft(board, boardState, 4);
+
+
+
+	auto start = std::chrono::steady_clock::now();
+	perft(board, boardState, 5);
+
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
 	
 	//after restoring board state and then using make move results in an error... so likely boardstate / board is not restored properly 
 

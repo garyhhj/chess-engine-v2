@@ -10,10 +10,10 @@
 
 class Movelist {
 public: 
-	Movelist(); 
-	Movelist(const Movelist& rhs);
+	Movelist() = default; 
+	/*Movelist(const Movelist& rhs);
 	Movelist& operator=(Movelist& rhs);
-	~Movelist(); 
+	~Movelist(); */
 
 	move getMove(const int index); 
 	const int getIndex() const; 
@@ -22,10 +22,11 @@ public:
 	void print(); 
 
 private:
-	void swap(Movelist& m1, Movelist& m2); 
+	//void swap(Movelist& m1, Movelist& m2); 
 	void moveGenWhite(const Board& board, BoardState& boardState);
 	void moveGenBlack(const Board& board, BoardState& boardState);
 
-	move* movelist;
-	int index; 
+	//move* movelist;
+	move movelist[256];
+	int index = 0; 
 };

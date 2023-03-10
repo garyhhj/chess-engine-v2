@@ -10,10 +10,10 @@ class BoardState {
 	friend class Board; 
 	friend class Movelist; 
 public: 
-	BoardState();
-	BoardState(const BoardState& rhs); 
-	BoardState& operator=(BoardState rhs) noexcept; //uses swap idiom 
-	~BoardState(); 
+	BoardState() = default;
+	//BoardState(const BoardState& rhs); 
+	//BoardState& operator=(BoardState rhs) noexcept; //uses swap idiom 
+	//~BoardState(); 
 	
 
 	void debug(); 
@@ -23,24 +23,24 @@ private:
 	void Idebug();
 
 
-	int* side; 
-	map* enpassant; 
-	bool* castleRightWQ; 
-	bool* castleRightWK; 
-	bool* castleRightBQ; 
-	bool* castleRightBK; 
+	int side; 
+	map enpassant; 
+	bool castleRightWQ; 
+	bool castleRightWK; 
+	bool castleRightBQ; 
+	bool castleRightBK; 
 
-	bool* doubleCheck; 
+	bool doubleCheck; 
 };
 
 class Board {
 	friend class Fen; 
 	friend class Movelist; 
 public: 
-	Board(); 
-	Board(const Board& rhs);
-	Board& operator=(Board rhs) noexcept; //uses swap idom 
-	~Board(); 
+	Board() = default; 
+	//Board(const Board& rhs);
+	//Board& operator=(Board rhs) noexcept; //uses swap idom 
+	//~Board(); 
 
 	void print(const BoardState& boardState) const;
 	bool attacked(const uint64_t square, const BoardState& boardState) const;
@@ -66,8 +66,10 @@ private:
 
 
 	//leaper pieces 
-	map* piece; //always size 12 
-	map* occupancy; //always size 2 
+	//map* piece; //always size 12 
+	map piece[12]; 
+	//map* occupancy; //always size 2 
+	map occupancy[2]; 
 };
 
 

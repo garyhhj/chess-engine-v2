@@ -79,7 +79,7 @@ move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int
 	return (getlsbBitIndex(sourceSquare) & 0x3f) | ((getlsbBitIndex(targetSquare) << 6) & 0xfc0) | ((piece << 12) & 0xf000) | ((promotePiece << 16) & 0xf0000) |
 		(captureFlag ? 0x1 << 20 : 0x0) | (doublePushFlag ? 0x1 << 21 : 0x0) | (enpassantFlag ? 0x1 << 22 : 0x0) | (castlingFlag ? 0x1 << 23 : 0x0);
 }
-
+ 
 void Move::decode(const move m) {
 
 	//sourceSquare 
@@ -138,49 +138,49 @@ constexpr bool Move::castlingFlag(const move m) { return m & 0x800000; }
 *
 *********************/
 
-
-
-constexpr bool getBit(const uint64_t bitBoard, const int index) {
-	return bitBoard & (0x8000000000000000 >> index);
-}
-
-constexpr void setBit(uint64_t& bitBoard, const uint64_t square) {
-	//bitBoard |= (0x8000000000000000 >> square);
-	bitBoard |= square;
-}
-
-constexpr void popBit(uint64_t& bitBoard, const uint64_t square) {
-	//bitBoard &= ~(0x8000000000000000 >> square);
-	bitBoard &= ~square;
-}
-
-constexpr uint64_t getLsbBit(const uint64_t bitBoard) {
-	return bitBoard & ~bitBoard + 1;
-}
-
-constexpr int getNumBit(uint64_t bitboard) {
-	int count = 0;
-
-	while (bitboard) {
-		++count;
-
-		bitboard &= bitboard - 1;
-	}
-	return count;
-}
-
-constexpr int getlsbBitIndex(uint64_t bitboard) {
-
-	//make sure bitboard is not zero 
-	if (bitboard) {
-		return 63 - getNumBit((bitboard & (~bitboard + 1)) - 1);
-	}
-
-	else {
-		//invalid index 
-		return -1;
-	}
-}
+//
+//
+//constexpr bool getBit(const uint64_t bitBoard, const int index) {
+//	return bitBoard & (0x8000000000000000 >> index);
+//}
+//
+//constexpr void setBit(uint64_t& bitBoard, const uint64_t square) {
+//	//bitBoard |= (0x8000000000000000 >> square);
+//	bitBoard |= square;
+//}
+//
+//constexpr void popBit(uint64_t& bitBoard, const uint64_t square) {
+//	//bitBoard &= ~(0x8000000000000000 >> square);
+//	bitBoard &= ~square;
+//}
+//
+//constexpr uint64_t getLsbBit(const uint64_t bitBoard) {
+//	return bitBoard & ~bitBoard + 1;
+//}
+//
+//constexpr int getNumBit(uint64_t bitboard) {
+//	return std::popcount(bitboard); 
+//	/*int count = 0; 
+//	while (bitboard) {
+//		++count;
+//
+//		bitboard &= bitboard - 1;
+//	}
+//	return count;*/
+//}
+//
+//constexpr int getlsbBitIndex(uint64_t bitboard) {
+//
+//	//make sure bitboard is not zero 
+//	if (bitboard) {
+//		return 63 - getNumBit((bitboard & (~bitboard + 1)) - 1);
+//	}
+//
+//	else {
+//		//invalid index 
+//		return -1;
+//	}
+//}
 
 
 /********************
@@ -264,16 +264,16 @@ enum Squares : const bit {
 	H1 = 0x0000000000000001ull,
 }; */
 
-const bit indexSquare[64] = {
-	A8, B8, C8, D8, E8, F8, G8, H8,
-	A7, B7, C7, D7, E7, F7, G7, H7,
-	A6, B6, C6, D6, E6, F6, G6, H6,
-	A5, B5, C5, D5, E5, F5, G5, H5,
-	A4, B4, C4, D4, E4, F4, G4, H4,
-	A3, B3, C3, D3, E3, F3, G3, H3,
-	A2, B2, C2, D2, E2, F2, G2, H2,
-	A1, B1, C1, D1, E1, F1, G1, H1,
-};
+//constexpr bit indexSquare[64] = {
+//	A8, B8, C8, D8, E8, F8, G8, H8,
+//	A7, B7, C7, D7, E7, F7, G7, H7,
+//	A6, B6, C6, D6, E6, F6, G6, H6,
+//	A5, B5, C5, D5, E5, F5, G5, H5,
+//	A4, B4, C4, D4, E4, F4, G4, H4,
+//	A3, B3, C3, D3, E3, F3, G3, H3,
+//	A2, B2, C2, D2, E2, F2, G2, H2,
+//	A1, B1, C1, D1, E1, F1, G1, H1,
+//};
 
 /*
 enum side : const int {

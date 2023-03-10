@@ -33,17 +33,16 @@ void perft(Board& board, BoardState& boardState, int depth) {
 	//current board conditions 
 	Board currBoard = board;
 	BoardState currBoardState = boardState;
-	std::cout << "for loop" << std::endl; 
 	for (int index = 0; index < ml.getIndex(); ++index) {
 		board = currBoard; 
 		boardState = currBoardState; 
 		board.makemove(ml.getMove(index), boardState); 
 		
-		int childNodes = perftHelper(board, boardState, depth - 1); 
-		Move::decode(ml.getMove(index)); 
-		std::cout << " | nodes: " << childNodes << "\n";
-		node += childNodes;
+		//int childNodes = perftHelper(board, boardState, depth - 1); 
+		//Move::decode(ml.getMove(index)); 
+		//std::cout << " | nodes: " << childNodes << "\n";
+		node += perftHelper(board, boardState, depth - 1);//childNodes;
 	}
-	std::cout << "nodes: " << node << "\n";
-	std::flush(std::cout);
+	//std::cout << "nodes: " << node << "\n";
+	//std::flush(std::cout);
 }

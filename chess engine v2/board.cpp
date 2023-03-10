@@ -8,61 +8,59 @@
 *********************/
 
 static inline int bishopMagicIndex(const uint64_t occ, int index) {
-	return ((occ & relevantBishopBlocker[index]) * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index]));
+	return static_cast<int>(((occ & relevantBishopBlocker[index]) * bishopMagicNum[index]) >> (64 - getNumBit(relevantBishopBlocker[index])));
 }
 
 static inline int rookMagicIndex(const uint64_t occ, int index) {
-	return ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
-
-
-	//return int((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index]));
+	return static_cast<int>(((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index])));
 }
 
 
 /********************
 *
-*BoardState
+boardState
 *
 *********************/
 
-BoardState::BoardState() 
-	: side(new int{}), enpassant(new map{}), 
-	castleRightWQ(new bool{}), castleRightWK(new bool{}), castleRightBQ(new bool{}), castleRightBK(new bool{}), 
-	doubleCheck(new bool{}) {}
+//BoardState::BoardState() 
+//	: side(new int{}), enpassant(new map{}), 
+//	castleRightWQ(new bool{}), castleRightWK(new bool{}), castleRightBQ(new bool{}), castleRightBK(new bool{}), 
+//	doubleCheck(new bool{}) {}
 
-BoardState::BoardState(const BoardState& rhs) 
-	: side(new int{*(rhs.side)}), enpassant(new map{*(rhs.enpassant)}), 
-	castleRightWQ(new bool{*(rhs.castleRightWK)}), castleRightWK(new bool{*(rhs.castleRightWK)}), 
-	castleRightBQ(new bool{*(rhs.castleRightBQ)}), castleRightBK(new bool{*(rhs.castleRightBK)}), 
-	doubleCheck(new bool{*(rhs.doubleCheck)}) {}
-
-
-BoardState& BoardState::operator=(BoardState rhs) noexcept {
-	BoardState::swap(*this, rhs);
-
-
-	rhs.side == nullptr; 
-	rhs.enpassant = nullptr; 
-	rhs.castleRightWQ = nullptr;
-	rhs.castleRightWK = nullptr;
-	rhs.castleRightBQ = nullptr;
-	rhs.castleRightBK = nullptr;
-
-	rhs.doubleCheck = nullptr;
-
-	return *this; 
-}
-
-BoardState::~BoardState() {
-	delete BoardState::side;
-	delete BoardState::enpassant;
-
-	delete BoardState::castleRightBK;
-	delete BoardState::castleRightBQ;
-	delete BoardState::castleRightWK;
-	delete BoardState::castleRightWQ;
-	delete BoardState::doubleCheck;
-}
+//
+//BoardState::BoardState(const BoardState& rhs) 
+//	: side(new int{*(rhs.side)}), enpassant(new map{*(rhs.enpassant)}), 
+//	castleRightWQ(new bool{*(rhs.castleRightWK)}), castleRightWK(new bool{*(rhs.castleRightWK)}), 
+//	castleRightBQ(new bool{*(rhs.castleRightBQ)}), castleRightBK(new bool{*(rhs.castleRightBK)}), 
+//	doubleCheck(new bool{*(rhs.doubleCheck)}) {}
+//
+//
+//BoardState& BoardState::operator=(BoardState rhs) noexcept {
+//	BoardState::swap(*this, rhs);
+//
+//
+//	rhs.side == nullptr; 
+//	rhs.enpassant = nullptr; 
+//	rhs.castleRightWQ = nullptr;
+//	rhs.castleRightWK = nullptr;
+//	rhs.castleRightBQ = nullptr;
+//	rhs.castleRightBK = nullptr;
+//
+//	rhs.doubleCheck = nullptr;
+//
+//	return *this; 
+//}
+//
+//BoardState::~BoardState() {
+//	delete BoardState::side;
+//	delete BoardState::enpassant;
+//
+//	delete BoardState::castleRightBK;
+//	delete BoardState::castleRightBQ;
+//	delete BoardState::castleRightWK;
+//	delete BoardState::castleRightWQ;
+//	delete BoardState::doubleCheck;
+//}
 
 
 void BoardState::debug() {
@@ -70,9 +68,9 @@ void BoardState::debug() {
 }
 
 void BoardState::Idebug() {
-	std::cout << "side: " << (*BoardState::side == white ? "white" : "black") << "\n" <<
-		"enpassant: " <<  char('A' + getlsbBitIndex(*BoardState::enpassant) % 8) << 8 - getlsbBitIndex(*BoardState::enpassant) / 8 << "\n" <<
-		"doublecheck: " << (*BoardState::doubleCheck ? "true" : "false") << "\n"; 
+	std::cout << "side: " << (BoardState::side == white ? "white" : "black") << "\n" <<
+		"enpassant: " <<  char('A' + getlsbBitIndex(BoardState::enpassant) % 8) << 8 - getlsbBitIndex(BoardState::enpassant) / 8 << "\n" <<
+		"doublecheck: " << (BoardState::doubleCheck ? "true" : "false") << "\n"; 
 	std::flush(std::cout);
 }
 
@@ -92,27 +90,27 @@ void BoardState::swap(BoardState& lhs, BoardState& rhs) {
 *Board
 *
 *********************/
-
-Board::Board() : piece(new map[12]), occupancy(new map[2]) {}
-
-Board::Board(const Board& rhs) 
-	: piece(new map[12]{rhs.piece[0], rhs.piece[1], rhs.piece[2], rhs.piece[3], rhs.piece[4], rhs.piece[5], rhs.piece[6], rhs.piece[7], rhs.piece[8], rhs.piece[9], rhs.piece[10], rhs.piece[11]}),
-	occupancy(new map[2]{rhs.occupancy[0], rhs.occupancy[1]}) {};
-
-Board& Board::operator=(Board rhs) noexcept{
-	std::swap(this->piece, rhs.piece); 
-	std::swap(this->occupancy, rhs.occupancy); 
-
-	rhs.piece = nullptr; 
-	rhs.occupancy = nullptr; 
-
-	return *this; 
-}
-
-Board::~Board() {
-	delete[] Board::piece; 
-	delete[] Board::occupancy; 
-}
+//
+//Board::Board() : piece(new map[12]), occupancy(new map[2]) {}
+//
+//Board::Board(const Board& rhs) 
+//	: piece(new map[12]{rhs.piece[0], rhs.piece[1], rhs.piece[2], rhs.piece[3], rhs.piece[4], rhs.piece[5], rhs.piece[6], rhs.piece[7], rhs.piece[8], rhs.piece[9], rhs.piece[10], rhs.piece[11]}),
+//	occupancy(new map[2]{rhs.occupancy[0], rhs.occupancy[1]}) {};
+//
+//Board& Board::operator=(Board rhs) noexcept{
+//	std::swap(this->piece, rhs.piece); 
+//	std::swap(this->occupancy, rhs.occupancy); 
+//
+//	rhs.piece = nullptr; 
+//	rhs.occupancy = nullptr; 
+//
+//	return *this; 
+//}
+//
+//Board::~Board() {
+//	delete[] Board::piece; 
+//	delete[] Board::occupancy; 
+//}
 
 void Board::print(const BoardState& boardState) const {
 	Iprint(boardState);
@@ -151,28 +149,28 @@ void Board::Iprint(const BoardState& boardState) const{
 
 	//side 
 	std::cout << "side: "; 
-	if (*(boardState.side) == white) std::cout << "white";
+	if (boardState.side == white) std::cout << "white";
 	else std::cout << "black"; 
 	std::cout << "\n"; 
 
 	//enpassant 
 	std::cout << "enpassant: ";
-	if (*boardState.enpassant) {
-		std::cout << char('A' + getlsbBitIndex(*boardState.enpassant) % 8);
-		std::cout << 8 - getlsbBitIndex(*boardState.enpassant) / 8;
+	if (boardState.enpassant) {
+		std::cout << char('A' + getlsbBitIndex(boardState.enpassant) % 8);
+		std::cout << 8 - getlsbBitIndex(boardState.enpassant) / 8;
 	}
 	else std::cout << "--"; 
 	std::cout << "\n"; 
 	
 	//castle rights 
 	std::cout << "castle right: "; 
-	if (*boardState.castleRightWK) std::cout << "K";
+	if (boardState.castleRightWK) std::cout << "K";
 	else std::cout << "-";
-	if (*boardState.castleRightWQ) std::cout << "Q";
+	if (boardState.castleRightWQ) std::cout << "Q";
 	else std::cout << "-"; 
-	if (*boardState.castleRightBK) std::cout << "k";
+	if (boardState.castleRightBK) std::cout << "k";
 	else std::cout << "-"; 
-	if (*boardState.castleRightBQ) std::cout << "q";
+	if (boardState.castleRightBQ) std::cout << "q";
 	else std::cout << "-"; 
 	std::cout << "\n\n"; 
 
@@ -181,7 +179,7 @@ void Board::Iprint(const BoardState& boardState) const{
 
 
 bool Board::attacked(const uint64_t square, const BoardState& boardState) const{
-	return (*boardState.side == white ? Board::IattackedWhite(square) : Board::IattackedBlack(square) ); 
+	return (boardState.side == white ? Board::IattackedWhite(square) : Board::IattackedBlack(square) ); 
 }
 
 //square is attack while white's turn 
@@ -215,7 +213,7 @@ bool Board::IattackedBlack(const uint64_t square) const{
 }
 
 const uint64_t Board::checkMask(BoardState& boardState) const{
-	return (*boardState.side == white ? Board::IcheckMaskWhite(boardState) : Board::IcheckMaskBlack(boardState)); 
+	return (boardState.side == white ? Board::IcheckMaskWhite(boardState) : Board::IcheckMaskBlack(boardState)); 
 }
 
 //return check mask for white's turn 
@@ -263,8 +261,8 @@ const uint64_t Board::IcheckMaskWhite(BoardState& boardState) const{
 	}
 
 	//double check 
-	if (numChecks == 2) *boardState.doubleCheck = true;
-	else *boardState.doubleCheck = false; 
+	if (numChecks == 2) boardState.doubleCheck = true;
+	else boardState.doubleCheck = false; 
 
 	if (res == 0x0ull) return ~res;
 	else return res; 
@@ -312,15 +310,15 @@ const uint64_t Board::IcheckMaskBlack(BoardState& boardState) const{
 	}
 
 	//double check 
-	if (numChecks == 2) *boardState.doubleCheck = true;
-	else *boardState.doubleCheck = false;
+	if (numChecks == 2) boardState.doubleCheck = true;
+	else boardState.doubleCheck = false;
 
 	if (res == 0x0ull) return ~res;
 	else return res;
 }
 
 const uint64_t Board::pinMaskDiagonal(const BoardState& boardState) const{
-	return (*boardState.side == white ? Board::IpinMaskDiagonalWhite() : Board::IpinMaskDiagonalBlack()); 
+	return (boardState.side == white ? Board::IpinMaskDiagonalWhite() : Board::IpinMaskDiagonalBlack()); 
 }
 
 //pin mask during white's turn (when white is about to make move) 
@@ -391,7 +389,7 @@ const uint64_t Board::IpinMaskDiagonalBlack() const{
 }
 
 const uint64_t Board::pinMaskHV(const BoardState& boardState) const{
-	return (*boardState.side == white ? Board::IpinMaskHVWhite() : Board::IpinMaskHVBlack()); 
+	return (boardState.side == white ? Board::IpinMaskHVWhite() : Board::IpinMaskHVBlack()); 
 }
 
 //horizontal/veritcal pinmask during white's turn 
@@ -490,14 +488,14 @@ void Fen::parseStartPosition(Board& board, BoardState& boardState) {
 
 void Fen::Iclear(Board& board, BoardState& boardState) {
 	//BoardState
-	*boardState.side = white; 
-	*boardState.enpassant = 0x0ull; 
-	*boardState.castleRightWQ = false;
-	*boardState.castleRightWK = false;
-	*boardState.castleRightBQ = false;
-	*boardState.castleRightBK = false;
+	boardState.side = white; 
+	boardState.enpassant = 0x0ull; 
+	boardState.castleRightWQ = false;
+	boardState.castleRightWK = false;
+	boardState.castleRightBQ = false;
+	boardState.castleRightBK = false;
 
-	*boardState.doubleCheck = false;
+	boardState.doubleCheck = false;
 
 
 	//Board
@@ -591,8 +589,8 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	//std::cout << "index: " << index << std::endl;
 
 	//side t0 move 
-	if (fen[index] == 'b') *boardState.side = black;
-	else *boardState.side = white;
+	if (fen[index] == 'b') boardState.side = black;
+	else boardState.side = white;
 	index += 2; 
 
 	//std::cout << "index: " << index << std::endl; 
@@ -601,16 +599,16 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	while (fen[index] != ' ') {
 		switch (fen[index]) {
 		case 'K':
-			*boardState.castleRightWK = true;
+			boardState.castleRightWK = true;
 			break;
 		case 'Q':
-			*boardState.castleRightWQ = true;
+			boardState.castleRightWQ = true;
 			break;
 		case 'k':
-			*boardState.castleRightBK = true;
+			boardState.castleRightBK = true;
 			break;
 		case 'q':
-			*boardState.castleRightBQ = true;
+			boardState.castleRightBQ = true;
 			break;
 		}
 		++index;
@@ -624,7 +622,7 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	}
 	if (index - enpassantStart == 2) {
 		const int mapIndex = (fen[enpassantStart] - 'a') + 8 * ('8' - fen[uint64_t(enpassantStart) + 1]);
-		*boardState.enpassant = indexSquare[mapIndex];
+		boardState.enpassant = indexSquare[mapIndex];
 	}
 
 }
@@ -635,7 +633,7 @@ void Fen::IparseStartPosition(Board& board, BoardState& boardState) {
 
 
 void Board::makemove(move move, BoardState& boardState) {
-	*boardState.side == white ? Board::Imakemovewhite(move, boardState) : Board::Imakemoveblack(move, boardState); 
+	boardState.side == white ? Board::Imakemovewhite(move, boardState) : Board::Imakemoveblack(move, boardState); 
 }
 
 void Board::Imakemovewhite(move move, BoardState& boardState) {
@@ -666,7 +664,7 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 
 	//doublepush 
 	if (Move::doublePushFlag(move)) {
-		*boardState.enpassant = (indexSquare[Move::targetSquare(move)] >> 8); 
+		boardState.enpassant = (indexSquare[Move::targetSquare(move)] >> 8); 
 	}
 
 	//enpassant 
@@ -691,12 +689,12 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 			setBit(Board::occupancy[white], D1);
 		}
 
-		*boardState.castleRightWK = false; 
-		*boardState.castleRightWQ = false; 
+		boardState.castleRightWK = false; 
+		boardState.castleRightWQ = false; 
 	}
 
 	//change side 
-	*boardState.side = black; 
+	boardState.side = black; 
 }
 
 
@@ -727,7 +725,7 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 
 	//doublepush 
 	if (Move::doublePushFlag(move)) {
-		*boardState.enpassant = (indexSquare[Move::targetSquare(move)] << 8);
+		boardState.enpassant = (indexSquare[Move::targetSquare(move)] << 8);
 	}
 
 	//enpassant 
@@ -752,10 +750,10 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 			setBit(Board::occupancy[black], D8);
 		}
 
-		*boardState.castleRightBK = false;
-		*boardState.castleRightBQ = false;
+		boardState.castleRightBK = false;
+		boardState.castleRightBQ = false;
 	}
 
 	//change side 
-	*boardState.side = white;
+	boardState.side = white;
 }
