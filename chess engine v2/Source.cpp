@@ -32,7 +32,7 @@ int main() {
 
 
 
-	perft(board, boardState, 1);
+	perft(board, boardState, 4);
 	
 	//after restoring board state and then using make move results in an error... so likely boardstate / board is not restored properly 
 

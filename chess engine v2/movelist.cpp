@@ -315,8 +315,6 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	
 	{
 		map attacks = kingAttack[getlsbBitIndex(board.piece[wKing])] & ~board.occupancy[white]; 
-		std::cout << "attacks: " << std::endl; 
-		printBit(attacks); 
 		while (attacks) {
 			if (!board.attacked(getLsbBit(attacks), boardState)) {
 				Movelist::pushBack(Move::makemove(board.piece[wKing], getLsbBit(attacks), wKing, wPawn, getLsbBit(attacks) & board.occupancy[black], false, false, false));
@@ -687,8 +685,6 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 
 	{
 		map attacks = kingAttack[getlsbBitIndex(board.piece[bKing])] & ~board.occupancy[black];
-		std::cout << "attacks: " << std::endl;
-		printBit(attacks);
 		while (attacks) {
 			if (!board.attacked(getLsbBit(attacks), boardState)) {
 				Movelist::pushBack(Move::makemove(board.piece[bKing], getLsbBit(attacks), bKing, wPawn, getLsbBit(attacks) & board.occupancy[white], false, false, false));

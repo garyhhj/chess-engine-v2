@@ -1,8 +1,9 @@
 #include "perft.h"
 
 int perftHelper(Board& board, BoardState& boardState, int depth) {
-	int nodes = 1; 
-	if (depth == 0) return nodes; 
+	if (depth == 0) return 1;
+	
+	int nodes = 0; 
 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
@@ -22,6 +23,9 @@ int perftHelper(Board& board, BoardState& boardState, int depth) {
 }
 
 void perft(Board& board, BoardState& boardState, int depth) {
+	if (depth == 0) {
+		std::cout << "nodes: 1" << std::endl; 
+	}
 	int node = 0; 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
@@ -36,7 +40,8 @@ void perft(Board& board, BoardState& boardState, int depth) {
 		board.makemove(ml.getMove(index), boardState); 
 		
 		int childNodes = perftHelper(board, boardState, depth - 1); 
-		std::cout << "index: " << index << " | nodes: " << childNodes << "\n";
+		Move::decode(ml.getMove(index)); 
+		std::cout << " | nodes: " << childNodes << "\n";
 		node += childNodes;
 	}
 	std::cout << "nodes: " << node << "\n";
