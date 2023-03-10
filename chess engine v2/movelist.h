@@ -16,6 +16,7 @@ public:
 	~Movelist(); 
 
 	move getMove(const int index); 
+	const int getIndex() const; 
 	void moveGen(const Board& board, BoardState& boardState);
 	constexpr void pushBack(const move m); 
 	void print(); 

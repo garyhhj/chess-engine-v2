@@ -22,6 +22,9 @@
     <Filter Include="Source Files\movelist">
       <UniqueIdentifier>{b0e57fcd-6f1a-448e-948e-d38444320f75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\perft">
+      <UniqueIdentifier>{36d27685-9a15-42ea-ace2-86c33a2ce492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -35,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="movelist.cpp">
       <Filter>Source Files\movelist</Filter>
+    </ClCompile>
+    <ClCompile Include="perft.cpp">
+      <Filter>Source Files\perft</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="movelist.h">
       <Filter>Source Files\movelist</Filter>
+    </ClInclude>
+    <ClInclude Include="perft.h">
+      <Filter>Source Files\perft</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

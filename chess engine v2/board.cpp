@@ -99,7 +99,7 @@ Board::Board(const Board& rhs)
 	: piece(new map[12]{rhs.piece[0], rhs.piece[1], rhs.piece[2], rhs.piece[3], rhs.piece[4], rhs.piece[5], rhs.piece[6], rhs.piece[7], rhs.piece[8], rhs.piece[9], rhs.piece[10], rhs.piece[11]}),
 	occupancy(new map[2]{rhs.occupancy[0], rhs.occupancy[1]}) {};
 
-Board& Board::operator=(Board& rhs) {
+Board& Board::operator=(Board rhs) noexcept{
 	std::swap(this->piece, rhs.piece); 
 	std::swap(this->occupancy, rhs.occupancy); 
 
@@ -735,16 +735,6 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 		popBit(Board::piece[wPawn], indexSquare[Move::targetSquare(move)] << 8);
 		popBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)] << 8);
 	}
-	/*  8   r n b q k b n r
-		7   p p p p p p p p
-		6   0 0 0 0 0 0 0 0
-		5   0 0 0 0 0 0 0 0
-		4   0 0 0 0 0 0 0 0
-		3   0 0 0 0 0 0 0 0
-		2   P P n p P P P P
-		1   r 0 0 0 K B N R
-
-			a b c d e f g h*/
 
 	//castlingFlag
 	if (Move::castlingFlag(move)) {

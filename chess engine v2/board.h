@@ -39,7 +39,7 @@ class Board {
 public: 
 	Board(); 
 	Board(const Board& rhs);
-	Board& operator=(Board& rhs); //uses swap idom 
+	Board& operator=(Board rhs) noexcept; //uses swap idom 
 	~Board(); 
 
 	void print(const BoardState& boardState) const;

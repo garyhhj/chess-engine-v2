@@ -87,6 +87,11 @@ move Movelist::getMove(const int index) {
 	return Movelist::movelist[index]; 
 }
 
+const int Movelist::getIndex() const {
+	return Movelist::index; 
+}
+
+
 /********************
 *Generate Moves
 *********************/
@@ -99,40 +104,14 @@ void Movelist::moveGen(const Board& board, BoardState& boardState) {
 
 void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 
-	std::cout << "move gen white" << std::endl; 
-	//get the check mask 
-	//get the pin masks 
 	const map checkMask = board.checkMask(boardState); 
-	//const bool doubleCheck = BoardState::Get().doubleCheck; 
-	
 	const map pinMaskHV = board.pinMaskHV(boardState); 
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState); 
 
 	const map occ = board.occupancy[white] | board.occupancy[black]; 
 
-	std::cout << "checkMask: " << std::endl; 
-	printBit(checkMask); 
-
-	std::cout << "pinMaskHV: " << std::endl; 
-	printBit(pinMaskHV); 
-
-	std::cout << "pinMaskDiagonal: " << std::endl; 
-	printBit(pinMaskDiagonal); 
 
 	//start generating moves 
-	//now generate moves 
-
-
-	//for checkMask... it means that the pieces must be resulting in the checkmask 
-	//if there are double checks, then can only move king  
-
-	//for pin masks... it means that the pinned piece can only move within the pinned area 
-	//prevent pawn captures, certain bishop diagonals, and certain rook moves in pinned pieces 
-	//for leaper pieces, can just not let them move (except king) /but king won't be pinned, it will be checked 
-	//for slider pieces, if same pin as move eg. bishop and diagonal, allow movement and only check against diagonal 
-	//for slider pieces, if different pin, then it cannot be moved 
-
-
 
 	//double check - can only move king 
 	if (*boardState.doubleCheck) {
@@ -497,39 +476,13 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 }
 
 void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
-	std::cout << "move gen black" << std::endl;
-	//get the check mask 
-	//get the pin masks 
-	const map checkMask = board.checkMask(boardState);
-	//const bool doubleCheck = BoardState::Get().doubleCheck; 
 
+	const map checkMask = board.checkMask(boardState);
 	const map pinMaskHV = board.pinMaskHV(boardState);
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState);
-
 	const map occ = board.occupancy[white] | board.occupancy[black];
 
-	std::cout << "checkMask: " << std::endl;
-	printBit(checkMask);
-
-	std::cout << "pinMaskHV: " << std::endl;
-	printBit(pinMaskHV);
-
-	std::cout << "pinMaskDiagonal: " << std::endl;
-	printBit(pinMaskDiagonal);
-
 	//start generating moves 
-	//now generate moves 
-
-
-	//for checkMask... it means that the pieces must be resulting in the checkmask 
-	//if there are double checks, then can only move king  
-
-	//for pin masks... it means that the pinned piece can only move within the pinned area 
-	//prevent pawn captures, certain bishop diagonals, and certain rook moves in pinned pieces 
-	//for leaper pieces, can just not let them move (except king) /but king won't be pinned, it will be checked 
-	//for slider pieces, if same pin as move eg. bishop and diagonal, allow movement and only check against diagonal 
-	//for slider pieces, if different pin, then it cannot be moved 
-
 
 
 	//double check - can only move king 

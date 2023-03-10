@@ -2,12 +2,13 @@
 #include "attackTable.h"
 #include "board.h"
 #include "movelist.h"
+#include "perft.h"
 
 #include <iostream>
 #include <bitset>
 #include <map>
 
-
+//write some stuff for perft test 
 
 
 int main() {
@@ -26,32 +27,14 @@ int main() {
 			
 		string fentemp = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1 ";
 
-
-
-		//for (int i = 0; i < fentemp.size(); ++i) {
-
-		//	std::cout << i << " " << fentemp[i] << '\n'; 
-		//}
-		//std::flush(std::cout); 
-
-
 		Fen::parse(fenStart, board, boardState);
 	}
 
-	board.print(boardState); 
-	 
 
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	ml.print(); 
 
-	board.makemove(ml.getMove(8), boardState); 
-
-	std::cout << "after making move" << std::endl; 
-	board.print(boardState); 
-
+	perft(board, boardState, 1);
 	
-	
+	//after restoring board state and then using make move results in an error... so likely boardstate / board is not restored properly 
 
 	//print to test debug 
 
@@ -97,18 +80,10 @@ int main() {
 
 		    a b c d e f g h*/
 	//todo: 
-	
-	//two options, one is to test each of move generation for black individually 
+	//perft test 
 
-	//another is to write make move and perft test 
+	//test out rule of 3.5 for board and boardState  
 
-	//then use perft test to filter out bugs 
-
-	//I am more down with make move and perft test 
-
-	//make move function for the board class? 
-
-	//how will perft test work? 
 
 
 
