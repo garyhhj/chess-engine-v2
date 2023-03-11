@@ -55,8 +55,8 @@ int main() {
 	board.print(boardState); 
 	
 	const map safesquare = board.safeSquares(boardState); 
-	printBit(safesquare); 
-	//perft(board, boardState, 1); 
+	
+	perft(board, boardState, 1); 
 
 	//perft(board, boardState, 1); 
 

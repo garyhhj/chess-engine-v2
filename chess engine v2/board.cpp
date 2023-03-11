@@ -225,57 +225,49 @@ bool Board::IattackedBlack(const uint64_t square) const{
 }
 
 //returns mask of safe squares for king moves
-const uint64_t Board::safeSquares(const BoardState& boardState) {
+const uint64_t Board::safeSquares(const BoardState& boardState) const{
 	return (boardState.side == white ? Board::IsafeSquaresWhite(boardState) : Board::IsafeSquaresBlack(boardState)); 
 }
 
-const uint64_t Board::IsafeSquaresWhite(const BoardState& boardState) {
-	//check attacked at each square? 
+const uint64_t Board::IsafeSquaresWhite(const BoardState& boardState) const{
 	const int kingIndex = getlsbBitIndex(Board::piece[wKing]); 
 	const map kingMask = Board::piece[wKing]; 
 	map res = 0x0ull; 
 
+	Board boardCopy = *this; 
 	//removing king
-	Board::piece[wKing] = 0x0ull; 
-	Board::occupancy[white] &= ~kingMask; 
+	boardCopy.piece[wKing] = 0x0ull; 
+	boardCopy.occupancy[white] &= ~kingMask; 
 
-	map potentialSquares = kingAttack[kingIndex] & ~(Board::occupancy[white] | Board::occupancy[black]); 
+	map potentialSquares = kingAttack[kingIndex] & ~boardCopy.occupancy[white]; 
 	while (potentialSquares) {
 		const map potentialSquare = getLsbBit(potentialSquares); 
-		if (!Board::attacked(potentialSquare, boardState)) {
+		if (!boardCopy.attacked(potentialSquare, boardState)) {
 			res |= potentialSquare;
 		}
 		potentialSquares &= potentialSquares - 1; 
 	}
 
-	//placing back king
-	Board::piece[wKing] = kingMask; 
-	Board::occupancy[white] |= kingMask; 
-
 	return res; 
 }
-const uint64_t Board::IsafeSquaresBlack(const BoardState& boardState) {
-	//check attacked at each square? 
+const uint64_t Board::IsafeSquaresBlack(const BoardState& boardState) const{
 	const int kingIndex = getlsbBitIndex(Board::piece[bKing]);
 	const map kingMask = Board::piece[bKing];
 	map res = 0x0ull;
 
+	Board boardCopy = *this;
 	//removing king
-	Board::piece[bKing] = 0x0ull;
-	Board::occupancy[black ] &= ~kingMask;
+	boardCopy.piece[bKing] = 0x0ull;
+	boardCopy.occupancy[black] &= ~kingMask;
 
-	map potentialSquares = kingAttack[kingIndex] & ~(Board::occupancy[white] | Board::occupancy[black]);
+	map potentialSquares = kingAttack[kingIndex] & ~boardCopy.occupancy[black];
 	while (potentialSquares) {
 		const map potentialSquare = getLsbBit(potentialSquares);
-		if (!Board::attacked(potentialSquare, boardState)) {
+		if (!boardCopy.attacked(potentialSquare, boardState)) {
 			res |= potentialSquare;
 		}
 		potentialSquares &= potentialSquares - 1;
 	}
-
-	//placing back king
-	Board::piece[bKing] = kingMask;
-	Board::occupancy[black] |= kingMask;
 
 	return res;
 }

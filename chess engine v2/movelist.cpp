@@ -102,6 +102,7 @@ void Movelist::moveGen(const Board& board, BoardState& boardState) {
 void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 
 	const map checkMask = board.checkMask(boardState); 
+	const map kingSafeSquares = board.safeSquares(boardState);
 	const map pinMaskHV = board.pinMaskHV(boardState); 
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState); 
 
@@ -112,29 +113,14 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 
 	//double check - can only move king 
 	if (boardState.doubleCheck) {
-		const int kingIndex = getlsbBitIndex(board.piece[wKing]); 
+		map targetSquares = kingSafeSquares;
+		while (targetSquares) {
+			const map targetSquare = getLsbBit(targetSquares); 
+			Movelist::pushBack(Move::makemove(board.piece[wKing], targetSquare, wKing, wPawn, targetSquare & board.occupancy[black], false, false, false));
 
-		//king move noncapture 
-		map potentialKingMoveNonCapture = kingAttack[kingIndex] & ~(board.occupancy[black] & board.occupancy[white]); 
-		while (potentialKingMoveNonCapture) {
-			//target square not attacked 
-			if (!board.attacked(getLsbBit(potentialKingMoveNonCapture), boardState)) {
-				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, false, false, false, false)); 
-			}
-			potentialKingMoveNonCapture &= potentialKingMoveNonCapture - 1; 
+			targetSquares &= targetSquares - 1; 
 		}
-
-
-		//king move capture 
-		map potentialKingMoveCapture = kingAttack[kingIndex] & board.occupancy[black];
-		while (potentialKingMoveCapture) {
-			//target square not attacked 
-			if (!board.attacked(getLsbBit(potentialKingMoveCapture), boardState)) {
-				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), wKing, wPawn, true, false, false, false));
-			}
-			potentialKingMoveCapture &= potentialKingMoveCapture - 1; 
-		}
-		return;
+		return; 
 	}
 
 
@@ -324,19 +310,13 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	//king moves 
 	//check if square is safe before moving 
 	//pins and check mask do no apply to the king 
-	
 	{
+		map targetSquares = kingSafeSquares;
+		while (targetSquares) {
+			const map targetSquare = getLsbBit(targetSquares);
+			Movelist::pushBack(Move::makemove(board.piece[wKing], targetSquare, wKing, wPawn, targetSquare & board.occupancy[black], false, false, false)); 
 
-		//safe squares ... write a function that returns a map of the safe squares a king can move to 
-		map targetSquare = kingAttack[getlsbBitIndex(board.piece[wKing])] & ~board.occupancy[white]; 
-
-		map attacks = kingAttack[getlsbBitIndex(board.piece[wKing])] & ~board.occupancy[white]; 
-		while (attacks) {
-			if (!board.attacked(getLsbBit(attacks), boardState)) {
-				const map sourceSquare = getLsbBit(attacks); 
-				Movelist::pushBack(Move::makemove(board.piece[wKing], sourceSquare, wKing, wPawn, sourceSquare & board.occupancy[black], false, false, false));
-			}
-			attacks &= attacks - 1; 
+			targetSquares &= targetSquares - 1; 
 		}
 	}
 
@@ -510,6 +490,7 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	
 	const map checkMask = board.checkMask(boardState);
+	const map kingSafeSquares = board.safeSquares(boardState);
 	const map pinMaskHV = board.pinMaskHV(boardState);
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState);
 	const map occ = board.occupancy[white] | board.occupancy[black];
@@ -518,27 +499,12 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 
 	//double check - can only move king 
 	if (boardState.doubleCheck) {
-		const int kingIndex = getlsbBitIndex(board.piece[bKing]);
+		map targetSquares = kingSafeSquares;
+		while (targetSquares) {
+			const map targetSquare = getLsbBit(targetSquares);
+			Movelist::pushBack(Move::makemove(board.piece[bKing], targetSquare, bKing, wPawn, targetSquare & board.occupancy[white], false, false, false));
 
-		//king move noncapture 
-		map potentialKingMoveNonCapture = kingAttack[kingIndex] & ~(board.occupancy[black] & board.occupancy[white]);
-		while (potentialKingMoveNonCapture) {
-			//target square not attacked 
-			if (!board.attacked(getLsbBit(potentialKingMoveNonCapture), boardState)) {
-				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), bKing, wPawn, false, false, false, false));
-			}
-			potentialKingMoveNonCapture &= potentialKingMoveNonCapture - 1;
-		}
-
-
-		//king move capture 
-		map potentialKingMoveCapture = kingAttack[kingIndex] & board.occupancy[black];
-		while (potentialKingMoveCapture) {
-			//target square not attacked 
-			if (!board.attacked(getLsbBit(potentialKingMoveCapture), boardState)) {
-				Movelist::pushBack(Move::makemove(indexSquare[kingIndex], getLsbBit(potentialKingMoveNonCapture), bKing, wPawn, true, false, false, false));
-			}
-			potentialKingMoveCapture &= potentialKingMoveCapture - 1;
+			targetSquares &= targetSquares - 1;
 		}
 		return;
 	}
@@ -730,15 +696,13 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	//king moves 
 	//check if square is safe before moving 
 	//pins and check mask do no apply to the king 
-
 	{
-		map attacks = kingAttack[getlsbBitIndex(board.piece[bKing])] & ~board.occupancy[black];
-		while (attacks) {
-			if (!board.attacked(getLsbBit(attacks), boardState)) {
-				const map targetSquare = getLsbBit(attacks);
-				Movelist::pushBack(Move::makemove(board.piece[bKing], targetSquare, bKing, wPawn, targetSquare & board.occupancy[white], false, false, false));
-			}
-			attacks &= attacks - 1;
+		map targetSquares = kingSafeSquares;
+		while (targetSquares) {
+			const map targetSquare = getLsbBit(targetSquares);
+			Movelist::pushBack(Move::makemove(board.piece[wKing], targetSquare, wKing, wPawn, targetSquare & board.occupancy[black], false, false, false));
+
+			targetSquares &= targetSquares - 1;
 		}
 	}
 

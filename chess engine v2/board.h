@@ -44,7 +44,7 @@ public:
 
 	void print(const BoardState& boardState) const;
 	bool attacked(const uint64_t square, const BoardState& boardState) const;
-	const uint64_t safeSquares(const BoardState& boardState); 
+	const uint64_t safeSquares(const BoardState& boardState) const ; 
 	const uint64_t checkMask(BoardState& boardState) const; 
 	const uint64_t pinMaskDiagonal(const BoardState& boardState) const;
 	const uint64_t pinMaskHV(const BoardState& boardState) const; 
@@ -57,8 +57,8 @@ public:
 
 	bool IattackedWhite(const uint64_t square) const;
 	bool IattackedBlack(const uint64_t square) const;
-	const uint64_t IsafeSquaresWhite(const BoardState& boardState);
-	const uint64_t IsafeSquaresBlack(const BoardState& boardState); 
+	const uint64_t IsafeSquaresWhite(const BoardState& boardState) const ;
+	const uint64_t IsafeSquaresBlack(const BoardState& boardState) const; 
 	const uint64_t IcheckMaskWhite(BoardState& boardState) const;
 	const uint64_t IcheckMaskBlack(BoardState& boardState) const;
 	const uint64_t IpinMaskDiagonalWhite() const; 
