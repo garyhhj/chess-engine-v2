@@ -25,29 +25,43 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1 ";
+		string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
 		Fen::parse(fenStart, board, boardState);
 	}
 
-
-
-
-
-
-	auto start = std::chrono::steady_clock::now();
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	board.makemove(ml.getMove(15), boardState);
-	board.print(boardState); 
-	
-	Movelist ml2; 
-	ml2.moveGen(board, boardState); 
-	//ml2.print(); 
-	board.makemove(ml2.getMove(0), boardState); 
 	board.print(boardState); 
 
-	perft(board, boardState, 1); 
+	perft(board, boardState, 4); 
+
+	//const map pind = board.pinMaskDiagonal(boardState); 
+	//printBit(pind); 
+
+	//ml.moveGen(board, boardState); 
+
+
+
+
+	//auto start = std::chrono::steady_clock::now();
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	//board.makemove(ml.getMove(5), boardState);
+	////board.print(boardState); 
+	//
+	//Movelist ml2; 
+	//ml2.moveGen(board, boardState); 
+	////ml2.print(); 
+	//board.makemove(ml2.getMove(15), boardState); 
+	////board.print(boardState); 
+
+	//Movelist ml3; 
+	//ml3.moveGen(board, boardState); 
+	////ml3.print(); 
+	//board.makemove(ml3.getMove(20), boardState); 
+	////board.print(boardState); 
+
+	//perft(board, boardState, 1); 
+	//perft(board, boardState, 2); 
 	//uh oh... this make move has some issues 
 
 	//std::cout << "wpawn, knight, king:" << std::endl;
@@ -80,9 +94,17 @@ int main() {
 	//perft(board, boardState, 1);
 
 
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> elapsed_seconds = end - start;
-	std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+	//auto end = std::chrono::steady_clock::now();
+	//std::chrono::duration<double> elapsed_seconds = end - start;
+	//std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
+
+
+
+
+
+
+
 
 	
 	//after restoring board state and then using make move results in an error... so likely boardstate / board is not restored properly 

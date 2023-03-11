@@ -335,7 +335,6 @@ const uint64_t Board::pinMaskDiagonal(const BoardState& boardState) const{
 
 //pin mask during white's turn (when white is about to make move) 
 const uint64_t Board::IpinMaskDiagonalWhite() const{
-
 	const int index = getlsbBitIndex(Board::piece[wKing]); 
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black]; 
 	uint64_t res = 0x0ull; 
@@ -368,7 +367,6 @@ const uint64_t Board::IpinMaskDiagonalWhite() const{
 }
 
 const uint64_t Board::IpinMaskDiagonalBlack() const{
-	
 	const int index = getlsbBitIndex(Board::piece[bKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
 	uint64_t res = 0x0ull;
@@ -386,7 +384,7 @@ const uint64_t Board::IpinMaskDiagonalBlack() const{
 			const int attackerIndex = getlsbBitIndex(potentialBishopPinAttacker);
 			const map uocc = occ & ~indexSquare[pinnedIndex];
 
-			if (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & Board::piece[wKing]) {
+			if (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & Board::piece[bKing]) {
 				res |= (bishopAttack[attackerIndex][bishopMagicIndex(uocc, attackerIndex)] & bishopAttack[index][bishopMagicIndex(uocc, index)]);
 				res |= indexSquare[attackerIndex];
 			}

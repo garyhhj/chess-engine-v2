@@ -502,14 +502,13 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 }
 
 void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
-
+	
 	const map checkMask = board.checkMask(boardState);
 	const map pinMaskHV = board.pinMaskHV(boardState);
 	const map pinMaskDiagonal = board.pinMaskDiagonal(boardState);
 	const map occ = board.occupancy[white] | board.occupancy[black];
 
 	//start generating moves 
-
 
 	//double check - can only move king 
 	if (boardState.doubleCheck) {
