@@ -147,7 +147,8 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		//non HV pinned 
 		map pawns = ((board.piece[wPawn] & ~pinMaskDiagonal & ~pinMaskHV) << 8) & ~(board.occupancy[white] | board.occupancy[black]) & ~Row8 & checkMask;
 		while (pawns) {
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) >> 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			const map targetSquare = getLsbBit(pawns); 
+			Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
 			
 			pawns &= pawns - 1; 
 		}
@@ -155,7 +156,8 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		//HV pinned 
 		pawns = (board.piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.occupancy[white] | board.occupancy[black]) & ~Row8 & checkMask;
 		while (pawns){
-			Movelist::pushBack(Move::makemove(getLsbBit(pawns) >> 8, getLsbBit(pawns), wPawn, wPawn, false, false, false, false));
+			const map targetSquare = getLsbBit(pawns);
+			Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
 		
 			pawns &= pawns - 1; 
 		}
@@ -216,9 +218,9 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	//pawn captures non promotion 
 	{
 		//non Diagonally pinned 
-		map pawns = board.piece[wPawn] & ~pinMaskHV & ~pinMaskDiagonal & ~Row7 & checkMask;
+		map pawns = board.piece[wPawn] & ~pinMaskHV & ~pinMaskDiagonal & ~Row7;
 		while (pawns) {
-			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black];
+			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & checkMask;
 			while (captures) {
 				Movelist::pushBack(Move::makemove(getLsbBit(pawns), getLsbBit(captures), wPawn, wPawn, true, false, false, false));
 
@@ -229,9 +231,9 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		}
 		
 		//diagonally pinned 
-		pawns = board.piece[wPawn] & ~pinMaskHV & pinMaskDiagonal & ~Row7 & checkMask; 
+		pawns = board.piece[wPawn] & ~pinMaskHV & pinMaskDiagonal & ~Row7; 
 		while (pawns) {
-			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & pinMaskDiagonal; 
+			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & pinMaskDiagonal & checkMask; 
 			while (captures) {
 				Movelist::pushBack(Move::makemove(getLsbBit(pawns), getLsbBit(captures), wPawn, wPawn, true, false, false, false));
 
@@ -245,9 +247,9 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	//pawn catpures with promotion 
 	{
 		//non Diagonally pinned 
-		map pawns = board.piece[wPawn] & ~pinMaskHV & ~pinMaskDiagonal & Row7 & checkMask; 
+		map pawns = board.piece[wPawn] & ~pinMaskHV & ~pinMaskDiagonal & Row7; 
 		while (pawns) {
-			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black]; 
+			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & checkMask; 
 			const map sourceSquare = getLsbBit(pawns); 
 			while (captures) {
 				const map targetSquare = getLsbBit(captures); 
@@ -263,9 +265,9 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		}
 
 		//Diagonally pinned 
-		pawns = board.piece[wPawn] & ~pinMaskHV & pinMaskDiagonal & Row7 & checkMask; 
+		pawns = board.piece[wPawn] & ~pinMaskHV & pinMaskDiagonal & Row7; 
 		while (pawns) {
-			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & pinMaskDiagonal; 
+			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & board.occupancy[black] & pinMaskDiagonal & checkMask; 
 			const map sourceSquare = getLsbBit(pawns);
 			while (captures) {
 				const map targetSquare = getLsbBit(captures); 
@@ -324,6 +326,10 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	//pins and check mask do no apply to the king 
 	
 	{
+
+		//safe squares ... write a function that returns a map of the safe squares a king can move to 
+		map targetSquare = kingAttack[getlsbBitIndex(board.piece[wKing])] & ~board.occupancy[white]; 
+
 		map attacks = kingAttack[getlsbBitIndex(board.piece[wKing])] & ~board.occupancy[white]; 
 		while (attacks) {
 			if (!board.attacked(getLsbBit(attacks), boardState)) {
@@ -618,9 +624,9 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	//pawn captures non promotion 
 	{
 		//non Diagonally pinned 
-		map pawns = board.piece[bPawn] & ~pinMaskHV & ~pinMaskDiagonal & ~Row2 & checkMask;
+		map pawns = board.piece[bPawn] & ~pinMaskHV & ~pinMaskDiagonal & ~Row2;
 		while (pawns) {
-			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white];
+			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & checkMask;
 			const map sourceSquare = getLsbBit(pawns);
 			while (captures) {
 				Movelist::pushBack(Move::makemove(sourceSquare, getLsbBit(captures), bPawn, wPawn, true, false, false, false));
@@ -632,9 +638,9 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		}
 
 		//diagonally pinned 
-		pawns = board.piece[bPawn] & ~pinMaskHV & pinMaskDiagonal & ~Row2 & checkMask;
+		pawns = board.piece[bPawn] & ~pinMaskHV & pinMaskDiagonal & ~Row2;
 		while (pawns) {
-			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & pinMaskDiagonal;
+			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & pinMaskDiagonal & checkMask;
 			const map sourceSquare = getLsbBit(pawns);
 			while (captures) {
 				Movelist::pushBack(Move::makemove(sourceSquare, getLsbBit(captures), bPawn, wPawn, true, false, false, false));
@@ -649,9 +655,9 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	//pawn captures with promotion 
 	{
 		//non Diagonally pinned 
-		map pawns = board.piece[bPawn] & ~pinMaskHV & ~pinMaskDiagonal & Row2 & checkMask;
+		map pawns = board.piece[bPawn] & ~pinMaskHV & ~pinMaskDiagonal & Row2;
 		while (pawns) {
-			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white];
+			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & checkMask;
 			const map sourceSquare = getLsbBit(pawns);
 			while (captures) {
 				const map targetSquare = getLsbBit(captures);
@@ -667,9 +673,9 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		}
 
 		//Diagonally pinned 
-		pawns = board.piece[bPawn] & ~pinMaskHV & pinMaskDiagonal & Row2 & checkMask;
+		pawns = board.piece[bPawn] & ~pinMaskHV & pinMaskDiagonal & Row2;
 		while (pawns) {
-			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & pinMaskDiagonal;
+			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & pinMaskDiagonal & checkMask;
 			const map sourceSquare = getLsbBit(pawns);
 			while (captures) {
 				const map targetSquare = getLsbBit(captures);

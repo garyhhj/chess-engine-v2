@@ -30,10 +30,43 @@ int main() {
 		Fen::parse(fenStart, board, boardState);
 	}
 
+
+	//board.print(boardState); 
+
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	//ml.print(); 
+	board.makemove(ml.getMove(4), boardState); 
+
+
+	Movelist ml1; 
+	ml1.moveGen(board, boardState); 
+	board.makemove(ml1.getMove(13), boardState); 
+
+
+	Movelist ml2; 
+	ml2.moveGen(board, boardState); 
+	board.makemove(ml2.getMove(20), boardState); 
+
+
+	Movelist ml3; 
+	ml3.moveGen(board, boardState); 
+	board.makemove(ml3.getMove(19), boardState); 
 	board.print(boardState); 
+	
+	const map safesquare = board.safeSquares(boardState); 
+	printBit(safesquare); 
+	//perft(board, boardState, 1); 
 
-	perft(board, boardState, 4); 
+	//perft(board, boardState, 1); 
 
+	//perft(board, boardState, 1); 
+
+	//for king moves need to chedck attacked 
+
+
+	//const map mask = board.checkMask(boardState); 
+	//printBit(mask); 
 	//const map pind = board.pinMaskDiagonal(boardState); 
 	//printBit(pind); 
 
