@@ -71,6 +71,18 @@ void BoardState::Idebug() {
 	std::cout << "side: " << (BoardState::side == white ? "white" : "black") << "\n" <<
 		"enpassant: " <<  char('A' + getlsbBitIndex(BoardState::enpassant) % 8) << 8 - getlsbBitIndex(BoardState::enpassant) / 8 << "\n" <<
 		"doublecheck: " << (BoardState::doubleCheck ? "true" : "false") << "\n"; 
+
+	//castle rights 
+	std::cout << "castle right: ";
+	if (BoardState::castleRightWK) std::cout << "K";
+	else std::cout << "-";
+	if (BoardState::castleRightWQ) std::cout << "Q";
+	else std::cout << "-";
+	if (BoardState::castleRightBK) std::cout << "k";
+	else std::cout << "-";
+	if (BoardState::castleRightBQ) std::cout << "q";
+	else std::cout << "-";
+	std::cout << "\n";
 	std::flush(std::cout);
 }
 
@@ -638,6 +650,7 @@ void Board::makemove(move move, BoardState& boardState) {
 
 void Board::Imakemovewhite(move move, BoardState& boardState) {
 
+	boardState.enpassant = 0x0ull; 
 	const int piece = Move::piece(move);
 	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
 	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
@@ -699,6 +712,8 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 
 
 void Board::Imakemoveblack(move move, BoardState& boardState) {
+
+	boardState.enpassant = 0x0ull;
 	const int piece = Move::piece(move);
 	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
 	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);

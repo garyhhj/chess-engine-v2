@@ -36,7 +36,49 @@ int main() {
 
 
 	auto start = std::chrono::steady_clock::now();
-	perft(board, boardState, 5);
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(15), boardState);
+	board.print(boardState); 
+	
+	Movelist ml2; 
+	ml2.moveGen(board, boardState); 
+	//ml2.print(); 
+	board.makemove(ml2.getMove(0), boardState); 
+	board.print(boardState); 
+
+	perft(board, boardState, 1); 
+	//uh oh... this make move has some issues 
+
+	//std::cout << "wpawn, knight, king:" << std::endl;
+	//printBit(board.piece[wPawn]); 
+	//printBit(board.piece[wKnight]); 
+	//printBit(board.piece[wKing]); 
+
+	//std::cout << "wbishop, wrook, wqueen" << std::endl; 
+	//printBit(board.piece[wBishop]); 
+	//printBit(board.piece[wRook]); 
+	//printBit(board.piece[wQueen]); 
+
+	//std::cout << "bpawn, knight, king:" << std::endl; 
+	//printBit(board.piece[bPawn]); 
+	//printBit(board.piece[bKnight]); 
+	//printBit(board.piece[bKing]); 
+
+	//std::cout << "bbishop, brook, bqueen" << std::endl; 
+	//printBit(board.piece[bBishop]); 
+	//printBit(board.piece[bRook]); 
+	//printBit(board.piece[bQueen]); 
+
+	//std::cout << "occupancy white black" << std::endl; 
+	//printBit(board.occupancy[white]); 
+	//printBit(board.occupancy[black]); 
+
+	//std::cout << "boardstate" << std::endl; 
+	//boardState.debug(); 
+
+	//perft(board, boardState, 1);
+
 
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;

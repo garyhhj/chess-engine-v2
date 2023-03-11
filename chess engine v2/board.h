@@ -51,6 +51,7 @@ public:
 	void makemove(move move, BoardState& boardState); 
 
 private:
+public: 
 	void Iprint(const BoardState& boardState) const;
 
 	bool IattackedWhite(const uint64_t square) const;
