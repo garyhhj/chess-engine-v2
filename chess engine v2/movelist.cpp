@@ -68,6 +68,7 @@ void Movelist::print() {
 		Move::decode(Movelist::movelist[i]);
 		std::cout << "\n";
 	}
+	std::flush(std::cout); 
 }
 //
 //void Movelist::swap(Movelist& m1, Movelist& m2) {
@@ -700,7 +701,7 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		map targetSquares = kingSafeSquares;
 		while (targetSquares) {
 			const map targetSquare = getLsbBit(targetSquares);
-			Movelist::pushBack(Move::makemove(board.piece[wKing], targetSquare, wKing, wPawn, targetSquare & board.occupancy[black], false, false, false));
+			Movelist::pushBack(Move::makemove(board.piece[bKing], targetSquare, bKing, wPawn, targetSquare & board.occupancy[white], false, false, false));
 
 			targetSquares &= targetSquares - 1;
 		}

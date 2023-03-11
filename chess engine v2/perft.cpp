@@ -30,11 +30,14 @@ void perft(Board& board, BoardState& boardState, int depth) {
 	int node = 0; 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
+	const int totalNodes = ml.getIndex(); 
+	std::cout << "total nodes: " << totalNodes << "\n";
+
 
 	//current board conditions 
 	Board currBoard = board;
 	BoardState currBoardState = boardState;
-	for (int index = 0; index < ml.getIndex(); ++index) {
+	for (int index = 0; index < totalNodes; ++index) {
 		board = currBoard; 
 		boardState = currBoardState; 
 		board.makemove(ml.getMove(index), boardState); 
@@ -44,7 +47,11 @@ void perft(Board& board, BoardState& boardState, int depth) {
 		std::cout << "move: " << index;
 		if (index < 10) std::cout << " ";
 		std::cout << " ";
+
+
 		Move::decode(ml.getMove(index)); 
+
+
 		std::cout << " | nodes: " << childNodes << "\n";
 		node += childNodes;
 	}

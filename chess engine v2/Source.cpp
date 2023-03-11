@@ -25,38 +25,46 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 			
-		string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
+		//string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
-		Fen::parse(fenStart, board, boardState);
+		string fentemp = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
+		string fentemp2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b KQkq - ";
+
+		Fen::parse(fentemp2, board, boardState);
 	}
-
+	
 
 	//board.print(boardState); 
 
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	//ml.print(); 
-	board.makemove(ml.getMove(4), boardState); 
+	perft(board, boardState, 2);
 
+	//board.print(boardState); 
 
-	Movelist ml1; 
-	ml1.moveGen(board, boardState); 
-	board.makemove(ml1.getMove(13), boardState); 
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	////ml.print(); 
+	//board.makemove(ml.getMove(36), boardState); 
+	//board.print(boardState); 
 
-
-	Movelist ml2; 
-	ml2.moveGen(board, boardState); 
-	board.makemove(ml2.getMove(20), boardState); 
-
-
-	Movelist ml3; 
-	ml3.moveGen(board, boardState); 
-	board.makemove(ml3.getMove(19), boardState); 
-	board.print(boardState); 
 	
-	const map safesquare = board.safeSquares(boardState); 
-	
-	perft(board, boardState, 1); 
+	//Movelist ml1; 
+	//ml1.moveGen(board, boardState); 
+	//board.makemove(ml1.getMove(13), boardState); 
+
+		
+	//Movelist ml2; 
+	//ml2.moveGen(board, boardState); 
+	//board.makemove(ml2.getMove(20), boardState); 
+
+
+	//Movelist ml3; 
+	//ml3.moveGen(board, boardState); 
+	//board.makemove(ml3.getMove(19), boardState); 
+	//board.print(boardState); 
+	//
+	//const map safesquare = board.safeSquares(boardState); 
+	//
+	//perft(board, boardState, 1); 
 
 	//perft(board, boardState, 1); 
 
