@@ -30,13 +30,19 @@ int main() {
 		string fentemp = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
 		string fentemp2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b KQkq - ";
 
-		Fen::parse(fentemp2, board, boardState);
+		Fen::parse(fentemp, board, boardState);
 	}
 	
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(20), boardState); 
 
-	//board.print(boardState); 
+	std::cout.clear(); 
+	board.print(boardState); 
 
-	perft(board, boardState, 2);
+	//board.print(boardState
+
+	//perft(board, boardState, 3);
 
 	//board.print(boardState); 
 

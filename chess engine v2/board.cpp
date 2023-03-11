@@ -698,38 +698,41 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 
 	boardState.enpassant = 0x0ull; 
 	const int piece = Move::piece(move);
-	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
-	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
-	popBit(Board::occupancy[white], indexSquare[Move::sourceSquare(move)]);
-	setBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)]);
+	const int sourceSquare = Move::sourceSquare(move); 
+	const int targetSquare = Move::targetSquare(move); 
+
+	popBit(Board::piece[piece], indexSquare[sourceSquare]);
+	setBit(Board::piece[piece], indexSquare[targetSquare]);
+	popBit(Board::occupancy[white], indexSquare[sourceSquare]);
+	setBit(Board::occupancy[white], indexSquare[targetSquare]);
 
 	//promotions
 	if (Move::promotePiece(move) != wPawn) {
-		popBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
-		setBit(Board::piece[Move::promotePiece(move)], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[piece], indexSquare[targetSquare]);
+		setBit(Board::piece[Move::promotePiece(move)], indexSquare[targetSquare]);
 	}
 	
 	//captures
 	if (Move::captureFlag(move)) {
-		popBit(Board::piece[bPawn], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[bKnight], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[bKing], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[bBishop], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[bRook], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[bQueen], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[bPawn], indexSquare[targetSquare]);
+		popBit(Board::piece[bKnight], indexSquare[targetSquare]);
+		popBit(Board::piece[bKing], indexSquare[targetSquare]);
+		popBit(Board::piece[bBishop], indexSquare[targetSquare]);
+		popBit(Board::piece[bRook], indexSquare[targetSquare]);
+		popBit(Board::piece[bQueen], indexSquare[targetSquare]);
 
-		popBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::occupancy[black], indexSquare[targetSquare]);
 	}
 
 	//doublepush 
 	if (Move::doublePushFlag(move)) {
-		boardState.enpassant = (indexSquare[Move::targetSquare(move)] >> 8); 
+		boardState.enpassant = (indexSquare[targetSquare] >> 8); 
 	}
 
 	//enpassant 
 	if (Move::enpassantFlag(move)) {
-		popBit(Board::piece[bPawn], indexSquare[Move::targetSquare(move)] >> 8); 
-		popBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)] >> 8); 
+		popBit(Board::piece[bPawn], indexSquare[targetSquare] >> 8); 
+		popBit(Board::occupancy[black], indexSquare[targetSquare] >> 8); 
 	}
 
 	//castlingFlag
@@ -752,8 +755,31 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 		boardState.castleRightWQ = false; 
 	}
 
+	//more castling flag 
+	if (piece == wKing) {
+		boardState.castleRightWK = false;
+		boardState.castleRightWQ = false;
+	}
+	if (indexSquare[sourceSquare] == A1 || indexSquare[targetSquare] == A1) {
+		boardState.castleRightWQ = false; 
+	}
+	if (indexSquare[sourceSquare] == H1 || indexSquare[targetSquare] == H1) {
+		boardState.castleRightWK = false; 
+	}
+
 	//change side 
 	boardState.side = black; 
+
+	//  8   r n b q k b n r
+	//	7   p p p p r p p p
+	//	6   0 0 0 0 0 0 0 0
+	//	5   0 0 0 0 0 0 0 0
+	//	4   0 0 0 0 0 0 0 b
+	//	3   0 0 0 0 0 0 0 0
+	//	2   0 0 0 0 R R 0 0
+	//	1   0 N 0 Q K 0 N 0
+
+	//		a b c d e f g h
 }
 
 
@@ -761,38 +787,41 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 
 	boardState.enpassant = 0x0ull;
 	const int piece = Move::piece(move);
-	popBit(Board::piece[piece], indexSquare[Move::sourceSquare(move)]);
-	setBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
-	popBit(Board::occupancy[black], indexSquare[Move::sourceSquare(move)]);
-	setBit(Board::occupancy[black], indexSquare[Move::targetSquare(move)]);
+	const int sourceSquare = Move::sourceSquare(move);
+	const int targetSquare = Move::targetSquare(move);
+
+	popBit(Board::piece[piece], indexSquare[sourceSquare]);
+	setBit(Board::piece[piece], indexSquare[targetSquare]);
+	popBit(Board::occupancy[black], indexSquare[sourceSquare]);
+	setBit(Board::occupancy[black], indexSquare[targetSquare]);
 
 	//promotions
 	if (Move::promotePiece(move) != wPawn) {
-		popBit(Board::piece[piece], indexSquare[Move::targetSquare(move)]);
-		setBit(Board::piece[Move::promotePiece(move)], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[piece], indexSquare[targetSquare]);
+		setBit(Board::piece[Move::promotePiece(move)], indexSquare[targetSquare]);
 	}
 
 	//captures
 	if (Move::captureFlag(move)) {
-		popBit(Board::piece[wPawn], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[wKnight], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[wKing], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[wBishop], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[wRook], indexSquare[Move::targetSquare(move)]);
-		popBit(Board::piece[wQueen], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::piece[wPawn], indexSquare[targetSquare]);
+		popBit(Board::piece[wKnight], indexSquare[targetSquare]);
+		popBit(Board::piece[wKing], indexSquare[targetSquare]);
+		popBit(Board::piece[wBishop], indexSquare[targetSquare]);
+		popBit(Board::piece[wRook], indexSquare[targetSquare]);
+		popBit(Board::piece[wQueen], indexSquare[targetSquare]);
 
-		popBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)]);
+		popBit(Board::occupancy[white], indexSquare[targetSquare]);
 	}
 
 	//doublepush 
 	if (Move::doublePushFlag(move)) {
-		boardState.enpassant = (indexSquare[Move::targetSquare(move)] << 8);
+		boardState.enpassant = (indexSquare[targetSquare] << 8);
 	}
 
 	//enpassant 
 	if (Move::enpassantFlag(move)) {
-		popBit(Board::piece[wPawn], indexSquare[Move::targetSquare(move)] << 8);
-		popBit(Board::occupancy[white], indexSquare[Move::targetSquare(move)] << 8);
+		popBit(Board::piece[wPawn], indexSquare[targetSquare] << 8);
+		popBit(Board::occupancy[white], indexSquare[targetSquare] << 8);
 	}
 
 	//castlingFlag
@@ -815,6 +844,29 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 		boardState.castleRightBQ = false;
 	}
 
+	//more castling flag 
+	if (piece == bKing) {
+		boardState.castleRightBK = false;
+		boardState.castleRightBQ = false;
+	}
+	if (indexSquare[sourceSquare] == A8 || indexSquare[targetSquare] == A8) {
+		boardState.castleRightBQ = false;
+	}
+	if (indexSquare[sourceSquare] == H8 || indexSquare[targetSquare] == H8) {
+		boardState.castleRightBK = false;
+	}
+
 	//change side 
 	boardState.side = white;
+
+	//  8   r n b q k b n r
+	//	7   p p p p r p p p
+	//	6   0 0 0 0 0 0 0 0
+	//	5   0 0 0 0 0 0 0 0
+	//	4   0 0 0 0 0 0 0 b
+	//	3   0 0 0 0 0 0 0 0
+	//	2   0 0 0 0 R R 0 0
+	//	1   0 N 0 Q K 0 N 0
+
+	//		a b c d e f g h
 }
