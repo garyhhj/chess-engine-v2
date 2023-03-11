@@ -327,8 +327,12 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	{
 		//non diagonally pinned 
 		map bishops = board.piece[wBishop] & ~pinMaskHV & ~pinMaskDiagonal;
+		//std::cout << "bishops non diagonally pinned:" << std::endl; 
+		//printBit(bishops); 
 		while (bishops) {
 			map targetSquares = bishopAttack[getlsbBitIndex(bishops)][bishopMagicIndex(occ, getlsbBitIndex(bishops))] & checkMask & ~board.occupancy[white];
+			//std::cout << "targetSquares: " << std::endl; 
+			//printBit(targetSquares); 
 			const map sourceSquare = getLsbBit(bishops); 
 			while (targetSquares) {
 				const map targetSquare = getLsbBit(targetSquares); 
@@ -342,9 +346,13 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 
 		//diagonally pinned 
 		bishops = board.piece[wBishop] & ~pinMaskHV & pinMaskDiagonal; 
+		//std::cout << "bishops non diagonally pinned:" << std::endl;
+		//printBit(bishops);
 		while (bishops) {
 			map targetSquares = bishopAttack[getlsbBitIndex(bishops)][bishopMagicIndex(occ, getlsbBitIndex(bishops))] & checkMask & ~board.occupancy[white] & pinMaskDiagonal;
-			const map sourceSquare = getlsbBitIndex(bishops); 
+			//std::cout << "targetSquares: " << std::endl; 
+			//printBit(targetSquares); 
+			const map sourceSquare = getLsbBit(bishops); 
 			while (targetSquares) {
 				const map targetSquare = getLsbBit(targetSquares); 
 				Movelist::pushBack(Move::makemove(sourceSquare, targetSquare, wBishop, wPawn, targetSquare & board.occupancy[black], false, false, false));

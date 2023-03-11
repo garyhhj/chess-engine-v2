@@ -766,6 +766,12 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 	if (indexSquare[sourceSquare] == H1 || indexSquare[targetSquare] == H1) {
 		boardState.castleRightWK = false; 
 	}
+	if (indexSquare[sourceSquare] == A8 || indexSquare[targetSquare] == A8) {
+		boardState.castleRightBQ = false;
+	}
+	if (indexSquare[sourceSquare] == H8 || indexSquare[targetSquare] == H8) {
+		boardState.castleRightBK = false;
+	}
 
 	//change side 
 	boardState.side = black; 
@@ -848,6 +854,12 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 	if (piece == bKing) {
 		boardState.castleRightBK = false;
 		boardState.castleRightBQ = false;
+	}
+	if (indexSquare[sourceSquare] == A1 || indexSquare[targetSquare] == A1) {
+		boardState.castleRightWQ = false;
+	}
+	if (indexSquare[sourceSquare] == H1 || indexSquare[targetSquare] == H1) {
+		boardState.castleRightWK = false;
 	}
 	if (indexSquare[sourceSquare] == A8 || indexSquare[targetSquare] == A8) {
 		boardState.castleRightBQ = false;

@@ -28,17 +28,31 @@ int main() {
 		//string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
 		string fentemp = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
-		string fentemp2 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/1R2K2R b KQkq - ";
-
-		Fen::parse(fentemp, board, boardState);
+		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
+			
+		Fen::parse(fentemp2, board, boardState);
 	}
-	
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	board.makemove(ml.getMove(20), boardState); 
-
 	std::cout.clear(); 
+
+
 	board.print(boardState); 
+
+
+	perft(board, boardState, 3); 
+	
+
+	//std::cout << "making this move" << std::endl; 
+	//Movelist ml; 
+	//ml.moveGen(board, boardState);
+	//Move::decode(ml.getMove(29)); 
+	//std::cout << std::endl; 
+	//board.makemove(ml.getMove(29), boardState); 
+	//board.print(boardState); 
+
+	//perft(board, boardState, 3);
+
+	//std::cout.clear(); 
+	//board.print(boardState); 
 
 	//board.print(boardState
 
@@ -111,32 +125,39 @@ int main() {
 	//perft(board, boardState, 2); 
 	//uh oh... this make move has some issues 
 
-	//std::cout << "wpawn, knight, king:" << std::endl;
-	//printBit(board.piece[wPawn]); 
-	//printBit(board.piece[wKnight]); 
-	//printBit(board.piece[wKing]); 
+	{
+		//std::cout << std::endl; 
+		//std::cout << std::endl; 
+		//std::cout << std::endl; 
+		//std::cout << std::endl; 
+		//std::cout << std::endl; 
+		//std::cout << "wpawn, knight, king:" << std::endl;
+		//printBit(board.piece[wPawn]); 
+		//printBit(board.piece[wKnight]); 
+		//printBit(board.piece[wKing]); 
 
-	//std::cout << "wbishop, wrook, wqueen" << std::endl; 
-	//printBit(board.piece[wBishop]); 
-	//printBit(board.piece[wRook]); 
-	//printBit(board.piece[wQueen]); 
+		//std::cout << "wbishop, wrook, wqueen" << std::endl; 
+		//printBit(board.piece[wBishop]); 
+		//printBit(board.piece[wRook]); 
+		//printBit(board.piece[wQueen]); 
 
-	//std::cout << "bpawn, knight, king:" << std::endl; 
-	//printBit(board.piece[bPawn]); 
-	//printBit(board.piece[bKnight]); 
-	//printBit(board.piece[bKing]); 
+		//std::cout << "bpawn, knight, king:" << std::endl; 
+		//printBit(board.piece[bPawn]); 
+		//printBit(board.piece[bKnight]); 
+		//printBit(board.piece[bKing]); 
 
-	//std::cout << "bbishop, brook, bqueen" << std::endl; 
-	//printBit(board.piece[bBishop]); 
-	//printBit(board.piece[bRook]); 
-	//printBit(board.piece[bQueen]); 
+		//std::cout << "bbishop, brook, bqueen" << std::endl; 
+		//printBit(board.piece[bBishop]); 
+		//printBit(board.piece[bRook]); 
+		//printBit(board.piece[bQueen]); 
 
-	//std::cout << "occupancy white black" << std::endl; 
-	//printBit(board.occupancy[white]); 
-	//printBit(board.occupancy[black]); 
+		//std::cout << "occupancy white black" << std::endl; 
+		//printBit(board.occupancy[white]); 
+		//printBit(board.occupancy[black]); 
 
-	//std::cout << "boardstate" << std::endl; 
-	//boardState.debug(); 
+		//std::cout << "boardstate" << std::endl; 
+		//boardState.debug(); 
+	}
 
 	//perft(board, boardState, 1);
 
