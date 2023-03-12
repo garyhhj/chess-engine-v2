@@ -3,6 +3,7 @@
 #include "board.h"
 #include "movelist.h"
 #include "perft.h"
+#include "uci.h"
 
 #include <iostream>
 #include <bitset>
@@ -14,7 +15,7 @@ int main() {
 
 	Board board; 
 	BoardState boardState; 
-
+	UCI uci; 
 	{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
@@ -26,18 +27,25 @@ int main() {
 			
 		//string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
-		string fentemp = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
+		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 			
-		Fen::parse(fenStart, board, boardState);
+		Fen::parse(fentemp, board, boardState);
 	}
 	std::cout.clear(); 
 
-
 	board.print(boardState); 
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	int index = uci.parseMove("a7a8q", ml, boardState); 
+	std::cout << index << std::endl; 
+	Move::decode(ml.getMove(index));
 
 
-	perft(board, boardState, 7); 
+	std::cout << std::endl; 
+	std::cout << std::endl; 
+	std::cout << std::endl; 
+
 
 
 

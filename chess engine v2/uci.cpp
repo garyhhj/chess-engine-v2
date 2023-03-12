@@ -6,7 +6,26 @@
 *Util
 *
 *********************/
-static int charPiece[2][128];
+static constexpr int charPiece[2][128] =
+{ {0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
+{0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0,
+11, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
+};
 
 /********************
 *
@@ -19,19 +38,14 @@ UCI& UCI::get() {
 	return instance; 
 }
 
-int UCI::parseMove(const std::string& move, Movelist& ml) {
-	return UCI::get().parseMove(move, ml);
+int UCI::parseMove(const std::string& move, Movelist& ml, const BoardState& boardState) {
+	return UCI::get().IparseMove(move, ml, boardState.getSide());
 }
 
-int UCI::IparseMove(const std::string& move, Movelist& ml) {
+int UCI::IparseMove(const std::string& move, Movelist& ml, int side) {
 	const int sourceSquare = (8 - (move[1] - '0')) * 8 + (move[0] - 'a');
 	const int targetSquare = (8 - (move[3] - '0')) * 8 + (move[2] - 'a'); 
-
-	//something to do with promote piece 
-
-	const int promotePiece = wPawn; 
-	//big if statement, can I speed this up with an array? 
-	//need to change it ? idk how to tell white or black 
+	const int promotePiece = (move.size() == 5 ? charPiece[side][move[4]] : wPawn); 
 
 	for (int i = 0; i < ml.getIndex(); ++i) {
 		uint32_t move = ml.getMove(i); 
@@ -43,7 +57,6 @@ int UCI::IparseMove(const std::string& move, Movelist& ml) {
 	}
 
 	return -1; 
-
 
 	//  8   r n b q k b n r
 	//	7   p p p p r p p p
