@@ -7,7 +7,6 @@
 #include <iostream>
 #include <bitset>
 #include <map>
-#include <chrono>
 //write some stuff for perft test 
 
 
@@ -30,186 +29,17 @@ int main() {
 		string fentemp = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 			
-		Fen::parse(fentemp, board, boardState);
+		Fen::parse(fenStart, board, boardState);
 	}
 	std::cout.clear(); 
 
 
 	board.print(boardState); 
 
-	auto start = std::chrono::steady_clock::now(); 
-	perft(board, boardState, 6); 
 
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<double> elapsed_seconds = end - start;
-	std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
-	
-
-	//std::cout << "making this move" << std::endl; 
-	//Movelist ml; 
-	//ml.moveGen(board, boardState);
-	//Move::decode(ml.getMove(29)); 
-	//std::cout << std::endl; 
-	//board.makemove(ml.getMove(29), boardState); 
-	//board.print(boardState); 
-
-	//perft(board, boardState, 3);
-
-	//std::cout.clear(); 
-	//board.print(boardState); 
-
-	//board.print(boardState
-
-	//perft(board, boardState, 3);
-
-	//board.print(boardState); 
-
-	//Movelist ml; 
-	//ml.moveGen(board, boardState); 
-	////ml.print(); 
-	//board.makemove(ml.getMove(36), boardState); 
-	//board.print(boardState); 
-
-	
-	//Movelist ml1; 
-	//ml1.moveGen(board, boardState); 
-	//board.makemove(ml1.getMove(13), boardState); 
-
-		
-	//Movelist ml2; 
-	//ml2.moveGen(board, boardState); 
-	//board.makemove(ml2.getMove(20), boardState); 
+	perft(board, boardState, 7); 
 
 
-	//Movelist ml3; 
-	//ml3.moveGen(board, boardState); 
-	//board.makemove(ml3.getMove(19), boardState); 
-	//board.print(boardState); 
-	//
-	//const map safesquare = board.safeSquares(boardState); 
-	//
-	//perft(board, boardState, 1); 
-
-	//perft(board, boardState, 1); 
-
-	//perft(board, boardState, 1); 
-
-	//for king moves need to chedck attacked 
-
-
-	//const map mask = board.checkMask(boardState); 
-	//printBit(mask); 
-	//const map pind = board.pinMaskDiagonal(boardState); 
-	//printBit(pind); 
-
-	//ml.moveGen(board, boardState); 
-
-
-
-
-	//auto start = std::chrono::steady_clock::now();
-	//Movelist ml; 
-	//ml.moveGen(board, boardState); 
-	//board.makemove(ml.getMove(5), boardState);
-	////board.print(boardState); 
-	//
-	//Movelist ml2; 
-	//ml2.moveGen(board, boardState); 
-	////ml2.print(); 
-	//board.makemove(ml2.getMove(15), boardState); 
-	////board.print(boardState); 
-
-	//Movelist ml3; 
-	//ml3.moveGen(board, boardState); 
-	////ml3.print(); 
-	//board.makemove(ml3.getMove(20), boardState); 
-	////board.print(boardState); 
-
-	//perft(board, boardState, 1); 
-	//perft(board, boardState, 2); 
-	//uh oh... this make move has some issues 
-
-	{
-		//std::cout << std::endl; 
-		//std::cout << std::endl; 
-		//std::cout << std::endl; 
-		//std::cout << std::endl; 
-		//std::cout << std::endl; 
-		//std::cout << "wpawn, knight, king:" << std::endl;
-		//printBit(board.piece[wPawn]); 
-		//printBit(board.piece[wKnight]); 
-		//printBit(board.piece[wKing]); 
-
-		//std::cout << "wbishop, wrook, wqueen" << std::endl; 
-		//printBit(board.piece[wBishop]); 
-		//printBit(board.piece[wRook]); 
-		//printBit(board.piece[wQueen]); 
-
-		//std::cout << "bpawn, knight, king:" << std::endl; 
-		//printBit(board.piece[bPawn]); 
-		//printBit(board.piece[bKnight]); 
-		//printBit(board.piece[bKing]); 
-
-		//std::cout << "bbishop, brook, bqueen" << std::endl; 
-		//printBit(board.piece[bBishop]); 
-		//printBit(board.piece[bRook]); 
-		//printBit(board.piece[bQueen]); 
-
-		//std::cout << "occupancy white black" << std::endl; 
-		//printBit(board.occupancy[white]); 
-		//printBit(board.occupancy[black]); 
-
-		//std::cout << "boardstate" << std::endl; 
-		//boardState.debug(); 
-	}
-
-	//perft(board, boardState, 1);
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	//after restoring board state and then using make move results in an error... so likely boardstate / board is not restored properly 
-
-	//print to test debug 
-
-	/*map occ = Board::Get().occupancy[white] | Board::Get().occupancy[black]; 
-
-	std::cout << "occ" << std::endl; 
-	printBit(occ); 
-
-	int index = getlsbBitIndex(E1); 
-
-
-	int magicIndex = ((occ & relevantRookBlocker[index]) * rookMagicNum[index]) >> (64 - getNumBit(relevantRookBlocker[index])); 
-
-	printBit(rookAttack[index][magicIndex]); */
-	
-
-
-	////set up board with parse fen
-	//map mask = Board::Get().checkMask(); 
-	//
-	//printBit(mask);
-	/*std::string s; 
-
-	for (int i = 0; i < 64; ++i) {
-		std::cout << i << std::endl; 
-		printBit(relevantRookBlocker[i]); 
-
-		std::cin >> s; 
-	}*/
-
-
-	
 
 
 	/*  8   r n b q k b n r
@@ -223,15 +53,15 @@ int main() {
 
 		    a b c d e f g h*/
 	//todo: 
-	//perft test 
-
-	//test out rule of 3.5 for board and boardState  
-
-
-
-
 	//debruijin optimization for lsb bit index  
-	//make move function (make sure to change board state/enpassant flag/castling flags) 
+
+	//connecting the engine to the gui 
+	 
+	//move ordering 
+	//positional evaluation 
+	//material piece score 
+	//look at what chess programming did and copy that 
+	//perhaps create a namespace for evaluation and let board call some evaluation function 
 
 
 	

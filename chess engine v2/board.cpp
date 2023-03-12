@@ -86,6 +86,14 @@ void BoardState::Idebug() {
 	std::flush(std::cout);
 }
 
+int BoardState::getSide() const {
+	return BoardState::IgetSide(); 
+}
+
+int BoardState::IgetSide() const {
+	return BoardState::side; 
+}
+
 void BoardState::swap(BoardState& lhs, BoardState& rhs) {
 	std::swap(lhs.side, rhs.side); 
 	std::swap(lhs.enpassant, rhs.enpassant); 

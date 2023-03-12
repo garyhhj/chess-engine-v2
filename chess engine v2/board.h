@@ -15,11 +15,13 @@ public:
 	//BoardState& operator=(BoardState rhs) noexcept; //uses swap idiom 
 	//~BoardState(); 
 	
-
+	int getSide() const; 
 	void debug(); 
 
 private: 
 	void swap(BoardState& lhs, BoardState& rhs); 
+
+	int IgetSide() const; 
 	void Idebug();
 
 

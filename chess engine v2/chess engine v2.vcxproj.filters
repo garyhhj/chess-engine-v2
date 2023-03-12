@@ -25,6 +25,9 @@
     <Filter Include="Source Files\perft">
       <UniqueIdentifier>{36d27685-9a15-42ea-ace2-86c33a2ce492}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\uci">
+      <UniqueIdentifier>{dc395bee-f685-4efe-b690-c7dbb81da2a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="perft.cpp">
       <Filter>Source Files\perft</Filter>
+    </ClCompile>
+    <ClCompile Include="uci.cpp">
+      <Filter>Source Files\uci</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="perft.h">
       <Filter>Source Files\perft</Filter>
+    </ClInclude>
+    <ClInclude Include="uci.h">
+      <Filter>Source Files\uci</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

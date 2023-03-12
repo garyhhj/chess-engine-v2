@@ -24,19 +24,18 @@ int perftHelper(Board& board, BoardState& boardState, int depth) {
 
 void perft(Board& board, BoardState& boardState, int depth) {
 	std::cout << "perft" << std::endl; 
+	auto start = std::chrono::steady_clock::now();
 	if (depth == 0) {
 		std::cout << "nodes: 1" << std::endl; 
 	}
 	int node = 0; 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
-	const int totalNodes = ml.getIndex(); 
-	std::cout << "total nodes: " << totalNodes << "\n";
-
 
 	//current board conditions 
 	Board currBoard = board;
 	BoardState currBoardState = boardState;
+	const int totalNodes = ml.getIndex();
 	for (int index = 0; index < totalNodes; ++index) {
 		board = currBoard; 
 		boardState = currBoardState; 
@@ -56,5 +55,10 @@ void perft(Board& board, BoardState& boardState, int depth) {
 		node += childNodes;
 	}
 	std::cout << "nodes: " << node << "\n";
+
+
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 	std::flush(std::cout);
 }
