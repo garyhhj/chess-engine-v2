@@ -27,18 +27,22 @@ int main() {
 			
 		//string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
-		string fentemp = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
+		string fentemp = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 			
-		Fen::parse(fentemp2, board, boardState);
+		Fen::parse(fentemp, board, boardState);
 	}
 	std::cout.clear(); 
 
 
 	board.print(boardState); 
 
+	auto start = std::chrono::steady_clock::now(); 
+	perft(board, boardState, 6); 
 
-	perft(board, boardState, 3); 
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
 	
 
 	//std::cout << "making this move" << std::endl; 
@@ -162,9 +166,7 @@ int main() {
 	//perft(board, boardState, 1);
 
 
-	//auto end = std::chrono::steady_clock::now();
-	//std::chrono::duration<double> elapsed_seconds = end - start;
-	//std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
+
 
 
 
