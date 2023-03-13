@@ -4,20 +4,20 @@
 #include "board.h"
 
 #include <string>
+#include <sstream>
 
 class UCI {
 public: 
 	UCI() = default; 
-	UCI& get();
-	int parseMove(const std::string& move, Movelist& ml, const BoardState& boardState);
+	static UCI& get();
+	static int parseMove(const std::string& move, Movelist& ml, const BoardState& boardState); //eg. e7e8q returns index to move in movelist or -1 
+	static void parsePosition(const std::string& position, Board& board, BoardState& boardState); 
 private: 
 	int IparseMove(const std::string& move, Movelist& ml, int side); 
+	void IparsePosition(const std::string& position, Board& board, BoardState& boardState);
 
-	//parse move input e7e8q  
-	//return whether that move is legal within the board state 
 
-	//parse position 
-	//soemthing idk 
+
 
 	// parse UCI "go" command
 	// go depth something 

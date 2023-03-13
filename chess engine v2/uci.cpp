@@ -57,15 +57,50 @@ int UCI::IparseMove(const std::string& move, Movelist& ml, int side) {
 	}
 
 	return -1; 
-
-	//  8   r n b q k b n r
-	//	7   p p p p r p p p
-	//	6   0 0 0 0 0 0 0 0
-	//	5   0 0 0 0 0 0 0 0	
-	//	4   0 0 0 0 0 0 0 b
-	//	3   0 0 0 0 0 0 0 0
-	//	2   0 0 0 0 R R 0 0
-	//	1   0 N 0 Q K 0 N 0
-
-	//		a b c d e f g h
 }
+
+/*
+Example UCI commands to init position on chess board
+// init start position and make the moves on chess board
+position startpos moves e2e4 e7e5
+
+// init position from fen string and make moves on chess board
+position fen r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 moves e2a6 e8g8
+*/
+void UCI::parsePosition(const std::string& position, Board& board, BoardState& boardState) {
+	UCI::get().IparsePosition(position, board, boardState); 
+}
+
+void UCI::IparsePosition(const std::string& position, Board& board, BoardState& boardState) {
+	std::stringstream ss(position); 
+	std::string word; 
+	while (ss >> word) {
+		if (word == "startpos") {
+			Fen::parseStartPosition(board, boardState); 
+		}
+		else if (word == "fen") {
+			std::string fen = "";
+			int count = 6; 
+			while (count--) {
+				ss >> word;
+				fen += word;
+				fen += " ";
+			}
+			Fen::parse(fen, board, boardState); 
+		}
+		else if (word == "moves") {
+			while (ss >> word) {
+				Movelist ml;
+				ml.moveGen(board, boardState);
+				const int index = UCI::parseMove(word, ml, boardState);
+				if (index != -1) board.makemove(ml.getMove(index), boardState);
+				else {
+					std::cout << "illegal move: " << word << std::endl;
+					return;
+				}
+			}
+
+		}
+	}
+}
+

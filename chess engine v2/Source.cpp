@@ -14,8 +14,7 @@
 int main() {
 
 	Board board; 
-	BoardState boardState; 
-	UCI uci; 
+	BoardState boardState;  
 	{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
@@ -30,24 +29,20 @@ int main() {
 		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 			
-		Fen::parse(fentemp, board, boardState);
+		//Fen::parse(fentemp, board, boardState);
 	}
 	std::cout.clear(); 
 
-	board.print(boardState); 
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	int index = uci.parseMove("a7a8q", ml, boardState); 
-	std::cout << index << std::endl; 
-	Move::decode(ml.getMove(index));
+	//board.print(boardState); 
+	
+	UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves e2e4 e7e5", board, boardState);
 
+	board.print(boardState);
 
-	std::cout << std::endl; 
-	std::cout << std::endl; 
-	std::cout << std::endl; 
+		//position startpos moves e2e4 e7e5
 
-
-
+		// init position from fen string and make moves on chess board
+		//position fen r3k2r / p1ppqpb1 / bn2pnp1 / 3PN3 / 1p2P3 / 2N2Q1p / PPPBBPPP / R3K2R w KQkq - 0 1 moves e2a6 e8g8
 
 
 	/*  8   r n b q k b n r
