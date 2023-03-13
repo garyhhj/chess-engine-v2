@@ -104,3 +104,22 @@ void UCI::IparsePosition(const std::string& position, Board& board, BoardState& 
 	}
 }
 
+void UCI::parseGo(const std::string& command, Board& board, BoardState& boardState) {
+	UCI::get().IparseGo(command, board, boardState); 
+}
+
+//eg go depth 1
+void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardState) {
+	std::stringstream ss(command); 
+	std::string word; 
+
+	int depth = -1; 
+	
+	ss >> word; //go 
+	ss >> word; //depth 
+	ss >> depth; 
+
+	//some code to search some depth 
+	std::cout << "depth: " << depth << std::endl;
+}
+
