@@ -128,21 +128,18 @@ void UCI::uciRun(Board& board, BoardState& boardState) {
 }
 void UCI::IuciRun(Board& board, BoardState& boardState) {
 	std::cout.clear(); 
-	std::cin.clear(); 
 
 	//print engine info 
-	printf("id name meo\n");
-	printf("id name yarh\n");
-	printf("uciok\n");
+	std::cout << "id name meo\n";
+	std::cout << "id name yarh\n";
+	std::cout << "uciok\n";
 
-	while (true) {
-		std::flush(std::cout); 
-
-		std::string line; 
-		std::getline(std::cin, line); 
+	
+	std::string line; 
+	while (std::getline(std::cin, line)) {
 		std::stringstream ss(line); 
 		
-		if (ss.tellp() == std::streampos(0)) {
+		if (line.size() == 0) {
 			continue; 
 		}
 		
@@ -162,12 +159,13 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "uci") {
 			//print engine info 
-			printf("id name meo\n");
-			printf("id name yarh\n");
-			printf("uciok\n");
+			std::cout << "id name meo\n";
+			std::cout << "id name yarh\n";
+			std::cout << "uciok\n";
 		}
 		else if (word == "quit") {
 			break; 
 		}
+		std::cout << std::flush; 
 	}
 }
