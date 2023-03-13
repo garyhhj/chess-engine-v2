@@ -48,6 +48,9 @@
     <ClCompile Include="uci.cpp">
       <Filter>Source Files\uci</Filter>
     </ClCompile>
+    <ClCompile Include="boardeval.cpp">
+      <Filter>Source Files\board</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precalculated.h">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="uci.h">
       <Filter>Source Files\uci</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluation.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

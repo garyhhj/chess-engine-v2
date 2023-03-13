@@ -32,8 +32,8 @@ int main() {
 
 	Board board; 
 	BoardState boardState;  
-	UCI::uciRun(board, boardState); 
-
+	//UCI::uciRun(board, boardState); 
+	board.test(); 
 
 	/*  8   r n b q k b n r
 		7   p p p p p p p p

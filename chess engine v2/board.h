@@ -44,6 +44,7 @@ public:
 	//Board& operator=(Board rhs) noexcept; //uses swap idom 
 	//~Board(); 
 
+	//move generation 
 	void print(const BoardState& boardState) const;
 	bool attacked(const uint64_t square, const BoardState& boardState) const;
 	const uint64_t safeSquares(const BoardState& boardState) const ; 
@@ -53,8 +54,12 @@ public:
 
 	void makemove(move move, BoardState& boardState); 
 
+	//evaluation 
+	void test(); 
+
 private:
-public: 
+//public: 
+	//move generation 
 	void Iprint(const BoardState& boardState) const;
 
 	bool IattackedWhite(const uint64_t square) const;
@@ -70,11 +75,11 @@ public:
 	void Imakemovewhite(move move, BoardState& boardState);
 	void Imakemoveblack(move move, BoardState& boardState);
 
+	//evaluation
+	void Itest(); 
 
 	//leaper pieces 
-	//map* piece; //always size 12 
 	map piece[12]; 
-	//map* occupancy; //always size 2 
 	map occupancy[2]; 
 };
 
