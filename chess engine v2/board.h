@@ -1,7 +1,10 @@
 #pragma once
 #include "macro.h"
+#include "movelist.h"
 #include "attackTable.h"
+#include "evaluation.h"
 #include <string>
+#include <algorithm>
 
 class Movelist; 
 
@@ -55,7 +58,8 @@ public:
 	void makemove(move move, BoardState& boardState); 
 
 	//evaluation 
-	void test(); 
+	int minMax(BoardState& boardState, int depth); 
+	int evaluate(const BoardState& boardState) const; 
 
 private:
 //public: 
@@ -76,7 +80,10 @@ private:
 	void Imakemoveblack(move move, BoardState& boardState);
 
 	//evaluation
-	void Itest(); 
+	int IminMax(BoardState& boardState, int depth);
+	int Ievaluate(const BoardState& boardState) const; 
+
+	int materialEvaluation() const; 
 
 	//leaper pieces 
 	map piece[12]; 

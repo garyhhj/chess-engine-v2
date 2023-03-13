@@ -8,8 +8,15 @@
 static constexpr int materialScore[12] = {
 	100, 300, 0, 300, 500, 900, //wPawn, wKnight, wKing, wBishop, wRook, wQueen
 	-100, -300, 0, -300, -500, -900
-}
+};
 
+/********************
+*
+*positional score
+*
+*********************/
+
+//aiya writing this seems annoying 
 
 
 //enum piece : const int {

@@ -95,14 +95,14 @@ constexpr uint64_t getLsbBit(const uint64_t bitBoard) {
 }
 
 constexpr int getNumBit(uint64_t bitboard) {
-	//return std::popcount(bitboard);
-	int count = 0;
+	return std::popcount(bitboard);
+	/*int count = 0;
 	while (bitboard) {
 		++count;
 
 		bitboard &= bitboard - 1;
 	}
-	return count;
+	return count;*/
 }
 
 constexpr int getlsbBitIndex(uint64_t bitboard) {
