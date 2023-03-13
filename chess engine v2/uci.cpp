@@ -123,3 +123,51 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	std::cout << "depth: " << depth << std::endl;
 }
 
+void UCI::uciRun(Board& board, BoardState& boardState) {
+	UCI::get().IuciRun(board, boardState); 
+}
+void UCI::IuciRun(Board& board, BoardState& boardState) {
+	std::cout.clear(); 
+	std::cin.clear(); 
+
+	//print engine info 
+	printf("id name meo\n");
+	printf("id name yarh\n");
+	printf("uciok\n");
+
+	while (true) {
+		std::flush(std::cout); 
+
+		std::string line; 
+		std::getline(std::cin, line); 
+		std::stringstream ss(line); 
+		
+		if (ss.tellp() == std::streampos(0)) {
+			continue; 
+		}
+		
+		std::string word; 
+		ss >> word; 
+		if (word == "isready") {
+			std::cout << "readyok\n"; 
+		}
+		else if (word == "position") {
+			UCI::parsePosition(line, board, boardState); 
+		}
+		else if (word == "ucinewgame") {
+			UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
+		}
+		else if (word == "go") {
+			UCI::parseGo(line, board, boardState); 
+		}
+		else if (word == "uci") {
+			//print engine info 
+			printf("id name meo\n");
+			printf("id name yarh\n");
+			printf("uciok\n");
+		}
+		else if (word == "quit") {
+			break; 
+		}
+	}
+}
