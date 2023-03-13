@@ -12,6 +12,10 @@
 
 
 int main() {
+	
+	Board board;
+	BoardState boardState;
+
 	{
 		using namespace std;
 		string fen1 = "8/8/8/8/8/8/8/8 w - - ";
@@ -26,14 +30,16 @@ int main() {
 		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 
-		//Fen::parse(fentemp, board, boardState);
+		Fen::parse(fenStart, board, boardState);
 	}
 
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	ml.print(); 
 
-	Board board; 
-	BoardState boardState;  
 	//UCI::uciRun(board, boardState); 
-	board.test(); 
+
+	
 
 	/*  8   r n b q k b n r
 		7   p p p p p p p p
@@ -52,12 +58,18 @@ int main() {
 	 
 	//move ordering 
 	//positional evaluation 
-	//material piece score 
-	//look at what chess programming did and copy that 
-	//perhaps create a namespace for evaluation and let board call some evaluation function 
 
+	//printing out the move string give a move and index 
+	//another min max function but just for base call that will print out the correct move string 
+	//make min and max into alpha and beta 
+	//sorting moves / move ordering 
 
-	
+	//read up on history killer 
+	//pv
+	//mvvla 
+	//how to minimize horizon effect - is it even necessary if engine can search at higher depth? 
+
+	//hashing zorborist 
 	
 
 }

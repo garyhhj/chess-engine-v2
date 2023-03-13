@@ -28,6 +28,9 @@
     <Filter Include="Source Files\uci">
       <UniqueIdentifier>{dc395bee-f685-4efe-b690-c7dbb81da2a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\evaluation">
+      <UniqueIdentifier>{9278f363-4ea2-45dc-ac8c-c2a36450d7d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -48,8 +51,8 @@
     <ClCompile Include="uci.cpp">
       <Filter>Source Files\uci</Filter>
     </ClCompile>
-    <ClCompile Include="boardeval.cpp">
-      <Filter>Source Files\board</Filter>
+    <ClCompile Include="evaluation.cpp">
+      <Filter>Source Files\evaluation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +77,11 @@
     <ClInclude Include="uci.h">
       <Filter>Source Files\uci</Filter>
     </ClInclude>
-    <ClInclude Include="evaluation.h">
+    <ClInclude Include="evaluationTable.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluation.h">
+      <Filter>Source Files\evaluation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

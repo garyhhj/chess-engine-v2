@@ -131,6 +131,26 @@ constexpr bool Move::doublePushFlag(const move m) { return m & 0x200000; }
 constexpr bool Move::enpassantFlag(const move m) { return m & 0x400000; }
 constexpr bool Move::castlingFlag(const move m) { return m & 0x800000; }
 
+const std::string& moveString(const move m) {
+	const int sourceSquare = Move::sourceSquare(m);
+	const int targetSquare = Move::targetSquare(m); 
+	const int promotePiece = Move::promotePiece(m); 
+
+	std::string move = ""; 
+	move += static_cast<char>(sourceSquare % 8 + 'a');
+	move += static_cast<char>('8' - sourceSquare / 8);
+
+	move += static_cast<char>(targetSquare % 8 + 'a');
+	move += static_cast<char>('8' - targetSquare/ 8);
+
+	if (promotePiece == wKnight || promotePiece == bKnight) move += 'k';
+	else if (promotePiece == wBishop || promotePiece == bBishop) move += 'b';
+	else if (promotePiece == wRook || promotePiece == bRook) move += 'r';
+	else if (promotePiece == wQueen || promotePiece == wQueen) move += 'q'; 
+
+	return move; 
+}
+
 
 /********************
 *

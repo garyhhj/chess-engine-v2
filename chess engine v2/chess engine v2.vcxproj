@@ -138,12 +138,13 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="movelist.cpp" />
     <ClCompile Include="perft.cpp" />
-    <ClCompile Include="boardeval.cpp" />
+    <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="uci.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="attackTable.h" />
     <ClInclude Include="board.h" />
+    <ClInclude Include="evaluationTable.h" />
     <ClInclude Include="evaluation.h" />
     <ClInclude Include="uci.h" />
     <ClInclude Include="perft.h" />

@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <string> 
 
 /********************
 *
@@ -53,6 +54,8 @@ namespace Move {
 	constexpr bool doublePushFlag(const move m);
 	constexpr bool enpassantFlag(const move m);
 	constexpr bool castlingFlag(const move m);
+
+	const std::string& moveString(const move m);
 
 };
 

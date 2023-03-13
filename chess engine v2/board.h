@@ -1,8 +1,7 @@
 #pragma once
 #include "macro.h"
-#include "movelist.h"
 #include "attackTable.h"
-#include "evaluation.h"
+//#include "evaluation.h"
 #include <string>
 #include <algorithm>
 
@@ -56,13 +55,7 @@ public:
 	const uint64_t pinMaskHV(const BoardState& boardState) const; 
 
 	void makemove(move move, BoardState& boardState); 
-
-	//evaluation 
-	int minMax(BoardState& boardState, int depth); 
-	int evaluate(const BoardState& boardState) const; 
-
-private:
-//public: 
+private: 
 	//move generation 
 	void Iprint(const BoardState& boardState) const;
 
@@ -78,12 +71,6 @@ private:
 	const uint64_t IpinMaskHVBlack() const; 
 	void Imakemovewhite(move move, BoardState& boardState);
 	void Imakemoveblack(move move, BoardState& boardState);
-
-	//evaluation
-	int IminMax(BoardState& boardState, int depth);
-	int Ievaluate(const BoardState& boardState) const; 
-
-	int materialEvaluation() const; 
 
 	//leaper pieces 
 	map piece[12]; 
