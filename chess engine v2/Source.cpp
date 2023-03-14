@@ -34,19 +34,46 @@ int main() {
 		Fen::parse(fenStart, board, boardState);
 	}
 
-	Movelist ml; 
+	/*Movelist ml; 
 	ml.moveGen(board, boardState); 
 	ml.print(); 
 	auto s = Move::moveString(ml.getMove(2)); 
 
-	std::cout << s << std::endl; 
+	std::cout << s << std::endl; */
+	
 	//Move::moveString(ml.getMove(2)); 
 
 	//test the move string generation 
 
+	board.print(boardState); 
+
+	auto s = Evaluation::minMax(board, boardState, 10); 
+	std::cout << "bestmove: " << s << std::endl; 
+
 	//UCI::uciRun(board, boardState); 
 
-	
+	//if (word == "isready") {
+	//	std::cout << "readyok\n";
+	//}
+	//else if (word == "position") {
+	//	UCI::parsePosition(line, board, boardState);
+	//}
+	//else if (word == "ucinewgame") {
+	//	UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
+	//}
+	//else if (word == "go") {
+	//	UCI::parseGo(line, board, boardState);
+	//}
+	//else if (word == "uci") {
+	//	//print engine info 
+	//	std::cout << "id name meo\n";
+	//	std::cout << "id name yarh\n";
+	//	std::cout << "uciok\n";
+	//}
+	//else if (word == "quit") {
+	//	break;
+	//}
+
 
 	/*  8   r n b q k b n r
 		7   p p p p p p p p

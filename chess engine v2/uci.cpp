@@ -120,7 +120,8 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	ss >> depth; 
 
 	//some code to search some depth 
-	std::cout << "depth: " << depth << std::endl;
+	//std::cout << "depth: " << depth << std::endl;
+	std::cout << "depth: " << depth << std::endl; 
 	const std::string move = Evaluation::minMax(board, boardState, depth); 
 	std::cout << "bestmove " << move << "\n"; 
 }
@@ -152,9 +153,11 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "position") {
 			UCI::parsePosition(line, board, boardState); 
+			board.print(boardState); 
 		}
 		else if (word == "ucinewgame") {
 			UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
+			board.print(boardState); 
 		}
 		else if (word == "go") {
 			UCI::parseGo(line, board, boardState); 
