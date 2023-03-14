@@ -6,8 +6,9 @@
 
 namespace Evaluation {
 	int minMax(Board& board, BoardState& boardState, int depth); 
-	int evaluate(Board& board, BoardState& boardState);
+	int evaluate(Board& board, BoardState& boardState, Movelist& ml);
 
 	int materialEvaluation(const Board& board);
+	int mobilityEvaluation(const Movelist& ml);
 
 }

@@ -40,7 +40,7 @@ static constexpr int mvvlva[12][12] = //mvvlva[attacker][defender]
 *
 *********************/
 
-//aiya writing this seems annoying 
+
 
 
 //enum piece : const int {

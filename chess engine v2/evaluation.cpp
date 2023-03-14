@@ -64,10 +64,17 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
 }
 
 
-int Evaluation::evaluate(Board& board, BoardState& boardState){
+int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
 	//material score 
-	return Evaluation::materialEvaluation(board);
-	
+	const int materialScore = Evaluation::materialEvaluation(board); 
+	const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
+	std::cout
+		<< "material score: " << materialScore << "\n"
+		<< "mobility score: " << mobilityScore << "\n" << std::flush; 
+
+	return
+		Evaluation::materialEvaluation(board) +
+		Evaluation::mobilityEvaluation(ml); 
 
 }
 
@@ -84,4 +91,8 @@ int Evaluation::materialEvaluation(const Board& board) {
 		getNumBit(board.getPiece()[bBishop]) * materialScore[bBishop] +
 		getNumBit(board.getPiece()[bRook]) * materialScore[bRook] +
 		getNumBit(board.getPiece()[bQueen]) * materialScore[bQueen];
+}
+
+int Evaluation::mobilityEvaluation(const Movelist& ml) {
+	return ml.getIndex() * 1000; 
 }
