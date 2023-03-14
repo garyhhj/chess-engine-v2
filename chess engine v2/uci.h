@@ -2,6 +2,7 @@
 #include "movelist.h"
 #include "macro.h"
 #include "board.h"
+#include "evaluation.h"
 
 #include <iostream>
 #include <string>

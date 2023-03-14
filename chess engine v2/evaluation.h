@@ -5,7 +5,7 @@
 #include "movelist.h"
 
 namespace Evaluation {
-	int minMax(Board& board, BoardState& boardState, int depth); 
+	std::string minMax(Board& board, BoardState& boardState, int depth); //returns move string of best move 
 	int minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth); 
 	int evaluate(Board& board, BoardState& boardState, Movelist& ml);
 

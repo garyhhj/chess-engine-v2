@@ -113,7 +113,7 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	std::stringstream ss(command); 
 	std::string word; 
 
-	int depth = -1; 
+	int depth = 6; 
 	
 	ss >> word; //go 
 	ss >> word; //depth 
@@ -121,6 +121,8 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 
 	//some code to search some depth 
 	std::cout << "depth: " << depth << std::endl;
+	const std::string move = Evaluation::minMax(board, boardState, depth); 
+	std::cout << "bestmove " << move << "\n"; 
 }
 
 void UCI::uciRun(Board& board, BoardState& boardState) {

@@ -39,7 +39,7 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 			//search 
 			board.makemove(ml.getMove(i), boardState);
 			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			maxEval = std::max(alpha, eval); 
+			maxEval = std::max(maxEval, eval); 
 			alpha = std::max(alpha, eval); 
 			if (beta <= alpha) break; 
 		}
@@ -82,6 +82,7 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
 		Evaluation::evaluate(board, boardState, ml); 
 	}
 
+	//need some way to keep track of best move 
 	int alpha = -50000; 
 	int beta = 50000; 
 	//max 
@@ -101,7 +102,7 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
 			//search 
 			board.makemove(ml.getMove(i), boardState);
 			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			maxEval = std::max(alpha, eval);
+			maxEval = std::max(maxEval, eval); 
 			alpha = std::max(alpha, eval);
 			if (beta <= alpha) break;
 		}
