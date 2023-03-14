@@ -890,3 +890,15 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 
 	//		a b c d e f g h
 }
+
+
+/********************
+*
+*Non movegeneration
+*
+*********************/
+
+
+const map* Board::getPiece() const { return Board::piece; }
+const map* Board::getOccupancy() const { return Board::occupancy; }
+

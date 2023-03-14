@@ -131,7 +131,7 @@ constexpr bool Move::doublePushFlag(const move m) { return m & 0x200000; }
 constexpr bool Move::enpassantFlag(const move m) { return m & 0x400000; }
 constexpr bool Move::castlingFlag(const move m) { return m & 0x800000; }
 
-const std::string& moveString(const move m) {
+const std::string Move::moveString(const move m) {
 	const int sourceSquare = Move::sourceSquare(m);
 	const int targetSquare = Move::targetSquare(m); 
 	const int promotePiece = Move::promotePiece(m); 

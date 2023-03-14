@@ -72,16 +72,16 @@ int Evaluation::evaluate(Board& board, BoardState& boardState){
 }
 
 int Evaluation::materialEvaluation(const Board& board) {
-	return materialScore[wPawn];
-		//getNumBit(Board::piece[wPawn]) * materialScore[wPawn] +
-		//getNumBit(Board::piece[wKnight]) * materialScore[wKnight] +
-		//getNumBit(Board::piece[wBishop]) * materialScore[wBishop] +
-		//getNumBit(Board::piece[wRook]) * materialScore[wRook] +
-		//getNumBit(Board::piece[wQueen]) * materialScore[wQueen] +
+	return 
+		getNumBit(board.getPiece()[wPawn]) * materialScore[wPawn] +
+		getNumBit(board.getPiece()[wKnight]) * materialScore[wKnight] +
+		getNumBit(board.getPiece()[wBishop]) * materialScore[wBishop] +
+		getNumBit(board.getPiece()[wRook]) * materialScore[wRook] +
+		getNumBit(board.getPiece()[wQueen]) * materialScore[wQueen] +
 
-		//getNumBit(Board::piece[bPawn]) * materialScore[bPawn] +
-		//getNumBit(Board::piece[bKnight]) * materialScore[bKnight] +
-		//getNumBit(Board::piece[bBishop]) * materialScore[bBishop] +
-		//getNumBit(Board::piece[bRook]) * materialScore[bRook] +
-		//getNumBit(Board::piece[bQueen]) * materialScore[bQueen];
+		getNumBit(board.getPiece()[bPawn]) * materialScore[bPawn] +
+		getNumBit(board.getPiece()[bKnight]) * materialScore[bKnight] +
+		getNumBit(board.getPiece()[bBishop]) * materialScore[bBishop] +
+		getNumBit(board.getPiece()[bRook]) * materialScore[bRook] +
+		getNumBit(board.getPiece()[bQueen]) * materialScore[bQueen];
 }

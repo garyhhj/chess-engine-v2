@@ -4,6 +4,7 @@
 #include "movelist.h"
 #include "perft.h"
 #include "uci.h"
+#include "evaluation.h"
 
 #include <iostream>
 #include <bitset>
@@ -36,6 +37,12 @@ int main() {
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
 	ml.print(); 
+	auto s = Move::moveString(ml.getMove(2)); 
+
+	std::cout << s << std::endl; 
+	//Move::moveString(ml.getMove(2)); 
+
+	//test the move string generation 
 
 	//UCI::uciRun(board, boardState); 
 

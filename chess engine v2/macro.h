@@ -55,7 +55,7 @@ namespace Move {
 	constexpr bool enpassantFlag(const move m);
 	constexpr bool castlingFlag(const move m);
 
-	const std::string& moveString(const move m);
+	const std::string moveString(const move m);
 
 };
 
