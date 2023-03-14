@@ -11,4 +11,5 @@ namespace Evaluation {
 
 	int materialEvaluation(const Board& board);
 	int mobilityEvaluation(const Movelist& ml);
+	int positionalEvaluation(const Board& board); 
 }
