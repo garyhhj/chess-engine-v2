@@ -45,10 +45,11 @@ int main() {
 
 	//test the move string generation 
 
-	board.print(boardState); 
+	printBit(0xffffffffffffffffull);
+	/*board.print(boardState); 
 
 	auto s = Evaluation::minMax(board, boardState, 3); 
-	std::cout << "bestmove: " << s << std::endl; 
+	std::cout << "bestmove: " << s << std::endl; */
 
 	//UCI::uciRun(board, boardState); 
 

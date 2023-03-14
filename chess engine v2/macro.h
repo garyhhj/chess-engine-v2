@@ -15,6 +15,7 @@ typedef uint64_t map;
 typedef uint64_t board;
 
 
+
 //forces compile time evaluation 
 //error, e3160, nothing on stackoverflow and documentation
 /*
@@ -234,6 +235,8 @@ const map Row7 = A7 | B7 | C7 | D7 | E7 | F7 | G7 | H7;
 const map Row8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
 
 const map Edge = AFile | HFile | Row1 | Row8; 
+
+const map AllOne = 0xffffffffffffffffull; 
 
 enum piece : const int {
 	wPawn = 0,

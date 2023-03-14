@@ -43,6 +43,17 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 			alpha = std::max(alpha, eval); 
 			if (beta <= alpha) break; 
 		}
+
+		const map checkMask = currBoard.checkMask(currBoardState); 
+		if (checkMask != AllOne && !ml.getIndex()) {
+			//checkmate score 
+			return -49000; 
+		}
+		else if (checkMask == AllOne && !ml.getIndex()) {
+			//stalemate score 
+			return 0; 
+		}
+
 		return maxEval;
 	}
 
@@ -66,6 +77,16 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 			minEval = std::min(minEval, eval); 
 			beta = std::min(beta, eval); 
 			if(beta <= alpha) break; 
+		}
+
+		const map checkMask = currBoard.checkMask(currBoardState);
+		if (checkMask != AllOne && !ml.getIndex()) {
+			//checkmate score 
+			return 49000;
+		}
+		else if (checkMask == AllOne && !ml.getIndex()) {
+			//stalemate score 
+			return 0;
 		}
 
 		return minEval; 
@@ -174,6 +195,9 @@ std::string Evaluation::minMax(Board& board, BoardState& boardState, int depth) 
 
 
 int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
+	
+	
+	
 	//material score 
 	const int materialScore = Evaluation::materialEvaluation(board); 
 	const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
@@ -181,6 +205,7 @@ int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
 	/*std::cout
 		<< "material score: " << materialScore << "\n"
 		<< "mobility score: " << mobilityScore << "\n" << std::flush; */
+
 
 	return
 		materialScore + 
