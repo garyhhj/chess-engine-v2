@@ -13,53 +13,124 @@
 *
 *********************/
 
-int Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
+int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	//base case 
 	if (depth == 0) {
 		//evaluate and return some number 
-		Evaluation::evaluate(board, boardState); 
+		Movelist ml;
+		ml.moveGen(board, boardState);
+		Evaluation::evaluate(board, boardState, ml);
 	}
-	
+
 	//max 
 	if (boardState.getSide() == white) {
-		Movelist ml; 
-		ml.moveGen(board, boardState); 
+		Movelist ml;
+		ml.moveGen(board, boardState);
 
-		Board currBoard = board; 
-		BoardState currBoardState = boardState; 
+		Board currBoard = board;
+		BoardState currBoardState = boardState;
 
 		int maxEval = -50000;
 		const int index = ml.getIndex();
 		for (int i = 0; i < index; ++i) {
-			board = currBoard; 
-			boardState = currBoardState; 
-
-			//search 
-			board.makemove(ml.getMove(i), boardState); 
-			maxEval = std::max(Evaluation::minMax(board, boardState, depth - 1), maxEval); 
-		}
-		return maxEval; 
-	}
-
-	//min
-	else {
-		Movelist ml; 
-		ml.moveGen(board, boardState); 
-
-		Board currBoard = board; 
-		BoardState currBoardState = boardState; 
-		
-		int maxEval = 50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard; 
+			board = currBoard;
 			boardState = currBoardState;
 
 			//search 
 			board.makemove(ml.getMove(i), boardState);
-			maxEval = std::min(minMax(board, boardState, depth - 1), maxEval); 
+			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			maxEval = std::max(alpha, eval); 
+			alpha = std::max(alpha, eval); 
+			if (beta <= alpha) break; 
 		}
-		return maxEval; 
+		return maxEval;
+	}
+
+	//min
+	else {
+		Movelist ml;
+		ml.moveGen(board, boardState);
+
+		Board currBoard = board;
+		BoardState currBoardState = boardState;
+
+		int minEval = 50000;
+		const int index = ml.getIndex();
+		for (int i = 0; i < index; ++i) {
+			board = currBoard;
+			boardState = currBoardState;
+
+			//search 
+			board.makemove(ml.getMove(i), boardState);
+			const int eval = minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			minEval = std::min(minEval, eval); 
+			beta = std::min(beta, eval); 
+			if(beta <= alpha) break; 
+		}
+
+		return minEval; 
+	}
+}
+
+
+int Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
+	//base case 
+	if (depth == 0) {
+		//evaluate and return some number 
+		Movelist ml; 
+		ml.moveGen(board, boardState);
+		Evaluation::evaluate(board, boardState, ml); 
+	}
+
+	int alpha = -50000; 
+	int beta = 50000; 
+	//max 
+	if (boardState.getSide() == white) {
+		Movelist ml;
+		ml.moveGen(board, boardState);
+
+		Board currBoard = board;
+		BoardState currBoardState = boardState;
+
+		int maxEval = -50000;
+		const int index = ml.getIndex();
+		for (int i = 0; i < index; ++i) {
+			board = currBoard;
+			boardState = currBoardState;
+
+			//search 
+			board.makemove(ml.getMove(i), boardState);
+			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			maxEval = std::max(alpha, eval);
+			alpha = std::max(alpha, eval);
+			if (beta <= alpha) break;
+		}
+		return maxEval;
+	}
+
+	//min
+	else {
+		Movelist ml;
+		ml.moveGen(board, boardState);
+
+		Board currBoard = board;
+		BoardState currBoardState = boardState;
+
+		int minEval = 50000;
+		const int index = ml.getIndex();
+		for (int i = 0; i < index; ++i) {
+			board = currBoard;
+			boardState = currBoardState;
+
+			//search 
+			board.makemove(ml.getMove(i), boardState);
+			const int eval = minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			minEval = std::min(minEval, eval);
+			beta = std::min(beta, eval);
+			if (beta <= alpha) break;
+		}
+
+		return minEval;
 	}
 }
 
@@ -76,6 +147,13 @@ int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
 		Evaluation::materialEvaluation(board) +
 		Evaluation::mobilityEvaluation(ml); 
 
+
+	//some ideas for evaluation 
+	//bishops hang back 
+	//knights and pawns control center 
+	//pawn structure score 
+
+	//after certain amount of material is off the board //perhaps implement through some lazy technique... stop evaluating based on position and just let engine search super deep 
 }
 
 int Evaluation::materialEvaluation(const Board& board) {
