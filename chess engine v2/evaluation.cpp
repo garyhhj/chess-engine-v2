@@ -177,12 +177,15 @@ int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
 	//material score 
 	const int materialScore = Evaluation::materialEvaluation(board); 
 	const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
+	const int positionalScore = Evaluation::positionalEvaluation(board); 
 	/*std::cout
 		<< "material score: " << materialScore << "\n"
 		<< "mobility score: " << mobilityScore << "\n" << std::flush; */
 
 	return
-		materialScore + mobilityScore; 
+		materialScore + 
+		mobilityScore + 
+		positionalScore; 
 		/*Evaluation::materialEvaluation(board) +
 		Evaluation::mobilityEvaluation(ml); */
 
@@ -213,3 +216,87 @@ int Evaluation::materialEvaluation(const Board& board) {
 int Evaluation::mobilityEvaluation(const Movelist& ml) {
 	return ml.getIndex() * 100; 
 }
+
+int Evaluation::positionalEvaluation(const Board& board) {
+	int score = 0; 
+	//leapers 
+	map piece = board.getPiece()[wPawn]; 
+	while (piece) {
+		score += wPawnPScore[getlsbBitIndex(piece)]; 
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[bPawn];
+	while (piece) {
+		score += bPawnPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[wKnight];
+	while (piece) {
+		score += wKnightPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[bKnight];
+	while (piece) {
+		score += bKnightPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[wKing];
+	while (piece) {
+		score += wKingPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[bKing];
+	while (piece) {
+		score += bKingPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	//sliders 
+	piece = board.getPiece()[wBishop];
+	while (piece) {
+		score += wBishopPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[bBishop];
+	while (piece) {
+		score += bBishopPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[wRook];
+	while (piece) {
+		score += wRookPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}
+
+	piece = board.getPiece()[bRook];
+	while (piece) {
+		score += bRookPScore[getlsbBitIndex(piece)];
+		piece &= piece - 1;
+	}	
+	
+	return score; 
+}
+
+
+//enum piece : const int {
+//	wPawn = 0,
+//	wKnight = 1,
+//	wKing = 2,
+//	wBishop = 3,
+//	wRook = 4,
+//	wQueen = 5,
+//
+//	bPawn = 6,
+//	bKnight = 7,
+//	bKing = 8,
+//	bBishop = 9,
+//	bRook = 10,
+//	bQueen = 11,
+//};

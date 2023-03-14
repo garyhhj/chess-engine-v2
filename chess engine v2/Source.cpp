@@ -47,7 +47,7 @@ int main() {
 
 	board.print(boardState); 
 
-	auto s = Evaluation::minMax(board, boardState, 10); 
+	auto s = Evaluation::minMax(board, boardState, 3); 
 	std::cout << "bestmove: " << s << std::endl; 
 
 	//UCI::uciRun(board, boardState); 
