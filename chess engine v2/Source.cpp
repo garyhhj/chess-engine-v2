@@ -31,13 +31,16 @@ int main() {
 		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
 		string fentemp3 = "3k4/8/4K3/1Q6/8/8/8/8 w - - 0 1 "; 
-		Fen::parse(fentemp3, board, boardState);
+		string fentemp4 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 "; 
+		string fentemp5 = "r1bq2nr/ppppbk2/2n2p2/3Pp1pp/4P1P1/5N2/PPP2PBP/RNBQ2KR w - - 3 9 "; 
+		//make sure to parse fen start before running uci 
+		Fen::parse(fentemp5, board, boardState);
 	}
 
-
+	
 	UCI::uciRun(board, boardState); 
 	//UCI::uciRun(board, boardState); 
-
+	
 	/*Movelist ml; 
 	ml.moveGen(board, boardState); 
 	ml.print(); 

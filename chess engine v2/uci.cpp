@@ -119,11 +119,19 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	ss >> word; //depth 
 	ss >> depth; 
 	
+	std::cout << "debugging information: " << std::endl; 
+	std::cout << "searching a depth of: " << depth << std::endl; 
+	board.print(boardState); 
 
 	std::string bestmove; 
 	int eval = Evaluation::minMax(board, boardState, depth, bestmove); 
 	if (!bestmove.empty()) {
 		std::cout << "bestmove " << bestmove << "\n";
+	}
+	else {
+		std::cout << "could not find best move" << std::endl; 
+		std::cout << "debugging information: " << std::endl;
+		board.print(boardState); 
 	}
 }
 
@@ -154,11 +162,11 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "position") {
 			UCI::parsePosition(line, board, boardState); 
-			board.print(boardState); 
+			//board.print(boardState); 
 		}
 		else if (word == "ucinewgame") {
 			UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
-			board.print(boardState); 
+			//board.print(boardState); 
 		}
 		else if (word == "go") {
 			UCI::parseGo(line, board, boardState); 
@@ -173,5 +181,10 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 			break; 
 		}
 		std::cout << std::flush; 
+	}
+
+
+	if (!std::cin) {
+		std::cout << "info: cin is corrupted" << std::endl; 
 	}
 }

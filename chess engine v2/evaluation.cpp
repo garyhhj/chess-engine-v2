@@ -149,8 +149,8 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth, std::str
 			board.makemove(ml.getMove(i), boardState);
 			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
 			
-			//Move::decode(ml.getMove(i)); 
-			//std::cout << " eval: " << eval << std::endl; 
+			Move::decode(ml.getMove(i)); 
+			std::cout << " eval: " << eval << std::endl; 
 
 			if (maxEval < eval) {
 				maxEval = eval; 
@@ -167,7 +167,6 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth, std::str
 
 	//min
 	else {
-		std::string bestmove; 
 		int minEval = 50000;
 		const int index = ml.getIndex();
 		for (int i = 0; i < index; ++i) {
