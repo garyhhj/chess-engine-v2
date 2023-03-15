@@ -14,22 +14,20 @@
 *********************/
 
 int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
-	//base case 
-	if (depth == 0) {
+	Movelist ml;
+	ml.moveGen(board, boardState);
+
+	Board currBoard = board;
+	BoardState currBoardState = boardState;
+
+	//base case, reached depth or no more moves(checkmate/stalemate) 
+	if (depth == 0 || ml.getIndex() == 0) {
 		//evaluate and return some number 
-		Movelist ml;
-		ml.moveGen(board, boardState);
-		return Evaluation::evaluate(board, boardState, ml);
+		return Evaluation::evaluate(board, boardState, ml, depth);
 	}
 
 	//max 
 	if (boardState.getSide() == white) {
-		Movelist ml;
-		ml.moveGen(board, boardState);
-
-		Board currBoard = board;
-		BoardState currBoardState = boardState;
-
 		int maxEval = -50000;
 		const int index = ml.getIndex();
 		for (int i = 0; i < index; ++i) {
@@ -43,28 +41,11 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 			alpha = std::max(alpha, eval); 
 			if (beta <= alpha) break; 
 		}
-
-		const map checkMask = currBoard.checkMask(currBoardState); 
-		if (checkMask != AllOne && !ml.getIndex()) {
-			//checkmate score 
-			return -49000; 
-		}
-		else if (checkMask == AllOne && !ml.getIndex()) {
-			//stalemate score 
-			return 0; 
-		}
-
 		return maxEval;
 	}
 
 	//min
 	else {
-		Movelist ml;
-		ml.moveGen(board, boardState);
-
-		Board currBoard = board;
-		BoardState currBoardState = boardState;
-
 		int minEval = 50000;
 		const int index = ml.getIndex();
 		for (int i = 0; i < index; ++i) {
@@ -78,68 +59,26 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 			beta = std::min(beta, eval); 
 			if(beta <= alpha) break; 
 		}
-
-		const map checkMask = currBoard.checkMask(currBoardState);
-		if (checkMask != AllOne && !ml.getIndex()) {
-			//checkmate score 
-			return 49000;
-		}
-		else if (checkMask == AllOne && !ml.getIndex()) {
-			//stalemate score 
-			return 0;
-		}
-
 		return minEval; 
 	}
 }
 
 
-std::string Evaluation::minMax(Board& board, BoardState& boardState, int depth) {
-	//base case(doesn't make sense to use tbh) 
-	if (depth == 0) {
-		//evaluate and return some number 
-		Movelist ml; 
-		ml.moveGen(board, boardState);
-		
-		Board currBoard = board;
-		BoardState currBoardState = boardState;
+int Evaluation::minMax(Board& board, BoardState& boardState, int depth, std::string& bestmove) {
+	Movelist ml;
+	ml.moveGen(board, boardState);
 
-		std::string bestmove;
-		int maxEval = (boardState.getSide() == white ? -50000 : 50000);
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard;
-			boardState = currBoardState;
+	Board currBoard = board;
+	BoardState currBoardState = boardState;
 
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::evaluate(board, boardState, ml);
-			
-			if (boardState.getSide() == white && maxEval < eval) {
-				maxEval = eval; 
-				bestmove = Move::moveString(ml.getMove(i)); 
-			}
-			else if (boardState.getSide() == black && eval < maxEval) {
-				maxEval = eval; 
-				bestmove = Move::moveString(ml.getMove(i)); 
-			}
-		}
-		//return maxEval;
-		return bestmove;
-	}
+	//base case
+	if (depth <= 0) return 0; 
 
 	//need some way to keep track of best move 
 	int alpha = -50000; 
 	int beta = 50000; 
 	//max 
 	if (boardState.getSide() == white) {
-		Movelist ml;
-		ml.moveGen(board, boardState);
-
-		Board currBoard = board;
-		BoardState currBoardState = boardState;
-
-		std::string bestmove; 
 		int maxEval = -50000;
 		const int index = ml.getIndex();
 		for (int i = 0; i < index; ++i) {
@@ -149,27 +88,25 @@ std::string Evaluation::minMax(Board& board, BoardState& boardState, int depth) 
 			//search 
 			board.makemove(ml.getMove(i), boardState);
 			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			
+			//Move::decode(ml.getMove(i)); 
+			//std::cout << " eval: " << eval << std::endl; 
 
 			if (maxEval < eval) {
 				maxEval = eval; 
 				bestmove = Move::moveString(ml.getMove(i)); 
-				std::cout << "updated bestmove: " << bestmove << std::endl;
 			}
 			alpha = std::max(alpha, eval);
 			if (beta <= alpha) break;
 		}
-		//return maxEval;
-		return bestmove; 
+
+		board = currBoard; 
+		boardState = currBoardState; 
+		return maxEval;
 	}
 
 	//min
 	else {
-		Movelist ml;
-		ml.moveGen(board, boardState);
-
-		Board currBoard = board;
-		BoardState currBoardState = boardState;
-
 		std::string bestmove; 
 		int minEval = 50000;
 		const int index = ml.getIndex();
@@ -189,14 +126,24 @@ std::string Evaluation::minMax(Board& board, BoardState& boardState, int depth) 
 			if (beta <= alpha) break;
 		}
 
-		return bestmove;
+		board = currBoard; 
+		boardState = currBoardState; 
+		return minEval;
 	}
 }
 
 
-int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml){
-	
-	
+int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml, int depth){
+	//checkmate and stalemate 
+	const map checkMask = board.checkMask(boardState);
+	if (checkMask != AllOne && !ml.getIndex()) {
+		//checkmate score 
+		return (boardState.getSide() == white ? -49000 - depth : 49000 + depth);
+	}
+	else if (checkMask == AllOne && !ml.getIndex()) {
+		//stalemate score 
+		return 0;
+	}
 	
 	//material score 
 	const int materialScore = Evaluation::materialEvaluation(board); 

@@ -30,9 +30,13 @@ int main() {
 
 		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
 		string fentemp2 = "r3k2r/p1ppqN2/1n2pnpb/1b1P4/1p2P3/2N2Q1p/PPPBBPPP/2KR3R w --kq - ";
-
-		Fen::parse(fenStart, board, boardState);
+		string fentemp3 = "3k4/8/4K3/1Q6/8/8/8/8 w - - 0 1 "; 
+		Fen::parse(fentemp3, board, boardState);
 	}
+
+
+	UCI::uciRun(board, boardState); 
+	//UCI::uciRun(board, boardState); 
 
 	/*Movelist ml; 
 	ml.moveGen(board, boardState); 
@@ -45,7 +49,6 @@ int main() {
 
 	//test the move string generation 
 
-	printBit(0xffffffffffffffffull);
 	/*board.print(boardState); 
 
 	auto s = Evaluation::minMax(board, boardState, 3); 
@@ -106,5 +109,6 @@ int main() {
 
 	//hashing zorborist 
 	
+	//add ply 
 
 }
