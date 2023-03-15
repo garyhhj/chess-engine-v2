@@ -13,6 +13,65 @@
 *
 *********************/
 
+int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
+	Movelist ml;
+	ml.moveGen(board, boardState);
+
+	Board currBoard = board;
+	BoardState currBoardState = boardState;
+
+	bool captures = false; 
+	{
+		const int mlIndex = ml.getIndex();
+		for (int i = 0; i < mlIndex; ++i) { if (Move::captureFlag(ml.getMove(i))) captures = true; }
+	}
+
+	if (!captures || ml.getIndex() == 0) {
+		return Evaluation::evaluate(board, boardState, ml, depth);
+	}
+
+	//max 
+	if (boardState.getSide() == white) {
+		int maxEval = -50000;
+		const int index = ml.getIndex();
+		for (int i = 0; i < index; ++i) {
+			if(!Move::captureFlag(ml.getMove(i))) continue; 
+
+			board = currBoard;
+			boardState = currBoardState;
+			
+			//search 
+			board.makemove(ml.getMove(i), boardState);
+			const int eval = Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth - 1);
+			maxEval = std::max(maxEval, eval);
+			alpha = std::max(alpha, eval);
+			if (beta <= alpha) break;
+		}
+		return maxEval;
+	}
+
+	//min
+	else {
+		int minEval = 50000;
+		const int index = ml.getIndex();
+		for (int i = 0; i < index; ++i) {
+			if (!Move::captureFlag(ml.getMove(i))) continue;
+			board = currBoard;
+			boardState = currBoardState;
+
+			//search 
+			board.makemove(ml.getMove(i), boardState);
+			const int eval = Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth - 1);
+			minEval = std::min(minEval, eval);
+			beta = std::min(beta, eval);
+			if (beta <= alpha) break;
+		}
+		return minEval;
+	}
+}
+
+
+
 int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	Movelist ml;
 	ml.moveGen(board, boardState);
@@ -22,8 +81,9 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 
 	//base case, reached depth or no more moves(checkmate/stalemate) 
 	if (depth == 0 || ml.getIndex() == 0) {
-		//evaluate and return some number 
-		return Evaluation::evaluate(board, boardState, ml, depth);
+		//call quiesence search 
+		return Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth); 
+		//return Evaluation::evaluate(board, boardState, ml, depth);
 	}
 
 	//max 
@@ -54,7 +114,7 @@ int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, in
 
 			//search 
 			board.makemove(ml.getMove(i), boardState);
-			const int eval = minMaxHelper(board, boardState, alpha, beta, depth - 1);
+			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
 			minEval = std::min(minEval, eval); 
 			beta = std::min(beta, eval); 
 			if(beta <= alpha) break; 
