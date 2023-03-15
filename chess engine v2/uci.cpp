@@ -113,7 +113,6 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 
 	Evaluation::ply = 0; 
 	Evaluation::nodes = 0; 
-	Evaluation::bestmove = ""; 
 
 	std::stringstream ss(command); 
 	std::string word; 
@@ -125,11 +124,18 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	ss >> depth; 
 	
 
+	
+	const int eval = Evaluation::negamax(board, boardState, -50000, 50000, depth); 
+	std::cout << "info score cp " << eval << " depth " << depth << " nodes " << Evaluation::nodes << " pv "; 
+	
+	for (int i = 0; i < Evaluation::pvLength[0]; ++i) {
+		std::cout << Move::moveString(Evaluation::pvTable[0][i]) << " "; 
+	}
+	std::cout << "\n"; 
 
-	int eval = Evaluation::negamax(board, boardState, -50000, 50000, depth); 
-	std::cout << "searched depth of " << depth << " for " << Evaluation::nodes << " nodes " << std::endl; 
-	if (!Evaluation::bestmove.empty()) {
-		std::cout << "bestmove " << Evaluation::bestmove << "\n";
+
+	if (Evaluation::pvTable[0][0] != 0x0ul) {
+		std::cout << "bestmove " << Move::moveString(Evaluation::pvTable[0][0]) << "\n";
 	}
 	else {
 		std::cout << "could not find best move" << std::endl; 

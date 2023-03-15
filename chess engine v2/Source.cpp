@@ -41,7 +41,7 @@ int main() {
 
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentemp3, board, boardState);
+		Fen::parse(fenStart, board, boardState);
 	}
 	board.print(boardState); 
 

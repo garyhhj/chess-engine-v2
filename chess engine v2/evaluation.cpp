@@ -8,9 +8,11 @@
 
 int Evaluation::ply = 0;
 int Evaluation::nodes = 0;
-std::string Evaluation::bestmove = "";
-move Evaluation::killerMoves[2][64]{}; //[priority][ply]
-int Evaluation::historyScore[12][64]{}; //[piece][ply]
+
+move Evaluation::killerMoves[2][Evaluation::MAXPLY]{}; //[priority][ply]
+int Evaluation::historyScore[12][Evaluation::MAXPLY]{}; //[piece][ply]
+int Evaluation::pvLength[Evaluation::MAXPLY]{}; //[ply]
+move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply] 
 
 
 
@@ -82,7 +84,7 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 
 int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	++Evaluation::nodes; 
-
+	Evaluation::pvLength[ply] = ply; 
 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
@@ -103,8 +105,8 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	}
 
 	for (int i = 0; i < mlIndex; ++i) {
-		
-		board.makemove(ml.getMove(i), boardState); 
+		const move currmove = ml.getMove(i); 
+		board.makemove(currmove, boardState); 
 		++Evaluation::ply; 
 		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
 		--Evaluation::ply; 
@@ -118,18 +120,27 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		
 		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
 		if (eval >= beta) {
-
-			Evaluation::killerMoves[1][ply] = Evaluation::killerMoves[0][ply]; 
-			Evaluation::killerMoves[0][ply] = ml.getMove(i); 
+			if (!Move::captureFlag(currmove)) {
+				Evaluation::killerMoves[1][ply] = Evaluation::killerMoves[0][ply];
+				Evaluation::killerMoves[0][ply] = currmove;
+			}
 
 			return beta; 
 		}
 
 		//found better move 
 		if (eval > alpha) {
-			Evaluation::historyScore[Move::piece(ml.getMove(i))][Move::targetSquare(ml.getMove(i))] += depth; 
+			using namespace Evaluation;
+			historyScore[Move::piece(currmove)][Move::targetSquare(currmove)] += depth; 
 
-			if(Evaluation::ply == 0) Evaluation::bestmove = Move::moveString(ml.getMove(i)); 
+			pvTable[ply][ply] = currmove; 
+			
+			for (int nextPly = ply + 1; nextPly < pvLength[ply + 1]; ++nextPly) {
+				pvTable[ply][nextPly] = pvTable[ply + 1][nextPly]; 
+			}
+			pvLength[ply] = pvLength[ply + 1]; 
+
+			/*if(Evaluation::ply == 0) Evaluation::bestmove = Move::moveString(currmove); */
 			alpha = eval; 
 		}
 	}

@@ -7,12 +7,15 @@
 #include <algorithm>
 
 namespace Evaluation {
+	const int MAXPLY = 64; 
 
 	extern int ply; 
 	extern int nodes; 
-	extern std::string bestmove;
-	extern move killerMoves[2][64]; //[priority][ply]
-	extern int historyScore[12][64]; //[piece][ply]
+
+	extern move killerMoves[2][MAXPLY]; //[priority][ply]
+	extern int historyScore[12][MAXPLY]; //[piece][ply]
+	extern int pvLength[MAXPLY]; //[ply]
+	extern move pvTable[MAXPLY][MAXPLY]; //[ply][ply] 
 
 
 	//int negamaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth);
