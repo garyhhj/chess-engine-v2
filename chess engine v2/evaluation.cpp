@@ -9,6 +9,8 @@
 int Evaluation::ply = 0;
 int Evaluation::nodes = 0;
 std::string Evaluation::bestmove = "";
+move Evaluation::killerMoves[2][64]{}; //[priority][ply]
+int Evaluation::historyScore[12][64]{}; //[piece][ply]
 
 
 
@@ -116,11 +118,17 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		
 		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
 		if (eval >= beta) {
+
+			Evaluation::killerMoves[1][ply] = Evaluation::killerMoves[0][ply]; 
+			Evaluation::killerMoves[0][ply] = ml.getMove(i); 
+
 			return beta; 
 		}
 
 		//found better move 
 		if (eval > alpha) {
+			Evaluation::historyScore[Move::piece(ml.getMove(i))][Move::targetSquare(ml.getMove(i))] += depth; 
+
 			if(Evaluation::ply == 0) Evaluation::bestmove = Move::moveString(ml.getMove(i)); 
 			alpha = eval; 
 		}
@@ -146,13 +154,18 @@ int Evaluation::moveScore(const Board& board, move m) {
 			}
 		}
 
-		return mvvlva[Move::piece(m)][targetPiece];
+		return mvvlva[Move::piece(m)][targetPiece] + 10000;
 	}
 
 	//quiet moves 
 	else {
+		//killer move 
+		if (Evaluation::killerMoves[0][ply] == m) return 9000;
+		else if (Evaluation::killerMoves[1][ply] == m) return 8000;
 
-	}
+		//history score 
+		else return Evaluation::historyScore[Move::piece(m)][Move::targetSquare(m)]; 
+	} 
 
 	return 0; 
 }

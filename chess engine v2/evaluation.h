@@ -11,6 +11,9 @@ namespace Evaluation {
 	extern int ply; 
 	extern int nodes; 
 	extern std::string bestmove;
+	extern move killerMoves[2][64]; //[priority][ply]
+	extern int historyScore[12][64]; //[piece][ply]
+
 
 	//int negamaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth);
 	int negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth); 

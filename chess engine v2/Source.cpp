@@ -130,17 +130,12 @@ int main() {
 
 	//printing out the move string give a move and index 
 	//another min max function but just for base call that will print out the correct move string 
-	//make min and max into alpha and beta 
-	//sorting moves / move ordering 
 
 	//read up on history killer 
 	//pv
 	//static exchange evaluation 
 	//transposition table 
 
-	//pv/killer moves 
-
-	//increase engine search depth when in check 
 
 	//pv/killer/history moves 
 	//iterative deepening 
