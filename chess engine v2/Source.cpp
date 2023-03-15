@@ -140,12 +140,11 @@ int main() {
 
 	//pv/killer moves 
 
-	//change minimax to negamax algorithm 
-	//add ply and increase depth when in check for searching 
+	//increase engine search depth when in check 
+
 	//pv/killer/history moves 
 	//iterative deepening 
 
-	//engine has issues and doesn't see mate... search depth of 1 and check out what is the issue 
 
 	//hashing zorborist 
 

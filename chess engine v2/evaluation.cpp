@@ -95,6 +95,11 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		//return Evaluation::evaluate(board, boardState, ml, ply); 
 	}
 
+	//increase search depth while in check 
+	if (board.attacked(board.getPiece()[(boardState.getSide() == white ? wKing : bKing)], boardState)) {
+		++depth; 
+	}
+
 	for (int i = 0; i < mlIndex; ++i) {
 		
 		board.makemove(ml.getMove(i), boardState); 
@@ -102,7 +107,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
 		--Evaluation::ply; 
 
-		//if(Evaluation::ply == 1) Move::decode(ml.getMove(i)); std::cout << " score: " << eval << std::endl;
+		//if(Evaluation::ply == 0) Move::decode(ml.getMove(i)); std::cout << " score: " << eval << std::endl;
 		
 
 
