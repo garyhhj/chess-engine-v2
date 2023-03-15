@@ -6,6 +6,11 @@
 *
 *********************/
 
+int Evaluation::ply = 0;
+int Evaluation::nodes = 0;
+std::string Evaluation::bestmove = "";
+
+
 
 /********************
 *
@@ -14,186 +19,110 @@
 *********************/
 
 /********************
-*minimax + search
+*negamax + alphabeta
 *********************/
-int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
+
+
+int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta) {
+	++Evaluation::nodes;
+
+
 	Movelist ml;
 	ml.moveGen(board, boardState);
-
-	Board currBoard = board;
-	BoardState currBoardState = boardState;
+	Evaluation::sortMove(board, ml);
+	const int mlIndex = ml.getIndex();
 
 	bool captures = false; 
 	{
-		const int mlIndex = ml.getIndex();
-		for (int i = 0; i < mlIndex; ++i) { if (Move::captureFlag(ml.getMove(i))) captures = true; }
-	}
-
-	if (!captures || ml.getIndex() == 0) {
-		return Evaluation::evaluate(board, boardState, ml, depth);
-	}
-
-	//max 
-	if (boardState.getSide() == white) {
-		int maxEval = -50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			if(!Move::captureFlag(ml.getMove(i))) continue; 
-
-			board = currBoard;
-			boardState = currBoardState;
-			
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth - 1);
-			maxEval = std::max(maxEval, eval);
-			alpha = std::max(alpha, eval);
-			if (beta <= alpha) break;
+		for (int i = 0; i < mlIndex; ++i) {
+			if (Move::captureFlag(ml.getMove(i))) {
+				captures = true; 
+				break; 
+			}
 		}
-		return maxEval;
 	}
-
-	//min
-	else {
-		int minEval = 50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			if (!Move::captureFlag(ml.getMove(i))) continue;
-			board = currBoard;
-			boardState = currBoardState;
-
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth - 1);
-			minEval = std::min(minEval, eval);
-			beta = std::min(beta, eval);
-			if (beta <= alpha) break;
-		}
-		return minEval;
-	}
-}
-
-
-
-int Evaluation::minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
-	Movelist ml;
-	ml.moveGen(board, boardState);
 
 	Board currBoard = board;
 	BoardState currBoardState = boardState;
 
-	//base case, reached depth or no more moves(checkmate/stalemate) 
-	if (depth == 0 || ml.getIndex() == 0) {
-		//call quiesence search 
-		return Evaluation::quiesenceSearch(board, boardState, alpha, beta, depth); 
-		//return Evaluation::evaluate(board, boardState, ml, depth);
+	
+	//only want to evaluate positions with non captures 
+	if (!captures) {
+		return Evaluation::evaluate(board, boardState, ml, Evaluation::ply);
 	}
 
-	//max 
-	if (boardState.getSide() == white) {
-		int maxEval = -50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard;
-			boardState = currBoardState;
+	for (int i = 0; i < mlIndex; ++i) {
+		if (!Move::captureFlag(ml.getMove(i))) continue; 
 
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			maxEval = std::max(maxEval, eval); 
-			alpha = std::max(alpha, eval); 
-			if (beta <= alpha) break; 
+		board.makemove(ml.getMove(i), boardState);
+		++Evaluation::ply;
+		const int eval = -Evaluation::quiesenceSearch(board, boardState, -beta, -alpha);
+		--Evaluation::ply;
+
+
+		board = currBoard;
+		boardState = currBoardState;
+
+		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
+		if (eval >= beta) {
+			return beta;
 		}
-		return maxEval;
-	}
 
-	//min
-	else {
-		int minEval = 50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard;
-			boardState = currBoardState;
-
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			minEval = std::min(minEval, eval); 
-			beta = std::min(beta, eval); 
-			if(beta <= alpha) break; 
+		//found better move 
+		if (eval > alpha) {
+			alpha = eval;
 		}
-		return minEval; 
 	}
+
+	return alpha;
 }
 
 
-int Evaluation::minMax(Board& board, BoardState& boardState, int depth, std::string& bestmove) {
-	Movelist ml;
-	ml.moveGen(board, boardState);
+int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
+	++Evaluation::nodes; 
 
-	Board currBoard = board;
-	BoardState currBoardState = boardState;
 
-	//base case
-	if (depth <= 0) return 0; 
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	Evaluation::sortMove(board, ml); 
+	const int mlIndex = ml.getIndex(); 
 
-	//need some way to keep track of best move 
-	int alpha = -50000; 
-	int beta = 50000; 
-	//max 
-	if (boardState.getSide() == white) {
-		int maxEval = -50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard;
-			boardState = currBoardState;
+	Board currBoard = board; 
+	BoardState currBoardState = boardState; 
 
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = Evaluation::minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			
-			Move::decode(ml.getMove(i)); 
-			std::cout << " eval: " << eval << std::endl; 
-
-			if (maxEval < eval) {
-				maxEval = eval; 
-				bestmove = Move::moveString(ml.getMove(i)); 
-			}
-			alpha = std::max(alpha, eval);
-			if (beta <= alpha) break;
-		}
-
-		board = currBoard; 
-		boardState = currBoardState; 
-		return maxEval;
+	if (depth == 0 || mlIndex == 0) {
+		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);  
+		//return Evaluation::evaluate(board, boardState, ml, ply); 
 	}
 
-	//min
-	else {
-		int minEval = 50000;
-		const int index = ml.getIndex();
-		for (int i = 0; i < index; ++i) {
-			board = currBoard;
-			boardState = currBoardState;
+	for (int i = 0; i < mlIndex; ++i) {
+		
+		board.makemove(ml.getMove(i), boardState); 
+		++Evaluation::ply; 
+		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
+		--Evaluation::ply; 
 
-			//search 
-			board.makemove(ml.getMove(i), boardState);
-			const int eval = minMaxHelper(board, boardState, alpha, beta, depth - 1);
-			if (eval < minEval) {
-				minEval = eval; 
-				bestmove = Move::moveString(ml.getMove(i)); 
-			}
+		//if(Evaluation::ply == 1) Move::decode(ml.getMove(i)); std::cout << " score: " << eval << std::endl;
+		
 
-			beta = std::min(beta, eval);
-			if (beta <= alpha) break;
+
+		board = currBoard;
+		boardState = currBoardState;
+		
+		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
+		if (eval >= beta) {
+			return beta; 
 		}
 
-		board = currBoard; 
-		boardState = currBoardState; 
-		return minEval;
+		//found better move 
+		if (eval > alpha) {
+			if(Evaluation::ply == 0) Evaluation::bestmove = Move::moveString(ml.getMove(i)); 
+			alpha = eval; 
+		}
 	}
+
+	return alpha; 
 }
-
 
 
 /********************
@@ -236,31 +165,31 @@ void Evaluation::sortMove(const Board& board, Movelist& ml) {
 /********************
 *evaluation 
 *********************/
-int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml, int depth){
+int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml, int ply){
 	//checkmate and stalemate 
 	const map checkMask = board.checkMask(boardState);
 	if (checkMask != AllOne && !ml.getIndex()) {
-		//checkmate score 
-		return (boardState.getSide() == white ? -49000 - depth : 49000 + depth);
+		return -49000 + ply; 
+		//return (boardState.getSide() == white ? -49000 - depth : -49000 - depth);
 	}
 	else if (checkMask == AllOne && !ml.getIndex()) {
-		//stalemate score 
+		//stalemate score
 		return 0;
 	}
 	
 	//material score 
 	const int materialScore = Evaluation::materialEvaluation(board); 
-	const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
+	//const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
 	const int positionalScore = Evaluation::positionalEvaluation(board); 
 	/*std::cout
 		<< "material score: " << materialScore << "\n"
 		<< "mobility score: " << mobilityScore << "\n" << std::flush; */
 
 
-	return
-		materialScore + 
-		mobilityScore + 
-		positionalScore; 
+	return (boardState.getSide() == white ? 1 : -1) * (
+		materialScore +
+		//mobilityScore + 
+		positionalScore); 
 		/*Evaluation::materialEvaluation(board) +
 		Evaluation::mobilityEvaluation(ml); */
 

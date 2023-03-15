@@ -110,6 +110,11 @@ void UCI::parseGo(const std::string& command, Board& board, BoardState& boardSta
 
 //eg go depth 1
 void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardState) {
+
+	Evaluation::ply = 0; 
+	Evaluation::nodes = 0; 
+	Evaluation::bestmove = ""; 
+
 	std::stringstream ss(command); 
 	std::string word; 
 
@@ -119,14 +124,12 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	ss >> word; //depth 
 	ss >> depth; 
 	
-	std::cout << "debugging information: " << std::endl; 
-	std::cout << "searching a depth of: " << depth << std::endl; 
-	board.print(boardState); 
 
-	std::string bestmove; 
-	int eval = Evaluation::minMax(board, boardState, depth, bestmove); 
-	if (!bestmove.empty()) {
-		std::cout << "bestmove " << bestmove << "\n";
+
+	int eval = Evaluation::negamax(board, boardState, -50000, 50000, depth); 
+	std::cout << "searched depth of " << depth << " for " << Evaluation::nodes << " nodes " << std::endl; 
+	if (!Evaluation::bestmove.empty()) {
+		std::cout << "bestmove " << Evaluation::bestmove << "\n";
 	}
 	else {
 		std::cout << "could not find best move" << std::endl; 
@@ -162,11 +165,11 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "position") {
 			UCI::parsePosition(line, board, boardState); 
-			//board.print(boardState); 
+			board.print(boardState); 
 		}
 		else if (word == "ucinewgame") {
 			UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
-			//board.print(boardState); 
+			board.print(boardState); 
 		}
 		else if (word == "go") {
 			UCI::parseGo(line, board, boardState); 

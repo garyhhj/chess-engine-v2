@@ -33,24 +33,41 @@ int main() {
 		string fentemp3 = "3k4/8/4K3/1Q6/8/8/8/8 w - - 0 1 "; 
 		string fentemp4 = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 "; 
 		string fentemp5 = "r1bq2nr/ppppbk2/2n2p2/3Pp1pp/4P1P1/5N2/PPP2PBP/RNBQ2KR w - - 3 9 "; 
+		string fentemp6 = "3K4/8/4k3/1q6/8/8/8/8 b - - 0 1 ";
+		string fentemp7 = "3Kq3/8/4k3/8/8/8/8/8 w - - 0 1 ";
+
+		string fentemp8 = "3kQ3/8/4K3/8/8/8/8/8 b - - 0 1 ";
+
+
+
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentemp5, board, boardState);
+		Fen::parse(fentemp3, board, boardState);
 	}
 	board.print(boardState); 
 
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	
-	Evaluation::sortMove(board, ml); 
+	UCI::uciRun(board, boardState); 
+	/*Movelist ml; 
+	ml.moveGen(board, boardState);
+	ml.print(); 
+	std::cout << "eval: " << Evaluation::evaluate(board, boardState, ml, 1); */
 
-	for (int i = 0; i < ml.getIndex(); ++i) {
-		Move::decode(ml.getMove(i)); 
-		std::cout << " movescore: " << Evaluation::moveScore(board, ml.getMove(i)); 
-		std::cout << std::endl; 
-	}
+	//Evaluation::negamax(board, boardState, -50000, 50000, 3); 
+	//std::cout << "bestmove: " << Evaluation::bestmove << std::endl; 
+	//board.print(boardState); 
+	//std::cout << "searched " << Evaluation::nodes << " nodes " << std::endl;
 
-	std::cout << "mvvlva: "; 
-	std::cout << mvvlva[wPawn][bKnight] << std::endl; 
+
+
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	//
+	//Evaluation::sortMove(board, ml); 
+
+	//for (int i = 0; i < ml.getIndex(); ++i) {
+	//	Move::decode(ml.getMove(i)); 
+	//	std::cout << " movescore: " << Evaluation::moveScore(board, ml.getMove(i)); 
+	//	std::cout << std::endl; 
+	//}
 
 	//UCI::uciRun(board, boardState); 
 	
@@ -118,8 +135,17 @@ int main() {
 
 	//read up on history killer 
 	//pv
-	//mvvla 
-	//finish sorting moves - do something 
+	//static exchange evaluation 
+	//transposition table 
+
+	//pv/killer moves 
+
+	//change minimax to negamax algorithm 
+	//add ply and increase depth when in check for searching 
+	//pv/killer/history moves 
+	//iterative deepening 
+
+	//engine has issues and doesn't see mate... search depth of 1 and check out what is the issue 
 
 	//hashing zorborist 
 
