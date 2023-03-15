@@ -13,6 +13,9 @@
 *
 *********************/
 
+/********************
+*minimax + search
+*********************/
 int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	Movelist ml;
 	ml.moveGen(board, boardState);
@@ -192,6 +195,47 @@ int Evaluation::minMax(Board& board, BoardState& boardState, int depth, std::str
 }
 
 
+
+/********************
+*sorting Moves
+*********************/
+int Evaluation::moveScore(const Board& board, move m) {
+	//capture moves 
+	if (Move::captureFlag(m)) {
+		const map targetSquare = indexSquare[Move::targetSquare(m)];
+
+		int targetPiece = wPawn; 
+		for (int i = 0; i < 12; ++i) {
+			if (targetSquare && board.getPiece()[i]) {
+				targetPiece = i; 
+				break; 
+			}
+		}
+
+		return mvvlva[Move::piece(m)][targetPiece];
+	}
+
+	//quiet moves 
+	else {
+
+	}
+
+	return 0; 
+}
+
+void Evaluation::sortMove(const Board& board, Movelist& ml) {
+	//std::sort();
+	std::sort(ml.getMovelist(), ml.getMovelist() + ml.getIndex(),
+		[board](const move& lhs, const move& rhs) -> bool {
+			return Evaluation::moveScore(board, lhs) > Evaluation::moveScore(board, rhs);
+		});
+}
+
+
+
+/********************
+*evaluation 
+*********************/
 int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml, int depth){
 	//checkmate and stalemate 
 	const map checkMask = board.checkMask(boardState);

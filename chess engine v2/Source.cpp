@@ -36,9 +36,19 @@ int main() {
 		//make sure to parse fen start before running uci 
 		Fen::parse(fentemp5, board, boardState);
 	}
+	board.print(boardState); 
 
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
 	
-	UCI::uciRun(board, boardState); 
+	Evaluation::sortMove(board, ml); 
+
+	for (int i = 0; i < ml.getIndex(); ++i) {
+		Move::decode(ml.getMove(i)); 
+		std::cout << " movescore: " << Evaluation::moveScore(board, ml.getMove(i)); 
+		std::cout << std::endl; 
+	}
+
 	//UCI::uciRun(board, boardState); 
 	
 	/*Movelist ml; 
@@ -97,8 +107,6 @@ int main() {
 
 	//connecting the engine to the gui 
 	 
-	//move ordering 
-	//positional evaluation 
 
 	//printing out the move string give a move and index 
 	//another min max function but just for base call that will print out the correct move string 
@@ -108,10 +116,9 @@ int main() {
 	//read up on history killer 
 	//pv
 	//mvvla 
-	//how to minimize horizon effect - is it even necessary if engine can search at higher depth? 
+	//finish sorting moves - do something 
 
 	//hashing zorborist 
-	
-	//add ply 
+
 
 }

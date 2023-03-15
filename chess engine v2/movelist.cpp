@@ -81,6 +81,10 @@ void Movelist::print() {
 //	m2.index = temp; 
 //}
 
+move* Movelist::getMovelist() {
+	return Movelist::movelist; 
+}
+
 move Movelist::getMove(const int index) {
 	return Movelist::movelist[index]; 
 }
@@ -880,4 +884,5 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	}
 
 }
+
 

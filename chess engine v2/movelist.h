@@ -2,7 +2,6 @@
 #include "macro.h"
 #include "board.h"
 #include "attackTable.h"
-
 #include <stdint.h>
 #include <iostream>
 
@@ -15,6 +14,7 @@ public:
 	Movelist& operator=(Movelist& rhs);
 	~Movelist(); */
 
+	move* getMovelist(); 
 	move getMove(const int index); 
 	const int getIndex() const; 
 	void moveGen(const Board& board, BoardState& boardState);

@@ -1,4 +1,5 @@
 #pragma once 
+#include "evaluationTable.h"
 
 #include <stdint.h>
 #include <iostream>
@@ -57,7 +58,6 @@ namespace Move {
 	constexpr bool castlingFlag(const move m);
 
 	const std::string moveString(const move m);
-
 };
 
 

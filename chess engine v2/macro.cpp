@@ -152,6 +152,7 @@ const std::string Move::moveString(const move m) {
 }
 
 
+
 /********************
 *
 *	Bit Macro
