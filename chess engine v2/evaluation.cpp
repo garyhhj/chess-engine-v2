@@ -206,7 +206,7 @@ int Evaluation::moveScore(const Board& board, move m) {
 
 		int targetPiece = wPawn; 
 		for (int i = 0; i < 12; ++i) {
-			if (targetSquare && board.getPiece()[i]) {
+			if (targetSquare & board.getPiece()[i]) {
 				targetPiece = i; 
 				break; 
 			}

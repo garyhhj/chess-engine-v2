@@ -49,6 +49,9 @@ int main() {
 		std::cout << std::endl; 
 	}
 
+	std::cout << "mvvlva: "; 
+	std::cout << mvvlva[wPawn][bKnight] << std::endl; 
+
 	//UCI::uciRun(board, boardState); 
 	
 	/*Movelist ml; 
