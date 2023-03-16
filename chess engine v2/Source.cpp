@@ -26,6 +26,8 @@ int main() {
 		string fenCmk = "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 ";
 		string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN2K2R b KQkq - 0 1 ";
 
+		string fenkiwi = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"; 
+
 		//string fentemp = "rnbqkbnr/1ppppppp/8/p7/Q7/2P5/PP1PPPPP/RNBQKBNR b KQkq - 0 1 ";
 
 		string fentemp = "1nbqkbnr/Pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 2";
@@ -38,14 +40,39 @@ int main() {
 
 		string fentemp8 = "3kQ3/8/4K3/8/8/8/8/8 b - - 0 1 ";
 
-
+		//string fenEndGame = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
+		string fenEndGame = "8/2p5/3p4/KP5r/1R3pPk/8/8/8 b ---- g3 0 1";
+		string fentest1 = "K7/8/8/8/1R1p1k2/8/8/8 b - - 0 1 ";
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fenStart, board, boardState);
+		Fen::parse(fentest1, board, boardState);
 	}
+
+	
+
 	board.print(boardState); 
 
-	UCI::uciRun(board, boardState); 
+	map mask = board.pinMaskHV(boardState); 
+	printBit(mask); 
+
+
+
+	/*
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	ml.print(); 
+
+	board.makemove(ml.getMove(2), boardState); 
+	board.print(boardState); 
+
+	*/
+	
+	//perft(board, boardState, 1);
+
+
+	//board.print(boardState); 
+
+	//UCI::uciRun(board, boardState); 
 	/*Movelist ml; 
 	ml.moveGen(board, boardState);
 	ml.print(); 

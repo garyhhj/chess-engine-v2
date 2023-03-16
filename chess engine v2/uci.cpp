@@ -113,35 +113,44 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 
 	Evaluation::ply = 0; 
 	Evaluation::nodes = 0; 
+	
+	std::fill(Evaluation::killerMoves[0], Evaluation::killerMoves[0] + 2 * 64, 0x0ul);
+	std::fill(Evaluation::historyScore[0], Evaluation::historyScore[0] + 12 * 64, 0);
+	std::fill(Evaluation::pvLength, Evaluation::pvLength + 64, 0);
+	std::fill(Evaluation::pvTable[0], Evaluation::pvTable[0] + 64 * 64, 0x0ul);
+
+
+
+
 
 	std::stringstream ss(command); 
 	std::string word; 
-
-	int depth; 
-
+	int depth;
 	ss >> word; //go 
 	ss >> word; //depth 
 	ss >> depth; 
 	
+	//iterative deepening
+	for (int currDepth = 1; currDepth <= depth; ++currDepth) {
+		Evaluation::nodes = 0; 
+		const int eval = Evaluation::negamax(board, boardState, -50000, 50000, currDepth);
+		std::cout << "info score cp " << eval << " depth " << currDepth << " nodes " << Evaluation::nodes << " pv ";
 
-	
-	const int eval = Evaluation::negamax(board, boardState, -50000, 50000, depth); 
-	std::cout << "info score cp " << eval << " depth " << depth << " nodes " << Evaluation::nodes << " pv "; 
-	
-	for (int i = 0; i < Evaluation::pvLength[0]; ++i) {
-		std::cout << Move::moveString(Evaluation::pvTable[0][i]) << " "; 
+		for (int i = 0; i < Evaluation::pvLength[0]; ++i) {
+			std::cout << Move::moveString(Evaluation::pvTable[0][i]) << " ";
+		}
+		std::cout << "\n";
 	}
-	std::cout << "\n"; 
-
+	
 
 	if (Evaluation::pvTable[0][0] != 0x0ul) {
 		std::cout << "bestmove " << Move::moveString(Evaluation::pvTable[0][0]) << "\n";
 	}
-	else {
-		std::cout << "could not find best move" << std::endl; 
-		std::cout << "debugging information: " << std::endl;
-		board.print(boardState); 
-	}
+	//else {
+	//	std::cout << "could not find best move" << std::endl; 
+	//	std::cout << "debugging information: " << std::endl;
+	//	board.print(boardState); 
+	//}
 }
 
 void UCI::uciRun(Board& board, BoardState& boardState) {

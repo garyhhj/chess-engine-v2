@@ -83,10 +83,9 @@ move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int
 void Move::decode(const move m) {
 
 	//sourceSquare 
-	std::cout << "SS: ";
 	//std::cout << Move::sourceSquare(m) << std::endl; 
 
-	//this is wrong and needs to change 
+	std::cout << "SS: "; 
 
 	//A8 is 0
 	//H1 is 63 

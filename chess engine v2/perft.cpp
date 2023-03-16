@@ -28,7 +28,7 @@ void perft(Board& board, BoardState& boardState, int depth) {
 	if (depth == 0) {
 		std::cout << "nodes: 1" << std::endl; 
 	}
-	int node = 0; 
+	uint64_t node = 0; 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
 

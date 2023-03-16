@@ -455,13 +455,14 @@ const uint64_t Board::IpinMaskDiagonalBlack() const{
 }
 
 const uint64_t Board::pinMaskHV(const BoardState& boardState) const{
-	return (boardState.side == white ? Board::IpinMaskHVWhite() : Board::IpinMaskHVBlack()); 
+	return (boardState.side == white ? Board::IpinMaskHVWhite(boardState) : Board::IpinMaskHVBlack(boardState)); 
 }
 
 //horizontal/veritcal pinmask during white's turn 
-const uint64_t Board::IpinMaskHVWhite() const{
+const uint64_t Board::IpinMaskHVWhite(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[wKing]);
-	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
+	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & ~(boardState.enpassant >> 8);
+
 	uint64_t res = 0x0ull;
 
 	//potential bishop pin 
@@ -492,9 +493,9 @@ const uint64_t Board::IpinMaskHVWhite() const{
 }
 
 //return horizontal/veritcal pin mask during black's turn 
-const uint64_t Board::IpinMaskHVBlack() const{
+const uint64_t Board::IpinMaskHVBlack(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[bKing]);
-	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
+	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & ~(boardState.enpassant << 8);
 	uint64_t res = 0x0ull;
 
 	//potential bishop pin 
