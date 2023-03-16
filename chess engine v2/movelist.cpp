@@ -248,7 +248,9 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		}
 
 		//horizontally pinned pawns(for enpassant capture) 
-		pawns = (board.piece[wPawn] & pinMaskHV & Row5);
+		//only have this pawn mask allowed if king is horizontally pinned meaning king must be one row 5 
+
+		pawns = (board.piece[wKing] & Row5 ? (board.piece[wPawn] & pinMaskHV & Row5) : 0x0ull);
 		while (pawns) {
 			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & (board.occupancy[black] | boardState.enpassant);
 			if (getNumBit(captures) == 2 && boardState.enpassant) {
@@ -676,7 +678,7 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		}
 
 		//horizontally pinned pawns(for enpassant capture) 
-		pawns = (board.piece[bPawn] & pinMaskHV & Row4); 
+		pawns = (board.piece[bKing] & Row4 ? (board.piece[bPawn] & pinMaskHV & Row4) : 0x0ull); 
 		while (pawns) {
 			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & (board.occupancy[white] | boardState.enpassant);
 			if (getNumBit(captures) == 2 && boardState.enpassant) {

@@ -84,20 +84,45 @@ int main() {
 		string fentest23 = "8/2p5/3p1k2/1P5r/K4pP1/4P3/8/1R6 w - - ";  //very important position, just start from here tbh 
 		string fentest24 = "8/2p5/3p1k2/1P5r/K4pP1/4P3/8/5R2 b - - ";  //very important position, just start from here tbh 
 
+		string stuff = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
+		string stuffmirror
+			= "8/2P5/3P4/kp5R/1r3P1K/8/4p1p1/8 b - - ";
+		string kiwipete = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+		string kiwipete1 = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPP1BPPP/R1B1K2R b KQkq -";
+		string kiwipete2 = "r3k2r/p1pp1pb1/bn1qpnp1/3PN3/1p2P3/2N2Q1p/PPP1BPPP/R1B1K2R w KQkq -"; //try e1d2 
+		string kiwipete3 = "r3k2r/p1pp1pb1/bn1qpnp1/3PN3/1p2P3/2N2Q1p/PPP1BPPP/R1BK12R b --kq -"; 
+		string kiwipete4 = "r3k2r/p2p1pb1/bn1qpnp1/2pPN3/1p2P3/2N2Q1p/PPP1BPPP/R1BK12R w --kq c6 ";
 
 
+		Fen::parse(kiwipete4, board, boardState); 
 
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentest24, board, boardState);
+		//Fen::parse(kiwipete3, board, boardState);
 	}
 
 
 	board.print(boardState); 
 
-	perft(board, boardState, 2); 
+	auto mask = board.pinMaskHV(boardState); 
+	printBit(mask); 
 
-	//push verticale pin 
+
+	perft(board, boardState, 1); 
+
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	//board.makemove(ml.getMove(3), boardState); 
+	//
+	//board.print(boardState); 
+
+//	perft(board, boardState, 2); 
+
+	//fix errors from kiwipete first 
+
+	//position 2 not correct at depth of 8 - correct up to depth of 7 
+
+	//replace rooks with bishop and test diagonal pins? light square and dark square on both sides 
 
 	//perft(board, boardState, 2);
 
