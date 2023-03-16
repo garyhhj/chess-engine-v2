@@ -46,24 +46,54 @@ int main() {
 		//string fenEndGame = "3rk2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQk- - ";
 		//string fenEndGame = "3rk2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R2K3R b --k- - ";
 		//string fenEndGame = "3rk2r/p1p1qpb1/bn2Pnp1/3pN3/1p2P3/2N2Q1p/PPPBBPPP/R2K3R w --k- d6 ";
-		string fenEndGame = "3rk3/8/8/r1Pp3K/8/8/8/8 w --k- d6 ";
+		string fenEndGame = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
 
 
 
 		//string fentest1 = "KB6/8/8/8/4pP2/8/7k/8 b - f3 0 1 ";
 
-		string fentest1 = "Kb6/8/8/8/4pp2/8/7k/8 b - - 0 1 ";
+		string fentest1 = "3rk2r/p1p1qpb1/bn2Pnp1/3pN3/1p2P3/2N2Q1p/PPPBBPPP/R2K3R w --k- d6 ";
+		string fentest2 = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - "; 
+		string fentest3 = "8/2p5/3p4/KP5r/1R2Pp1k/8/6P1/8 b - e3 ";
+		string fentest4 = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
+
+		string fentest5 = "8/8/8/KP5r/1R1pP2k/8/6P1/8 b - e3 ";
+
 
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fenEndGame, board, boardState);
+		Fen::parse(fentest5, board, boardState);
 	}
 
 	board.print(boardState);
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	ml.print(); 
 
-	map pinmaskhv = board.pinMaskHV(boardState); 
+
+	auto maskh = board.pinMaskHV(boardState); 
+	
+	std::cout << "horizontal mask" << std::endl; 
+	printBit(maskh); 
+/*
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(3), boardState); 
+
+	board.print(boardState); 
+
+	*/
+	//perft(board, boardState, 1); 
+
+	//kitty key : e2e4: 15
+	//	monkey key : e2e4: 16
+	//	different nodes
+	//	kitty key : g2g4: 16
+	//	monkey key : g2g4: 17
+
+	//map pinmaskhv = board.pinMaskHV(boardState); 
 	//map pinmaskd = board.pinMaskDiagonal(boardState); 
-	printBit(pinmaskhv); 
+	//printBit(pinmaskhv); 
 	//printBit(pinmaskd); 
 	
 

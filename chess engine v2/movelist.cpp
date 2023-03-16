@@ -145,12 +145,24 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		}
 
 		//HV pinned 
-		pawns = (board.piece[wPawn] & ~pinMaskDiagonal & pinMaskHV) << 8 & pinMaskHV & ~(board.occupancy[white] | board.occupancy[black]) & ~Row8 & checkMask;
+		pawns = (board.piece[wPawn] & ~pinMaskDiagonal & pinMaskHV & ~Row5) << 8 & pinMaskHV & ~(board.occupancy[white] | board.occupancy[black]) & ~Row8 & checkMask;
 		while (pawns){
 			const map targetSquare = getLsbBit(pawns);
 			Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
 		
 			pawns &= pawns - 1; 
+		}
+
+		pawns = (board.piece[wPawn] & ~pinMaskDiagonal & pinMaskHV & Row5) << 8 /* & pinMaskHV*/ & ~(board.occupancy[white] | board.occupancy[black]) & ~Row8 & checkMask;
+		//std::cout << "pawns: " << std::endl;                                       //might need to remove this and make sure it works special 
+		//printBit(pawns); 
+		while (pawns) {
+			const map targetSquare = getLsbBit(pawns);
+			const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
+			if (enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & (targetSquare >> 8)))
+				Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
+
+			pawns &= pawns - 1;
 		}
 	}
 
@@ -539,10 +551,22 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		}
 
 		//HV pinned 
-		pawns = (board.piece[bPawn] & ~pinMaskDiagonal & pinMaskHV) >> 8 & pinMaskHV & ~(board.occupancy[white] | board.occupancy[black]) & ~Row1 & checkMask;
+		pawns = (board.piece[bPawn] & ~pinMaskDiagonal & pinMaskHV & ~Row4) >> 8 & pinMaskHV & ~(board.occupancy[white] | board.occupancy[black]) & ~Row1 & checkMask;
 		while (pawns) {
 			const map targetSquare = getLsbBit(pawns); 
 			Movelist::pushBack(Move::makemove(targetSquare << 8, targetSquare, bPawn, wPawn, false, false, false, false));
+
+			pawns &= pawns - 1;
+		}
+
+		pawns = (board.piece[bPawn] & ~pinMaskDiagonal & pinMaskHV & Row4) >> 8 /* & pinMaskHV*/ & ~(board.occupancy[white] | board.occupancy[black]) & ~Row1 & checkMask;
+		//std::cout << "pawns: " << std::endl;                                       //might need to remove this and make sure it works special 
+		//printBit(pawns); 
+		while (pawns) {
+			const map targetSquare = getLsbBit(pawns);
+			const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
+			if (enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & (targetSquare << 8)))
+				Movelist::pushBack(Move::makemove(targetSquare << 8, targetSquare, bPawn, wPawn, false, false, false, false));
 
 			pawns &= pawns - 1;
 		}
