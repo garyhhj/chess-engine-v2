@@ -159,7 +159,7 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		while (pawns) {
 			const map targetSquare = getLsbBit(pawns);
 			const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
-			if (enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & (targetSquare >> 8)))
+			if (enpassantIndex != -1 && (pawnAttack[black][enpassantIndex] & (targetSquare >> 8)))
 				Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
 
 			pawns &= pawns - 1;
@@ -244,6 +244,25 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 			}
 
 			pawns &= pawns - 1; 
+		}
+
+		//horizontally pinned pawns(for enpassant capture) 
+		pawns = (board.piece[wPawn] & pinMaskHV & Row5);
+		while (pawns) {
+			map captures = pawnAttack[white][getlsbBitIndex(pawns)] & (board.occupancy[black] | boardState.enpassant);
+			if (getNumBit(captures) == 2 && boardState.enpassant) {
+				//we are allowed to capture the non enpassant square 
+				while (captures) {
+					const map targetSquare = getLsbBit(captures);
+					if (~(targetSquare & boardState.enpassant) == AllOne) {
+						Movelist::pushBack(Move::makemove(getLsbBit(pawns), targetSquare, wPawn, wPawn, true, false, false, false));
+					}
+
+					captures &= captures - 1;
+				}
+
+			}
+			pawns &= pawns - 1;
 		}
 	}
 
@@ -628,6 +647,7 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 	{
 		//non Diagonally pinned 
 		map pawns = board.piece[bPawn] & ~pinMaskHV & ~pinMaskDiagonal & ~Row2;
+
 		while (pawns) {
 			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & board.occupancy[white] & checkMask;
 			const map sourceSquare = getLsbBit(pawns);
@@ -652,6 +672,25 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 			}
 
 			pawns &= pawns - 1;
+		}
+
+		//horizontally pinned pawns(for enpassant capture) 
+		pawns = (board.piece[bPawn] & pinMaskHV & Row4); 
+		while (pawns) {
+			map captures = pawnAttack[black][getlsbBitIndex(pawns)] & (board.occupancy[white] | boardState.enpassant);
+			if (getNumBit(captures) == 2 && boardState.enpassant) {
+				//we are allowed to capture the non enpassant square 
+				while (captures) {
+					const map targetSquare = getLsbBit(captures); 
+					if (~(targetSquare & boardState.enpassant) == AllOne) {
+						Movelist::pushBack(Move::makemove(getLsbBit(pawns), targetSquare, bPawn, wPawn, true, false, false, false)); 
+					}
+
+					captures &= captures - 1; 
+				}
+
+			}
+			pawns &= pawns - 1; 
 		}
 	}
 

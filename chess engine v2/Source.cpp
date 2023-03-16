@@ -59,22 +59,72 @@ int main() {
 
 		string fentest5 = "8/8/8/KP5r/1R1pP2k/8/6P1/8 b - e3 ";
 
+		string fentest6 = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
+		string fentest7 = "8/8/3p4/KPp4r/1R2Pp1k/8/6P1/8 w - c6 ";
+		string fentest8 = "8/2p5/3p4/KP5r/1R3p1k/4P3/6P1/8 b - - ";
+		string fentest9 = "8/8/2pp4/KP5r/1R3p1k/4P3/6P1/8 w - - ";
+		string fentest10 = "8/8/2pp4/KP5r/1R3pPk/4P3/8/8 b - g3 ";
+		string fentest11 = "8/8/2pp4/KP5r/1R2rpPk/4P3/8/8 b - g3 ";
+
+		string fentest12 = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - "; 
+		string fentest13 = "8/2p5/3p4/KP5r/1R3p1k/4P3/6P1/8 b - - ";  //very important position, just start from here tbh 
+		string fentest14 = "8/8/2pp4/KP5r/1R3p1k/4P3/6P1/8 w - - ";  //very important position, just start from here tbh 
+		string fentest15 = "8/8/2pp4/KP5r/1R3p1k/4P1P1/8/8 b - - ";  //very important position, just start from here tbh 
+
 
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentest5, board, boardState);
+		Fen::parse(fentest15, board, boardState);
 	}
 
-	board.print(boardState);
-	Movelist ml; 
-	ml.moveGen(board, boardState); 
-	ml.print(); 
+
+	board.print(boardState); 
+
+	auto mask = board.pinMaskHV(boardState); 
+	std::cout << "mask h:: " << std::endl; 
+	printBit(mask); 
+
+	perft(board, boardState, 1); 
 
 
-	auto maskh = board.pinMaskHV(boardState); 
-	
-	std::cout << "horizontal mask" << std::endl; 
-	printBit(maskh); 
+
+
+	//perft(board, boardState, 4); 
+
+	//board.print(boardState);
+
+	//auto mask = board.pinMaskHV(boardState); 
+	//printBit(mask); 
+	//perft(board, boardState, 1); 
+
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	//board.makemove(ml.getMove(2), boardState); 
+	//Move::decode(ml.getMove(2)); std::cout << std::endl; 
+	//board.print(boardState);
+
+
+	//auto mask = board.pinMaskHV(boardState); 
+	//std::cout << "hv mask: " << std::endl; 
+	//printBit(mask); 
+
+	//perft(board, boardState, 1); 
+	//perft(board, boardState, 2); 
+
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	////ml.print(); 
+	//board.makemove(ml.getMove(3), boardState); 
+	//board.print(boardState); 
+	//
+	//board.print(boardState); 
+
+	//perft(board, boardState, 3); 
+
+	//auto maskh = board.pinMaskHV(boardState); 
+	//
+	//std::cout << "horizontal mask" << std::endl; 
+	//printBit(maskh); 
 /*
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
