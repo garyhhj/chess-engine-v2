@@ -41,7 +41,15 @@ int main() {
 		string fentemp8 = "3kQ3/8/4K3/8/8/8/8/8 b - - 0 1 ";
 
 		//string fenEndGame = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
-		string fenEndGame = "8/2p5/3p4/KP5r/1R3pPk/8/8/8 b ---- g3 0 1";
+		//string fenEndGame = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ";
+		//string fenEndGame = "r3k2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq - ";
+		//string fenEndGame = "3rk2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQk- - ";
+		//string fenEndGame = "3rk2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R2K3R b --k- - ";
+		//string fenEndGame = "3rk2r/p1p1qpb1/bn2Pnp1/3pN3/1p2P3/2N2Q1p/PPPBBPPP/R2K3R w --k- d6 ";
+		string fenEndGame = "3rk3/8/8/r1Pp3K/8/8/8/8 w --k- d6 ";
+
+
+
 		//string fentest1 = "KB6/8/8/8/4pP2/8/7k/8 b - f3 0 1 ";
 
 		string fentest1 = "Kb6/8/8/8/4pp2/8/7k/8 b - - 0 1 ";
@@ -51,14 +59,24 @@ int main() {
 		Fen::parse(fenEndGame, board, boardState);
 	}
 
+	board.print(boardState);
+
+	map pinmaskhv = board.pinMaskHV(boardState); 
+	//map pinmaskd = board.pinMaskDiagonal(boardState); 
+	printBit(pinmaskhv); 
+	//printBit(pinmaskd); 
 	
 
-	board.print(boardState); 
+	/*Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(4), boardState);
+
+	board.print(boardState);*/
 
 	/*map mask = board.pinMaskDiagonal(boardState); 
 	printBit(mask); */
 
-	perft(board, boardState, 1);
+	//perft(board, boardState, 1);
 
 
 	/*

@@ -473,12 +473,16 @@ const uint64_t Board::pinMaskHV(const BoardState& boardState) const{
 //horizontal/veritcal pinmask during white's turn 
 const uint64_t Board::IpinMaskHVWhite(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[wKing]);
-	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & ~(boardState.enpassant >> 8);
+	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & (Board::piece[wKing] & Row5 ? ~(boardState.enpassant >> 8) : AllOne);
+	std::cout << "occ: " << std::endl; 
+	printBit(occ); 
 
 	uint64_t res = 0x0ull;
 
 	//potential bishop pin 
 	map potentialRookPinnedPiece = rookAttack[index][rookMagicIndex(occ, index)] & (Board::occupancy[white]);
+	std::cout << "potential pinned piece: " << std::endl; 
+	printBit(potentialRookPinnedPiece); 
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialRookPinnedPiece) {
@@ -507,7 +511,7 @@ const uint64_t Board::IpinMaskHVWhite(const BoardState& boardState) const{
 //return horizontal/veritcal pin mask during black's turn 
 const uint64_t Board::IpinMaskHVBlack(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[bKing]);
-	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & ~(boardState.enpassant << 8);
+	const uint64_t occ = (Board::occupancy[white] | Board::occupancy[black]) & ~(Board::piece[bKing] & Row4 ? ~(boardState.enpassant << 8) : AllOne);
 	uint64_t res = 0x0ull;
 
 	//potential bishop pin 
