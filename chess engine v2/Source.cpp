@@ -42,19 +42,23 @@ int main() {
 
 		//string fenEndGame = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ";
 		string fenEndGame = "8/2p5/3p4/KP5r/1R3pPk/8/8/8 b ---- g3 0 1";
-		string fentest1 = "K7/8/8/8/1R1p1k2/8/8/8 b - - 0 1 ";
+		//string fentest1 = "KB6/8/8/8/4pP2/8/7k/8 b - f3 0 1 ";
+
+		string fentest1 = "Kb6/8/8/8/4pp2/8/7k/8 b - - 0 1 ";
+
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentest1, board, boardState);
+		Fen::parse(fenEndGame, board, boardState);
 	}
 
 	
 
 	board.print(boardState); 
 
-	map mask = board.pinMaskHV(boardState); 
-	printBit(mask); 
+	/*map mask = board.pinMaskDiagonal(boardState); 
+	printBit(mask); */
 
+	perft(board, boardState, 1);
 
 
 	/*

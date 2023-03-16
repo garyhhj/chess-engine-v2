@@ -386,17 +386,23 @@ const uint64_t Board::IcheckMaskBlack(BoardState& boardState) const{
 }
 
 const uint64_t Board::pinMaskDiagonal(const BoardState& boardState) const{
-	return (boardState.side == white ? Board::IpinMaskDiagonalWhite() : Board::IpinMaskDiagonalBlack()); 
+	return (boardState.side == white ? Board::IpinMaskDiagonalWhite(boardState) : Board::IpinMaskDiagonalBlack(boardState)); 
 }
 
 //pin mask during white's turn (when white is about to make move) 
-const uint64_t Board::IpinMaskDiagonalWhite() const{
+const uint64_t Board::IpinMaskDiagonalWhite(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[wKing]); 
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black]; 
 	uint64_t res = 0x0ull; 
 
+	map enpassantMask = 0x0ull; 
+	const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
+	if (enpassantIndex != -1 && (pawnAttack[black][enpassantIndex] & Board::piece[wPawn])) {
+		enpassantMask = (boardState.enpassant >> 8); 
+	}
+
 	//potential bishop pin 
-	map potentialBishopPinnedPiece = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::occupancy[white]); 
+	map potentialBishopPinnedPiece = bishopAttack[index][bishopMagicIndex(occ, index)] & ((Board::occupancy[white]) | enpassantMask);
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialBishopPinnedPiece) {
@@ -422,13 +428,19 @@ const uint64_t Board::IpinMaskDiagonalWhite() const{
 	return res; 
 }
 
-const uint64_t Board::IpinMaskDiagonalBlack() const{
+const uint64_t Board::IpinMaskDiagonalBlack(const BoardState& boardState) const{
 	const int index = getlsbBitIndex(Board::piece[bKing]);
 	const uint64_t occ = Board::occupancy[white] | Board::occupancy[black];
 	uint64_t res = 0x0ull;
 
+	map enpassantMask = 0x0ull;
+	const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
+	if (enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & Board::piece[bPawn])) {
+		enpassantMask = (boardState.enpassant << 8);
+	}
+
 	//potential bishop pin 
-	map potentialBishopPinnedPiece = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::occupancy[black]);
+	map potentialBishopPinnedPiece = bishopAttack[index][bishopMagicIndex(occ, index)] & ((Board::occupancy[black]) | enpassantMask);
 
 	//iterate through each potential pin and then create a pin mask 
 	while (potentialBishopPinnedPiece) {

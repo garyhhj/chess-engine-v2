@@ -68,8 +68,8 @@ private:
 	const uint64_t IsafeSquaresBlack(const BoardState& boardState) const; 
 	const uint64_t IcheckMaskWhite(BoardState& boardState) const;
 	const uint64_t IcheckMaskBlack(BoardState& boardState) const;
-	const uint64_t IpinMaskDiagonalWhite() const;
-	const uint64_t IpinMaskDiagonalBlack() const; 
+	const uint64_t IpinMaskDiagonalWhite(const BoardState& boardState) const;
+	const uint64_t IpinMaskDiagonalBlack(const BoardState& boardState) const;
 	const uint64_t IpinMaskHVWhite(const BoardState& boardState) const;
 	const uint64_t IpinMaskHVBlack(const BoardState& boardState) const;
 	void Imakemovewhite(move move, BoardState& boardState);
