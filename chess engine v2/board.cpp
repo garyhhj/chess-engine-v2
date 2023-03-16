@@ -683,12 +683,14 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	//std::cout << "index: " << index << std::endl;
 
 	//side t0 move 
+	std::cout << "index at b or w : " << index << std::endl; 
 	if (fen[index] == 'b') boardState.side = black;
 	else boardState.side = white;
 	index += 2; 
 
 	//std::cout << "index: " << index << std::endl; 
 	
+	std::cout << "index at castling: " << index << std::endl; 
 	//castling rights 
 	while (fen[index] != ' ') {
 		switch (fen[index]) {
@@ -710,8 +712,9 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	++index;
 
 	//enpassant square 
+	std::cout << "index at enpassant " << index << std::endl; 
 	int enpassantStart = index; 
-	while (fen[index] != ' ') {
+	while (fen[index] != ' ' && fen[index] != '-') {
 		++index;
 	}
 	if (index - enpassantStart == 2) {

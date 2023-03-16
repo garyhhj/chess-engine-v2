@@ -93,28 +93,34 @@ int main() {
 		string kiwipete3 = "r3k2r/p1pp1pb1/bn1qpnp1/3PN3/1p2P3/2N2Q1p/PPP1BPPP/R1BK12R b --kq -"; 
 		string kiwipete4 = "r3k2r/p2p1pb1/bn1qpnp1/2pPN3/1p2P3/2N2Q1p/PPP1BPPP/R1BK12R w --kq c6 ";
 
+		string kiwipeteclone = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
+		string kiwipeteclone1 = "r3k2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq -";
+		string kiwipeteclone2 = "r4k1r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQ-- -"; //lots of bugs revisit after first one 
 
-		Fen::parse(kiwipete4, board, boardState); 
+		for (int i = 0; i < kiwipeteclone2.size(); ++i) {
+			std::cout << i << " : " << kiwipeteclone2[i] << '\n';
+		}
+		std::cout << std::endl; 
+
+		Fen::parse(kiwipeteclone2, board, boardState);
 
 
 		//make sure to parse fen start before running uci 
 		//Fen::parse(kiwipete3, board, boardState);
 	}
 
-
+	//d5e6 is wrong 
+	
 	board.print(boardState); 
 
-	auto mask = board.pinMaskHV(boardState); 
-	printBit(mask); 
+	/*Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(6), boardState); 
+	
+	board.print(boardState); */
 
+	//perft(board, boardState, 4);
 
-	perft(board, boardState, 1); 
-
-	//Movelist ml; 
-	//ml.moveGen(board, boardState); 
-	//board.makemove(ml.getMove(3), boardState); 
-	//
-	//board.print(boardState); 
 
 //	perft(board, boardState, 2); 
 
