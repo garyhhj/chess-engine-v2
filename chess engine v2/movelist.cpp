@@ -159,7 +159,8 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 		while (pawns) {
 			const map targetSquare = getLsbBit(pawns);
 			const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
-			if (enpassantIndex != -1 && (pawnAttack[black][enpassantIndex] & (targetSquare >> 8)))
+			if ((enpassantIndex != -1 && (pawnAttack[black][enpassantIndex] & (targetSquare >> 8)))
+				|| (targetSquare & pinMaskHV))
 				Movelist::pushBack(Move::makemove(targetSquare >> 8, targetSquare, wPawn, wPawn, false, false, false, false));
 
 			pawns &= pawns - 1;
@@ -306,7 +307,7 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 	
 	//enpassant capture 
 	{
-		if (boardState.enpassant && (boardState.enpassant & checkMask)) {
+		if (boardState.enpassant && ((boardState.enpassant & checkMask) || (boardState.enpassant & (checkMask << 8)))) {
 			const int targetIndex = getlsbBitIndex(boardState.enpassant); 
 			
 			//non Diagonally pinned 
@@ -584,9 +585,9 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 		while (pawns) {
 			const map targetSquare = getLsbBit(pawns);
 			const int enpassantIndex = getlsbBitIndex(boardState.enpassant);
-			if (enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & (targetSquare << 8)))
+			if ((enpassantIndex != -1 && (pawnAttack[white][enpassantIndex] & (targetSquare << 8)))
+				|| (targetSquare & pinMaskHV))
 				Movelist::pushBack(Move::makemove(targetSquare << 8, targetSquare, bPawn, wPawn, false, false, false, false));
-
 			pawns &= pawns - 1;
 		}
 	}
@@ -734,7 +735,10 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 
 	//enpassant capture 
 	{
-		if (boardState.enpassant && (boardState.enpassant & checkMask)) {
+		//std::cout << "checkmask : " << std::endl; 
+		//printBit(checkMask); 
+
+		if (boardState.enpassant && ((boardState.enpassant & checkMask) || (boardState.enpassant & (checkMask >> 8)))) {
 			const int targetIndex = getlsbBitIndex(boardState.enpassant);
 
 			//non Diagonally pinned 
@@ -747,6 +751,8 @@ void Movelist::moveGenBlack(const Board& board, BoardState& boardState) {
 
 			//Diagonally pinned - no move possible 
 		}
+
+
 	}
 
 

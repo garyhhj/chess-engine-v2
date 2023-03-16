@@ -71,25 +71,53 @@ int main() {
 		string fentest14 = "8/8/2pp4/KP5r/1R3p1k/4P3/6P1/8 w - - ";  //very important position, just start from here tbh 
 		string fentest15 = "8/8/2pp4/KP5r/1R3p1k/4P1P1/8/8 b - - ";  //very important position, just start from here tbh 
 
+		string fentest16 = "8/2p5/3p4/KP4kr/1R3p2/4P3/6P1/8 w - - ";  //very important position, just start from here tbh 
+		string fentest17 = "8/2p5/3p4/1P4kr/KR3p2/4P3/6P1/8 b - - ";  //very important position, just start from here tbh 
+		string fentest18 = "8/2p5/3p4/1P3k1r/KR3p2/4P3/6P1/8 w - - ";  //very important position, just start from here tbh 
+		string fentest19 = "8/2p5/3p4/1P3k1r/KR3pP1/4P3/8/8 b - g3 ";  //very important position, just start from here tbh 
+
+		string fentest20 = "8/2p5/3p3k/1P32r/KR3pP1/4P3/8/8 b - g3 ";  //very important position, just start from here tbh 
+
+		//string fentest19 = "8/2p5/3p4/1P3k1r/KR3pP1/4P3/8/8 b - g3 ";  //very important position, just start from here tbh 
+		string fentest21 = "8/2p5/3p4/1P4kr/KR3pP1/4P3/8/8 w - - ";  //very important position, just start from here tbh 
+		string fentest22 = "8/2p5/3p4/1P4kr/K4pP1/4P3/8/1R6 b - - ";  //very important position, just start from here tbh 
+		string fentest23 = "8/2p5/3p1k2/1P5r/K4pP1/4P3/8/1R6 w - - ";  //very important position, just start from here tbh 
+		string fentest24 = "8/2p5/3p1k2/1P5r/K4pP1/4P3/8/5R2 b - - ";  //very important position, just start from here tbh 
+
+
+
 
 
 		//make sure to parse fen start before running uci 
-		Fen::parse(fentest15, board, boardState);
+		Fen::parse(fentest24, board, boardState);
 	}
 
 
 	board.print(boardState); 
 
-	auto mask = board.pinMaskHV(boardState); 
-	std::cout << "mask h:: " << std::endl; 
-	printBit(mask); 
+	perft(board, boardState, 2); 
 
-	perft(board, boardState, 1); 
+	//push verticale pin 
+
+	//perft(board, boardState, 2);
+
+	//Movelist ml;
+	//ml.moveGen(board, boardState);
+	//board.makemove(ml.getMove(11), boardState);
+
+	//board.print(boardState); 
+
+	//std::cout << "mask hv : " << std::endl; 
+	//printBit(board.pinMaskHV(boardState)); 
+
+	//perft(board, boardState, 1); 
+
+/*
 
 
+	board.print(boardState);
 
-
-	//perft(board, boardState, 4); 
+	*///perft(board, boardState, 4); 
 
 	//board.print(boardState);
 
