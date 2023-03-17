@@ -109,17 +109,15 @@ int main() {
 		string pos6 = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10 "; 
 
 		string posInitial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		//Fen::parse(fendumb, board, boardState);
 		Fen::parse(posInitial, board, boardState); 
 
-		//make sure to parse fen start before running uci 
-		//Fen::parse(kiwipete3, board, boardState);
 	}
 
 
-	//d5e6 is wrong 
 	
 	UCI::uciRun(board, boardState); 
+
+	//change all evaluation to match exactly bbc? 
 	
 		//Movelist ml;
 		//ml.moveGen(board, boardState);

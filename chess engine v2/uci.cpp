@@ -116,9 +116,9 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	
 	std::fill(Evaluation::killerMoves[0], Evaluation::killerMoves[0] + 2 * 64, 0x0ul);
 	std::fill(Evaluation::historyScore[0], Evaluation::historyScore[0] + 12 * 64, 0);
+
 	std::fill(Evaluation::pvLength, Evaluation::pvLength + 64, 0);
 	std::fill(Evaluation::pvTable[0], Evaluation::pvTable[0] + 64 * 64, 0x0ul);
-
 
 
 
@@ -133,6 +133,7 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	//iterative deepening
 	for (int currDepth = 1; currDepth <= depth; ++currDepth) {
 		Evaluation::nodes = 0; 
+
 		const int eval = Evaluation::negamax(board, boardState, -50000, 50000, currDepth);
 		std::cout << "info score cp " << eval << " depth " << currDepth << " nodes " << Evaluation::nodes << " pv ";
 

@@ -14,9 +14,9 @@ namespace Evaluation {
 
 	extern move killerMoves[2][MAXPLY]; //[priority][ply]
 	extern int historyScore[12][MAXPLY]; //[piece][ply]
+
 	extern int pvLength[MAXPLY]; //[ply]
 	extern move pvTable[MAXPLY][MAXPLY]; //[ply][ply] 
-
 
 	//int negamaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth);
 	int negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth); 

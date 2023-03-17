@@ -11,6 +11,7 @@ int Evaluation::nodes = 0;
 
 move Evaluation::killerMoves[2][Evaluation::MAXPLY]{}; //[priority][ply]
 int Evaluation::historyScore[12][Evaluation::MAXPLY]{}; //[piece][ply]
+
 int Evaluation::pvLength[Evaluation::MAXPLY]{}; //[ply]
 move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply] 
 
@@ -130,6 +131,8 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 
 		//found better move 
 		if (eval > alpha) {
+			alpha = eval;
+
 			using namespace Evaluation;
 			historyScore[Move::piece(currmove)][Move::targetSquare(currmove)] += depth; 
 
@@ -139,9 +142,6 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 				pvTable[ply][nextPly] = pvTable[ply + 1][nextPly]; 
 			}
 			pvLength[ply] = pvLength[ply + 1]; 
-
-			/*if(Evaluation::ply == 0) Evaluation::bestmove = Move::moveString(currmove); */
-			alpha = eval; 
 		}
 	}
 
@@ -153,8 +153,13 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 *sorting Moves
 *********************/
 int Evaluation::moveScore(const Board& board, move m) {
+	
+	//pv move 
+	if (Evaluation::pvTable[0][ply] == m) {
+		return 20000; 
+	}
 	//capture moves 
-	if (Move::captureFlag(m)) {
+	else if (Move::captureFlag(m)) {
 		const map targetSquare = indexSquare[Move::targetSquare(m)];
 
 		int targetPiece = wPawn; 
