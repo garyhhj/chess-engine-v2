@@ -115,6 +115,8 @@ int main() {
 		//make sure to parse fen start before running uci 
 		//Fen::parse(kiwipete3, board, boardState);
 	}
+
+
 	//d5e6 is wrong 
 	
 	UCI::uciRun(board, boardState); 
