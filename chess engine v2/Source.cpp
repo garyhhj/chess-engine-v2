@@ -109,16 +109,21 @@ int main() {
 		string pos6 = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10 "; 
 
 		string posInitial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		Fen::parse(posInitial, board, boardState); 
+		Fen::parse(fenCmk, board, boardState); 
 
 	}
-
+	board.print(boardState); 
 
 	
 	UCI::uciRun(board, boardState); 
 
-	//change all evaluation to match exactly bbc? 
+	//change how to handel detecting check mate to if statement at end of search 
+
+	//check quiesence 
 	
+	//something is wrong with evaluation... idk something very sus 
+	// 
+	// 
 		//Movelist ml;
 		//ml.moveGen(board, boardState);
 		//board.makemove(ml.getMove(32), boardState);

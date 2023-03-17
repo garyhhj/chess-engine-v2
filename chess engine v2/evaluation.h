@@ -28,7 +28,7 @@ namespace Evaluation {
 	int moveScore(const Board& board, move m); 
 	void sortMove(const Board&, Movelist& ml); 
 
-	int evaluate(Board& board, BoardState& boardState, Movelist& ml, int depth);
+	int evaluate(Board& board, BoardState& boardState, int depth);
 	int materialEvaluation(const Board& board);
 	int mobilityEvaluation(const Movelist& ml);
 	int positionalEvaluation(const Board& board); 

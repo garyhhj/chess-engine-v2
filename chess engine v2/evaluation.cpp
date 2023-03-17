@@ -31,30 +31,18 @@ move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply]
 int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta) {
 	++Evaluation::nodes;
 
+	const int eval = Evaluation::evaluate(board, boardState, ply); 
+	if (eval >= beta) return beta;
+	if (eval > alpha) alpha = eval;
+
 
 	Movelist ml;
 	ml.moveGen(board, boardState);
 	Evaluation::sortMove(board, ml);
 	const int mlIndex = ml.getIndex();
 
-	bool captures = false; 
-	{
-		for (int i = 0; i < mlIndex; ++i) {
-			if (Move::captureFlag(ml.getMove(i))) {
-				captures = true; 
-				break; 
-			}
-		}
-	}
-
 	Board currBoard = board;
 	BoardState currBoardState = boardState;
-
-	
-	//only want to evaluate positions with non captures 
-	if (!captures) {
-		return Evaluation::evaluate(board, boardState, ml, Evaluation::ply);
-	}
 
 	for (int i = 0; i < mlIndex; ++i) {
 		if (!Move::captureFlag(ml.getMove(i))) continue; 
@@ -86,6 +74,7 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	++Evaluation::nodes; 
 	Evaluation::pvLength[ply] = ply; 
+	bool findPV = false; 
 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
@@ -105,16 +94,25 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		++depth; 
 	}
 
+	int eval; 
 	for (int i = 0; i < mlIndex; ++i) {
 		const move currmove = ml.getMove(i); 
 		board.makemove(currmove, boardState); 
-		++Evaluation::ply; 
-		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
-		--Evaluation::ply; 
 
-		//if(Evaluation::ply == 0) Move::decode(ml.getMove(i)); std::cout << " score: " << eval << std::endl;
+		if (findPV) {
+			++Evaluation::ply;
+			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - 1); 
+			if ((eval > alpha) && (eval < beta)) {
+				eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1); 
+			}
+			--Evaluation::ply;
+		}
+		else {
+			++Evaluation::ply;
+			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1); 
+			--Evaluation::ply;
+		}
 		
-
 
 		board = currBoard;
 		boardState = currBoardState;
@@ -132,6 +130,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		//found better move 
 		if (eval > alpha) {
 			alpha = eval;
+			findPV = true; 
 
 			using namespace Evaluation;
 			historyScore[Move::piece(currmove)][Move::targetSquare(currmove)] += depth; 
@@ -144,6 +143,17 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 			pvLength[ply] = pvLength[ply + 1]; 
 		}
 	}
+
+	const map checkMask = board.checkMask(boardState); 
+	if (checkMask != AllOne && !ml.getIndex()) {
+		return -49000 + ply;
+		//return (boardState.getSide() == white ? -49000 - depth : -49000 - depth);
+	}
+	else if (checkMask == AllOne && !ml.getIndex()) {
+		//stalemate score
+		return 0;
+	}
+
 
 	return alpha; 
 }
@@ -199,17 +209,10 @@ void Evaluation::sortMove(const Board& board, Movelist& ml) {
 /********************
 *evaluation 
 *********************/
-int Evaluation::evaluate(Board& board, BoardState& boardState, Movelist& ml, int ply){
+int Evaluation::evaluate(Board& board, BoardState& boardState, int ply){
 	//checkmate and stalemate 
 	const map checkMask = board.checkMask(boardState);
-	if (checkMask != AllOne && !ml.getIndex()) {
-		return -49000 + ply; 
-		//return (boardState.getSide() == white ? -49000 - depth : -49000 - depth);
-	}
-	else if (checkMask == AllOne && !ml.getIndex()) {
-		//stalemate score
-		return 0;
-	}
+
 	
 	//material score 
 	const int materialScore = Evaluation::materialEvaluation(board); 
