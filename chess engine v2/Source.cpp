@@ -105,19 +105,19 @@ int main() {
 		string pos4_1 = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P1RPP/R2Q2K1 b kq - 0 1"; //b2a1 
 		string pos4_2 = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/P2P1RPP/q2Q2K1 w kq - 0 1"; 
 
+		string pos5 = "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8  "; 
+		string pos6 = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10 "; 
 
-
+		string posInitial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		//Fen::parse(fendumb, board, boardState);
-		Fen::parse(pos4_1, board, boardState); 
+		Fen::parse(posInitial, board, boardState); 
 
 		//make sure to parse fen start before running uci 
 		//Fen::parse(kiwipete3, board, boardState);
 	}
 	//d5e6 is wrong 
 	
-	board.print(boardState); 
-	
-	perft(board, boardState, 4); 
+	UCI::uciRun(board, boardState); 
 	
 		//Movelist ml;
 		//ml.moveGen(board, boardState);
