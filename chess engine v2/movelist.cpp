@@ -496,7 +496,7 @@ void Movelist::moveGenWhite(const Board& board, BoardState& boardState) {
 			map targetSquares = rookAttack[queenIndex][rookMagicIndex(occ, queenIndex)] & checkMask & ~board.occupancy[white] & pinMaskHV;
 			while (targetSquares) {
 				const map targetSquare = getLsbBit(targetSquares); 
-				Movelist::pushBack(Move::makemove(getLsbBit(queens), targetSquare, wRook, wPawn, targetSquare & board.occupancy[black], false, false, false));
+				Movelist::pushBack(Move::makemove(getLsbBit(queens), targetSquare, wQueen , wPawn, targetSquare& board.occupancy[black], false, false, false));
 
 				targetSquares &= targetSquares - 1;
 			}

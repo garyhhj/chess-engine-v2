@@ -96,28 +96,101 @@ int main() {
 		string kiwipeteclone = "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -";
 		string kiwipeteclone1 = "r3k2r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQkq -";
 		string kiwipeteclone2 = "r4k1r/p1ppqpb1/bn2Pnp1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQ-- -"; //lots of bugs revisit after first one 
+		string kiwipeteclone3 = "r4k1r/p1ppqPb1/bn3np1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQ-- -"; //try f6 g8 
+		string kiwipeteclone4 = "r3nk1r/p1ppqPb1/bn4p1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQ-- -"; 
+		string kiwipeteclone5 = "r3Rk1r/p1ppq1b1/bn4p1/4N3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R b KQ-- -";
 
-		for (int i = 0; i < kiwipeteclone2.size(); ++i) {
-			std::cout << i << " : " << kiwipeteclone2[i] << '\n';
-		}
-		std::cout << std::endl; 
+		string endgame = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - "; 
+		string pos4 = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1";
+		string pos4_1 = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P1RPP/R2Q2K1 b kq - 0 1"; //b2a1 
+		string pos4_2 = "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/P2P1RPP/q2Q2K1 w kq - 0 1"; 
 
-		Fen::parse(kiwipeteclone2, board, boardState);
 
+
+		//Fen::parse(fendumb, board, boardState);
+		Fen::parse(pos4_1, board, boardState); 
 
 		//make sure to parse fen start before running uci 
 		//Fen::parse(kiwipete3, board, boardState);
 	}
-
 	//d5e6 is wrong 
 	
 	board.print(boardState); 
-
-	/*Movelist ml; 
-	ml.moveGen(board, boardState); 
-	board.makemove(ml.getMove(6), boardState); 
 	
-	board.print(boardState); */
+	perft(board, boardState, 4); 
+	
+		//Movelist ml;
+		//ml.moveGen(board, boardState);
+		//board.makemove(ml.getMove(32), boardState);
+
+		//Move::decode(ml.getMove(32)); std::cout << std::endl;
+
+		//board.print(boardState); 
+
+	/*std::cout << "pawn" << std::endl; 
+	printBit(board.getPiece()[wPawn]); 
+	printBit(board.getPiece()[bPawn]); 
+
+	std::cout << "knight" << std::endl;
+	printBit(board.getPiece()[wKnight]);
+	printBit(board.getPiece()[bKnight]);
+
+	std::cout << "king" << std::endl;
+	printBit(board.getPiece()[wKing]);
+	printBit(board.getPiece()[bKing]);
+
+	std::cout << "bishop" << std::endl;
+	printBit(board.getPiece()[wBishop]);
+	printBit(board.getPiece()[bBishop]);
+
+	std::cout << "rook" << std::endl;
+	printBit(board.getPiece()[wRook]);
+	printBit(board.getPiece()[bRook]);
+	
+	std::cout << "queen" << std::endl;
+	printBit(board.getPiece()[wQueen]);
+	printBit(board.getPiece()[bQueen]);
+
+	
+
+
+	//board.print(boardState); 
+
+	/*
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+	board.makemove(ml.getMove(5), boardState); 
+
+	board.print(boardState);*/
+
+	//perft(board, boardState, 4); 
+
+	//wrong at depht of 5 
+
+	//Movelist ml; 
+	//ml.moveGen(board, boardState); 
+	//board.makemove(ml.getMove(7), boardState); 
+	//
+	//board.print(boardState); 
+
+	//auto mask = board.checkMask(boardState); 
+
+	
+
+	//std::cout << "checkmask" << std::endl; 
+	//printBit(mask); 
+
+	//if (boardState.doubleCheck) {
+	//	std::cout << "double check yay" << std::endl;
+	//}
+	//else std::cout << "noo something is wrong" << std::endl; 
+
+	//perft(board, boardState, 1); 
+
+
+	//perft(board, boardState, 1); 
+	//perft(board, boardState, 2);
+
 
 	//perft(board, boardState, 4);
 

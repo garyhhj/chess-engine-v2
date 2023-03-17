@@ -304,7 +304,7 @@ const uint64_t Board::IcheckMaskWhite(BoardState& boardState) const{
 	{
 		map mask = bishopAttack[index][bishopMagicIndex(occ, index)];
 		map bishopMask = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::piece[bBishop] | Board::piece[bQueen]);
-		if (bishopMask) numChecks += 1; 
+		if (bishopMask) numChecks += getNumBit(bishopMask);;
 		res |= bishopMask;
 
 		while (bishopMask) {
@@ -318,7 +318,7 @@ const uint64_t Board::IcheckMaskWhite(BoardState& boardState) const{
 	{
 		map mask = rookAttack[index][rookMagicIndex(occ, index)];
 		map rookMask = rookAttack[index][rookMagicIndex(occ, index)] & (Board::piece[bRook] | Board::piece[bQueen]); 
-		if (rookMask) numChecks += 1; 
+		if (rookMask) numChecks += getNumBit(rookMask); 
 		res |= rookMask; 
 
 		while (rookMask) {
@@ -353,7 +353,7 @@ const uint64_t Board::IcheckMaskBlack(BoardState& boardState) const{
 	{
 		map mask = bishopAttack[index][bishopMagicIndex(occ, index)];
 		map bishopMask = bishopAttack[index][bishopMagicIndex(occ, index)] & (Board::piece[wBishop] | Board::piece[wQueen]);
-		if (bishopMask) numChecks += 1;
+		if (bishopMask) numChecks += getNumBit(bishopMask);
 		res |= bishopMask;
 
 		while (bishopMask) {
@@ -367,7 +367,7 @@ const uint64_t Board::IcheckMaskBlack(BoardState& boardState) const{
 	{
 		map mask = rookAttack[index][rookMagicIndex(occ, index)];
 		map rookMask = rookAttack[index][rookMagicIndex(occ, index)] & (Board::piece[wRook] | Board::piece[wQueen]);
-		if (rookMask) numChecks += 1;
+		if (rookMask) numChecks += getNumBit(rookMask);
 		res |= rookMask;
 
 		while (rookMask) {
@@ -683,14 +683,12 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	//std::cout << "index: " << index << std::endl;
 
 	//side t0 move 
-	std::cout << "index at b or w : " << index << std::endl; 
 	if (fen[index] == 'b') boardState.side = black;
 	else boardState.side = white;
 	index += 2; 
 
 	//std::cout << "index: " << index << std::endl; 
 	
-	std::cout << "index at castling: " << index << std::endl; 
 	//castling rights 
 	while (fen[index] != ' ') {
 		switch (fen[index]) {
@@ -712,7 +710,6 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 	++index;
 
 	//enpassant square 
-	std::cout << "index at enpassant " << index << std::endl; 
 	int enpassantStart = index; 
 	while (fen[index] != ' ' && fen[index] != '-') {
 		++index;

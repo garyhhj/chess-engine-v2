@@ -20,7 +20,8 @@ public:
 	int getSide() const; 
 	void debug(); 
 
-private: 
+//private: 
+public: 
 	void swap(BoardState& lhs, BoardState& rhs); 
 
 	int IgetSide() const; 
