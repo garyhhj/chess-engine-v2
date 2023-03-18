@@ -115,7 +115,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	const int mlIndex = ml.getIndex(); 
 	
 
-	//increase search depth while in check 
+	//increase search depth while in check	
 	if (inCheck) {
 		++depth; 
 	}

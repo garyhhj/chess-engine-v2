@@ -31,6 +31,9 @@
     <Filter Include="Source Files\evaluation">
       <UniqueIdentifier>{9278f363-4ea2-45dc-ac8c-c2a36450d7d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\randomNum">
+      <UniqueIdentifier>{38630bd5-e717-441f-a90e-a1dabd28e709}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="evaluation.cpp">
       <Filter>Source Files\evaluation</Filter>
+    </ClCompile>
+    <ClCompile Include="randomNum.cpp">
+      <Filter>Source Files\randomNum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="evaluation.h">
       <Filter>Source Files\evaluation</Filter>
+    </ClInclude>
+    <ClInclude Include="randomNum.h">
+      <Filter>Source Files\randomNum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

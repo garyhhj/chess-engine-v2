@@ -5,6 +5,7 @@
 #include "perft.h"
 #include "uci.h"
 #include "evaluation.h"
+#include "randomNum.h"
 
 #include <iostream>
 #include <bitset>
@@ -114,8 +115,17 @@ int main() {
 	}
 	board.print(boardState); 
 
+	std::string s; 
+	for (int i = 0; i < 12; ++i) {
+		std::cout << "I: " << i << std::endl; 
+		printBit(Random::getRandomUint64()); 
+		std::cin >> s; 
+	}
+
 	
-	UCI::uciRun(board, boardState); 
+	//UCI::uciRun(board, boardState); 
+
+	//implement time handeling + 
 
 	//change how to handel detecting check mate to if statement at end of search 
 
