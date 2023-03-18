@@ -3,8 +3,18 @@
 #include "evaluationTable.h"
 #include "board.h"
 #include "movelist.h"
+#include "randomNum.h"
 
 #include <algorithm>
+
+namespace Zobrist {
+	extern map pieceKey[12][64]; //pieceKey[piece][square]
+	extern map enpassant[64]; //enapssant[square]
+	extern map castleKey[16]; //castleKey[castleflag(binary representation)]
+	extern map sideKey;
+
+	void initZobrist();
+}
 
 namespace Evaluation {
 	const int MAXPLY = 64; 

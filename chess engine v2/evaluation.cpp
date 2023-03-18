@@ -16,6 +16,34 @@ int Evaluation::pvLength[Evaluation::MAXPLY]{}; //[ply]
 move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply] 
 
 
+/********************
+*
+*Zobrist 
+*
+*********************/
+
+map Zobrist::pieceKey[12][64]{}; //pieceKey[piece][square]
+map Zobrist::enpassant[64]{}; //enapssant[square]
+map Zobrist::castleKey[16]{}; //castleKey[castleflag(binary representation)]
+map Zobrist::sideKey{};
+
+void Zobrist::initZobrist() {
+	for (int piece = 0; piece < 12; ++piece) {
+		for (int square = 0; square < 64; ++square) {
+			Zobrist::pieceKey[piece][square] = Random::getRandomUint64(); 
+		}
+	}
+
+	for (int square = 0; square < 64; ++square) {
+		Zobrist::enpassant[square] = Random::getRandomUint64(); 
+	}
+
+	for (int i = 0; i < 16; ++i) {
+		Zobrist::castleKey[i] = Random::getRandomUint64(); 
+	}
+
+	Zobrist::sideKey = Random::getRandomUint64(); 
+}
 
 /********************
 *

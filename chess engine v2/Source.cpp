@@ -115,12 +115,47 @@ int main() {
 	}
 	board.print(boardState); 
 
-	std::string s; 
+	Zobrist::initZobrist(); 
+
+	std::map<uint64_t, int> mp; 
+
 	for (int i = 0; i < 12; ++i) {
-		std::cout << "I: " << i << std::endl; 
-		printBit(Random::getRandomUint64()); 
-		std::cin >> s; 
+		for (int j = 0; j < 64; ++j) {
+			mp[Zobrist::pieceKey[i][j]]++;
+		}
 	}
+
+	for (int i = 0; i < 64; ++i) {
+		mp[Zobrist::enpassant[i]]++;
+	}
+
+	for (int i = 0; i < 16; ++i) {
+		mp[Zobrist::castleKey[i]]++; 
+	}
+
+	mp[Zobrist::sideKey]++; 
+
+	for (auto& i : mp) {
+		if (i.second > 1) std::cout << "oof not good" << std::endl; 
+	}
+	std::cout << "done " << std::endl; 
+
+	//map Zobrist::pieceKey[12][64]{}; //pieceKey[piece][square]
+	//map Zobrist::enpassant[64]{}; //enapssant[square]
+	//map Zobrist::castleKey[16]{}; //castleKey[castleflag(binary representation)]
+	//map Zobrist::sideKey{};
+
+
+	//std::string s; 
+	//for (int i = 0; i < 12; ++i) {
+	//	std::cout << "I: " << i << std::endl; 
+	//	printBit(Random::getRandomUint64()); 
+	//	std::cin >> s; 
+	//}
+
+	//I need to initialize the arrays for zobrist 
+	//I need to create a function that hashes zobrist 
+	//I also need to create lazy evaluation/update for zobrist hash using xor 
 
 	
 	//UCI::uciRun(board, boardState); 
