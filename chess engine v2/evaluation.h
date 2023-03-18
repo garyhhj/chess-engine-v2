@@ -8,6 +8,8 @@
 
 namespace Evaluation {
 	const int MAXPLY = 64; 
+	const int FULLDEPTHMOVES = 4; 
+	const int REDUCTIONLIMIT = 3; 
 
 	extern int ply; 
 	extern int nodes; 
@@ -18,6 +20,8 @@ namespace Evaluation {
 	extern int pvLength[MAXPLY]; //[ply]
 	extern move pvTable[MAXPLY][MAXPLY]; //[ply][ply] 
 
+	bool canLMR(move m); 
+	bool canNullMove(const Board& board); 
 	//int negamaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth);
 	int negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth); 
 

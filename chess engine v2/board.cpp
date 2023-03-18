@@ -919,6 +919,12 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 	//		a b c d e f g h
 }
 
+void Board::makenullmove(BoardState& boardState) {
+	boardState.side = (boardState.side == white ? black : white); 
+	boardState.enpassant = 0x0ull; 
+}
+
+
 
 /********************
 *

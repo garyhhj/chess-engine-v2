@@ -27,6 +27,18 @@ move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply]
 *negamax + alphabeta
 *********************/
 
+bool Evaluation::canNullMove(const Board& board) {
+	//diable null move pruning when pawns are only material on board 
+	return
+		((board.getPiece()[wPawn] | board.getPiece()[wKing]) != board.getOccupancy()[white]) ||
+		((board.getPiece()[bPawn] | board.getPiece()[bKing]) != board.getOccupancy()[black]);
+}
+
+bool Evaluation::canLMR(move m) {
+	//if there are captures and promotions return false 
+	return !(Move::captureFlag(m)) && (Move::promotePiece(m) == wPawn) && (m != Evaluation::pvTable[0][ply]);
+}
+
 
 int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta) {
 	++Evaluation::nodes;
@@ -74,23 +86,37 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	++Evaluation::nodes; 
 	Evaluation::pvLength[ply] = ply; 
-	bool findPV = false; 
+	
+	if (depth == 0) {
+		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);
+		//return Evaluation::evaluate(board, boardState, ml, ply); 
+	}
+
+	bool inCheck = board.attacked(board.getPiece()[(boardState.getSide() == white ? wKing : bKing)], boardState);
+	int movesSearched = 0;
+
+	Board currBoard = board;
+	BoardState currBoardState = boardState;
+	
+	//null move pruning 
+	if (depth >= 3 && !inCheck && Evaluation::ply && Evaluation::canNullMove(board)) {
+		board.makenullmove(boardState); 
+		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2); 
+		board = currBoard; 
+		boardState = currBoardState; 
+		if (eval >= beta) {
+			return beta; 
+		}
+	}
 
 	Movelist ml; 
 	ml.moveGen(board, boardState); 
 	Evaluation::sortMove(board, ml); 
 	const int mlIndex = ml.getIndex(); 
-
-	Board currBoard = board; 
-	BoardState currBoardState = boardState; 
-
-	if (depth == 0 || mlIndex == 0) {
-		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);  
-		//return Evaluation::evaluate(board, boardState, ml, ply); 
-	}
+	
 
 	//increase search depth while in check 
-	if (board.attacked(board.getPiece()[(boardState.getSide() == white ? wKing : bKing)], boardState)) {
+	if (inCheck) {
 		++depth; 
 	}
 
@@ -99,20 +125,25 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		const move currmove = ml.getMove(i); 
 		board.makemove(currmove, boardState); 
 
-		if (findPV) {
-			++Evaluation::ply;
-			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - 1); 
+		
+		//lmr nodes 
+		if(movesSearched >= Evaluation::FULLDEPTHMOVES && depth >= Evaluation::REDUCTIONLIMIT && !inCheck && Evaluation::canLMR(ml.getMove(i))){
+			//reduction in search 
+			++Evaluation::ply; 
+			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - (Evaluation::REDUCTIONLIMIT - 1)); 
 			if ((eval > alpha) && (eval < beta)) {
-				eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1); 
+				eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
 			}
-			--Evaluation::ply;
+			--Evaluation::ply; 
 		}
+		//interesting positions that do not qualify for lmr || first few full depth searches 
 		else {
 			++Evaluation::ply;
-			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1); 
+			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
 			--Evaluation::ply;
 		}
-		
+
+		++movesSearched; 
 
 		board = currBoard;
 		boardState = currBoardState;
@@ -130,7 +161,6 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		//found better move 
 		if (eval > alpha) {
 			alpha = eval;
-			findPV = true; 
 
 			using namespace Evaluation;
 			historyScore[Move::piece(currmove)][Move::targetSquare(currmove)] += depth; 

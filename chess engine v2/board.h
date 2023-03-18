@@ -56,6 +56,7 @@ public:
 	const uint64_t pinMaskHV(const BoardState& boardState) const; 
 
 	void makemove(move move, BoardState& boardState); 
+	void makenullmove(BoardState& boardState); 
 
 	const map* getPiece() const; 
 	const map* getOccupancy() const; 
