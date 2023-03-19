@@ -113,15 +113,33 @@ int main() {
 
 		string posInitial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	
-		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1";
+		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNB1KBNR w KQk- - 0 1";
 
 		
-		Fen::parse(fenKcpy, board, boardState);
+		Fen::parse(posInitial, board, boardState);
 
 	}
 	board.print(boardState);
 
+	Board currBoard = board; 
+	BoardState currBoardState = boardState; 
+	const map currhash = Zobrist::hashZobrist(board, boardState); 
+
+	Movelist ml; 
+	ml.moveGen(board, boardState); 
+
+	for (int i = 0; i < ml.getIndex(); ++i) {
+		Move::decode(ml.getMove(i)); std::cout << std::endl; 
+		
+		board.makemove(ml.getMove(i), boardState); 
+
+		board = currBoard; 
+		boardState = currBoardState; 
+		board.getHashkey() = currhash; 
+	}
+	std::cout << "done" << std::endl; 
 	
+	//test zobirst hashing 
 
 
 	
