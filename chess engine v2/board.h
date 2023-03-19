@@ -2,6 +2,7 @@
 #include "macro.h"
 #include "attackTable.h"
 //#include "evaluation.h"
+#include "zobrist.h"
 #include <string>
 #include <algorithm>
 
@@ -18,6 +19,7 @@ public:
 	//~BoardState(); 
 	
 	int getSide() const; 
+	int getCastleRightBin() const; 
 	void debug(); 
 
 //private: 
@@ -60,6 +62,7 @@ public:
 
 	const map* getPiece() const; 
 	const map* getOccupancy() const; 
+	map& getHashkey();
 private: 
 	//move generation 
 	void Iprint(const BoardState& boardState) const;
@@ -80,6 +83,7 @@ private:
 	//leaper pieces 
 	map piece[12]; 
 	map occupancy[2]; 
+	map hashKey = 0; 
 };
 
 

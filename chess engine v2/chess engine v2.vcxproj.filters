@@ -34,6 +34,9 @@
     <Filter Include="Source Files\randomNum">
       <UniqueIdentifier>{38630bd5-e717-441f-a90e-a1dabd28e709}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\zobrist">
+      <UniqueIdentifier>{3fdb6b2f-b2f8-4352-bd20-8b193799da7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="randomNum.cpp">
       <Filter>Source Files\randomNum</Filter>
+    </ClCompile>
+    <ClCompile Include="zobrist.cpp">
+      <Filter>Source Files\zobrist</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="randomNum.h">
       <Filter>Source Files\randomNum</Filter>
+    </ClInclude>
+    <ClInclude Include="zobrist.h">
+      <Filter>Source Files\zobrist</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

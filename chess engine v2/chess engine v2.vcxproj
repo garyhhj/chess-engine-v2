@@ -141,6 +141,7 @@
     <ClCompile Include="perft.cpp" />
     <ClCompile Include="evaluation.cpp" />
     <ClCompile Include="randomNum.cpp" />
+    <ClCompile Include="zobrist.cpp" />
     <ClCompile Include="uci.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="evaluationTable.h" />
     <ClInclude Include="evaluation.h" />
+    <ClInclude Include="zobrist.h" />
     <ClInclude Include="randomNum.h" />
     <ClInclude Include="uci.h" />
     <ClInclude Include="perft.h" />

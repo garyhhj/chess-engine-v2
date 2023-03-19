@@ -104,6 +104,15 @@ void BoardState::swap(BoardState& lhs, BoardState& rhs) {
 	std::swap(lhs.doubleCheck, rhs.doubleCheck); 
 }
 
+int BoardState::getCastleRightBin() const {
+	int res = 0x0ul; 
+	if (BoardState::castleRightWK) res |= 0b1000; 
+	if (BoardState::castleRightWQ) res |= 0b0100; 
+	if (BoardState::castleRightBK) res |= 0b0010; 
+	if (BoardState::castleRightBQ) res |= 0b0001; 
+	
+	return res; 
+}
 
 /********************
 *
@@ -192,7 +201,12 @@ void Board::Iprint(const BoardState& boardState) const{
 	else std::cout << "-"; 
 	if (boardState.castleRightBQ) std::cout << "q";
 	else std::cout << "-"; 
-	std::cout << "\n\n"; 
+	std::cout << "\n"; 
+
+	//hash key 
+	std::ios_base::fmtflags f(std::cout.flags());
+	std::cout << "zobrist: 0x" << std::hex << Board::hashKey << "\n\n"; 
+	std::cout.flags(f);
 
 	std::flush(std::cout);
 }
@@ -719,6 +733,8 @@ void Fen::Iparse(const std::string& fen, Board& board, BoardState& boardState) {
 		boardState.enpassant = indexSquare[mapIndex];
 	}
 
+	//hash key 
+	board.hashKey = Zobrist::hashZobrist(board, boardState); 
 }
 
 void Fen::IparseStartPosition(Board& board, BoardState& boardState) {
@@ -935,4 +951,6 @@ void Board::makenullmove(BoardState& boardState) {
 
 const map* Board::getPiece() const { return Board::piece; }
 const map* Board::getOccupancy() const { return Board::occupancy; }
+map& Board::getHashkey() { return Board::hashKey; }
+
 

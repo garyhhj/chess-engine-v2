@@ -5,6 +5,7 @@
 #include "perft.h"
 #include "uci.h"
 #include "evaluation.h"
+#include "zobrist.h"
 #include "randomNum.h"
 
 #include <iostream>
@@ -17,6 +18,7 @@ int main() {
 	
 	Board board;
 	BoardState boardState;
+	Zobrist::initZobristTables();
 
 	{
 		using namespace std;
@@ -110,35 +112,20 @@ int main() {
 		string pos6 = "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10 "; 
 
 		string posInitial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		Fen::parse(fenCmk, board, boardState); 
+	
+		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1";
+
+		
+		Fen::parse(fenKcpy, board, boardState);
 
 	}
-	board.print(boardState); 
+	board.print(boardState);
 
-	Zobrist::initZobrist(); 
+	
 
-	std::map<uint64_t, int> mp; 
 
-	for (int i = 0; i < 12; ++i) {
-		for (int j = 0; j < 64; ++j) {
-			mp[Zobrist::pieceKey[i][j]]++;
-		}
-	}
-
-	for (int i = 0; i < 64; ++i) {
-		mp[Zobrist::enpassant[i]]++;
-	}
-
-	for (int i = 0; i < 16; ++i) {
-		mp[Zobrist::castleKey[i]]++; 
-	}
-
-	mp[Zobrist::sideKey]++; 
-
-	for (auto& i : mp) {
-		if (i.second > 1) std::cout << "oof not good" << std::endl; 
-	}
-	std::cout << "done " << std::endl; 
+	
+	//create function that hashes keys 
 
 	//map Zobrist::pieceKey[12][64]{}; //pieceKey[piece][square]
 	//map Zobrist::enpassant[64]{}; //enapssant[square]
