@@ -13,12 +13,6 @@
 *
 *********************/
 
-const int tTableSize = 0x400000;
-
-const int tFlagExact = 0; 
-const int tFlagAlpha = 1; 
-const int tFlagBeta = 2; 
-
 typedef struct transposition{
 	map exactHash; 
 	int eval; 
@@ -30,6 +24,8 @@ class Ttable {
 public: 
 	static Ttable& get();
 	static void debug(); 
+	static int lookUp(const map hash, const int depth, const int alpha, const int beta); 
+	static void insert(const map hash, const int depth, const int flag, const int eval);
 
 private: 
 	Ttable();
@@ -37,8 +33,18 @@ private:
 	
 	void printTtable(const int index); 
 	void Idebug(); 
-
+	int IlookUp(const map hash, const int depth, const int alpha, const int beta);
+	void Iinsert(const map hash, const int depth, const int flag, const int eval);
 	transposition* tTable;
+
+
+	static const int tTableSize = 0x400000;
+
+	static const int tFlagExact = 0;
+	static const int tFlagAlpha = 1;
+	static const int tFlagBeta = 2;
+
+	static const int unknownEval = 1 << 30; 
 };
 
 /********************

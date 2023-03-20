@@ -27,6 +27,30 @@ Ttable& Ttable::get() {
 	return instance; 
 }
 
+int Ttable::lookUp(const map hash, const int depth, const int alpha, const int beta) {
+	return Ttable::get().IlookUp(hash, depth, alpha, beta); 
+}
+
+int Ttable::IlookUp(const map hash, const int depth, const int alpha, const int beta) {
+	//do something meow 
+	const int index = hash % tTableSize;
+	
+	transposition& tTableElement = Ttable::tTable[hash % Ttable::tTableSize]; 
+
+	if (tTableElement.exactHash == hash && tTableElement.depth >= depth) {
+
+		if (tTableElement.flag == Ttable::tFlagExact) return tTableElement.eval;
+
+		if (tTableElement.flag == Ttable::tFlagAlpha && tTableElement.eval <= alpha) return alpha; 
+
+		if (tTableElement.flag == Ttable::tFlagBeta && tTableElement.eval >= beta) return beta; 
+	}
+
+	return Ttable::unknownEval; 
+}
+
+
+
 static const std::string tflagString[] = {"exact", "alpha", "beta"};
 void Ttable::printTtable(const int index) {
 	std::ios_base::fmtflags f(std::cout.flags());
@@ -46,9 +70,7 @@ void Ttable::Idebug() {
 	std::cout << std::endl; 
 }
 
-Ttable::Ttable() : tTable(new transposition[tTableSize]) {
-	std::cout << "constructor called" << std::endl; 
-}
+Ttable::Ttable() : tTable(new transposition[tTableSize]) {}
 Ttable::~Ttable() {
 	delete[] Ttable::tTable; 
 }
