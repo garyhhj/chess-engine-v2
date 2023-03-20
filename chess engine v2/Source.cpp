@@ -123,6 +123,9 @@ int main() {
 	
 
 	//next step is implementing transposition table -> do this first 
+	//next step is to take time control and write the rest of the uci protocol 
+	
+	//clear transposition table function 
 	 
 	//implement time control -> essentially taking/copying a popular time control code ... wonder if it works in c++ since its written in c ... will it have some issues with std::cin buffer? 
 

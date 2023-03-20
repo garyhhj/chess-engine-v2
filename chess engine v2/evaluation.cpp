@@ -49,6 +49,34 @@ int Ttable::IlookUp(const map hash, const int depth, const int alpha, const int 
 	return Ttable::unknownEval; 
 }
 
+void Ttable::insert(const map hash, const int depth, const int flag, const int eval) {
+	Ttable::get().Iinsert(hash, depth, flag, eval); 
+}
+
+void Ttable::Iinsert(const map hash, const int depth, const int flag, const int eval) {
+	transposition& tTableElement = Ttable::tTable[hash % tTableSize]; 
+
+	tTableElement.exactHash = hash; 
+	tTableElement.depth = depth; 
+	tTableElement.flag = flag; 
+	tTableElement.eval = eval; 
+}
+
+void Ttable::clear() {
+	Ttable::get().Iclear(); 
+}
+
+void Ttable::Iclear() {	
+	for (int index = 0; index < Ttable::tTableSize; ++index) {
+		transposition& tTableElement = Ttable::tTable[index]; 
+
+		tTableElement.depth = 0; 
+		tTableElement.eval = Ttable::unknownEval; 
+		tTableElement.exactHash = 0x0ull; 
+		tTableElement.flag = Ttable::tFlagUnknown;
+	}
+}
+
 
 
 static const std::string tflagString[] = {"exact", "alpha", "beta"};
@@ -163,9 +191,10 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	//null move pruning 
 	if (depth >= 3 && !inCheck && Evaluation::ply && Evaluation::canNullMove(board)) {
 		board.makenullmove(boardState); 
-
+		++Evaluation::ply; 
 		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2); 
 		board.updateHash(currboardhash); 
+		--Evaluation::ply; 
 
 		board = currBoard; 
 		boardState = currBoardState; 
@@ -218,16 +247,6 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		board = currBoard;
 		boardState = currBoardState;
 		board.updateHash(currboardhash);
-		
-		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
-		if (eval >= beta) {
-			if (!Move::captureFlag(currmove)) {
-				Evaluation::killerMoves[1][ply] = Evaluation::killerMoves[0][ply];
-				Evaluation::killerMoves[0][ply] = currmove;
-			}
-
-			return beta; 
-		}
 
 		//found better move 
 		if (eval > alpha) {
@@ -242,6 +261,16 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 				pvTable[ply][nextPly] = pvTable[ply + 1][nextPly]; 
 			}
 			pvLength[ply] = pvLength[ply + 1]; 
+			
+			//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
+			if (eval >= beta) {
+				if (!Move::captureFlag(currmove)) {
+					Evaluation::killerMoves[1][ply] = Evaluation::killerMoves[0][ply];
+					Evaluation::killerMoves[0][ply] = currmove;
+				}
+
+				return beta;
+			}
 		}
 	}
 
