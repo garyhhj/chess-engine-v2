@@ -3,6 +3,7 @@
 int perftHelper(Board& board, BoardState& boardState, int depth) {
 	if (depth == 0) return 1;
 	
+	const map currhashkey = Zobrist::hashZobrist(board, boardState);
 	int nodes = 0; 
 
 	Movelist ml; 
@@ -16,6 +17,7 @@ int perftHelper(Board& board, BoardState& boardState, int depth) {
 		boardState = currBoardState; 
 		board.makemove(ml.getMove(i), boardState);
 		nodes += perftHelper(board, boardState, depth - 1); 
+		board.getHashkey() = currhashkey;  
 	}
 
 	return nodes; 
@@ -25,6 +27,8 @@ int perftHelper(Board& board, BoardState& boardState, int depth) {
 void perft(Board& board, BoardState& boardState, int depth) {
 	std::cout << "perft" << std::endl; 
 	auto start = std::chrono::steady_clock::now();
+	const map currhashkey = Zobrist::hashZobrist(board, boardState);
+
 	if (depth == 0) {
 		std::cout << "nodes: 1" << std::endl; 
 	}
@@ -42,6 +46,7 @@ void perft(Board& board, BoardState& boardState, int depth) {
 		board.makemove(ml.getMove(index), boardState); 
 		
 		int childNodes = perftHelper(board, boardState, depth - 1); 
+		board.getHashkey() = currhashkey;
 		//padding/move index 
 		std::cout << "move: " << index;
 		if (index < 10) std::cout << " ";

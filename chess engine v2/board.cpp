@@ -747,6 +747,7 @@ void Board::makemove(move move, BoardState& boardState) {
 }
 
 void Board::Imakemovewhite(move move, BoardState& boardState) {
+
 	//remove castle rights and enpassant 
 	Board::hashKey ^= Zobrist::castleKey[boardState.getCastleRightBin()]; 
 	if (boardState.enpassant != 0x0ull) Board::hashKey ^= Zobrist::enpassant[getlsbBitIndex(boardState.enpassant)]; 
@@ -780,17 +781,20 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 		//get capture piece  
 		int capturePiece = -1; 
 		for (int i = bPawn; i <= bQueen; ++i) {
-			if (indexSquare[targetSquare] &Board::piece[i]) {
+			if (indexSquare[targetSquare] & Board::piece[i]) {
 				capturePiece = i; 
 				break; 
 			}
 		}
+		
+		//non enpassant captures 
+		if (capturePiece != -1) {
+			popBit(Board::piece[capturePiece], indexSquare[targetSquare]);
+			popBit(Board::occupancy[black], indexSquare[targetSquare]);
 
-		popBit(Board::piece[capturePiece], indexSquare[targetSquare]); 
-		popBit(Board::occupancy[black], indexSquare[targetSquare]); 
-
-		Board::hashKey ^= Zobrist::pieceKey[capturePiece][targetSquare]; 
-
+			Board::hashKey ^= Zobrist::pieceKey[capturePiece][targetSquare];
+		}
+		
 		/*
 		popBit(Board::piece[bPawn], indexSquare[targetSquare]);
 		popBit(Board::piece[bKnight], indexSquare[targetSquare]);
@@ -867,9 +871,12 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 	boardState.side = black; 
 	Board::hashKey ^= Zobrist::sideKey; 
 
-	//if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
-	//	std::cout << "zobrist hashing has error on white" << std::endl; 
-	//}
+	if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
+		std::cout << "zobrist hashing has error on white" << std::endl; 
+		int meow = -1;
+		int meow2 = Zobrist::pieceKey[meow][2];
+		//assert(false);
+	}
 	//  8   r n b q k b n r
 	//	7   p p p p r p p p
 	//	6   0 0 0 0 0 0 0 0
@@ -921,11 +928,14 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 			}
 		}
 
-		popBit(Board::piece[capturePiece], indexSquare[targetSquare]);
-		popBit(Board::occupancy[white], indexSquare[targetSquare]);
+		//non enpassant captures 
+		if (capturePiece != -1) {
+			popBit(Board::piece[capturePiece], indexSquare[targetSquare]);
+			popBit(Board::occupancy[white], indexSquare[targetSquare]);
 
-		Board::hashKey ^= Zobrist::pieceKey[capturePiece][targetSquare];
-
+			Board::hashKey ^= Zobrist::pieceKey[capturePiece][targetSquare];
+		}
+		
 		//popBit(Board::piece[wPawn], indexSquare[targetSquare]);
 		//popBit(Board::piece[wKnight], indexSquare[targetSquare]);
 		//popBit(Board::piece[wKing], indexSquare[targetSquare]);
@@ -1002,9 +1012,12 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 	boardState.side = white;
 	Board::hashKey ^= Zobrist::sideKey; 
 
-	/*if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
+	if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
 		std::cout << "error with zobirst with has on black" << std::endl; 
-	}*/
+		int meow = -1; 
+		int meow2 = Zobrist::pieceKey[meow][2]; 
+		//assert(false);
+	}
 	//  8   r n b q k b n r
 	//	7   p p p p r p p p
 	//	6   0 0 0 0 0 0 0 0
@@ -1019,9 +1032,11 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 
 void Board::makenullmove(BoardState& boardState) {
 	boardState.side = (boardState.side == white ? black : white); 
+	Board::hashKey ^= Zobrist::sideKey; 
+	
+	if (boardState.enpassant != 0x0ull) Board::hashKey ^= Zobrist::enpassant[getlsbBitIndex(boardState.enpassant)]; 
 	boardState.enpassant = 0x0ull; 
 }
-
 
 
 /********************
@@ -1030,9 +1045,10 @@ void Board::makenullmove(BoardState& boardState) {
 *
 *********************/
 
-
 const map* Board::getPiece() const { return Board::piece; }
 const map* Board::getOccupancy() const { return Board::occupancy; }
 map& Board::getHashkey() { return Board::hashKey; }
+void Board::updateHash(const map hash) { Board::hashKey = hash; }
+
 
 

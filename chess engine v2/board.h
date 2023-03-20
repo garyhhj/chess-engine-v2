@@ -5,6 +5,7 @@
 #include "zobrist.h"
 #include <string>
 #include <algorithm>
+#include <assert.h>
 
 class Movelist; 
 
@@ -63,6 +64,7 @@ public:
 	const map* getPiece() const; 
 	const map* getOccupancy() const; 
 	map& getHashkey();
+	void updateHash(const map hash); 
 private: 
 	//move generation 
 	void Iprint(const BoardState& boardState) const;

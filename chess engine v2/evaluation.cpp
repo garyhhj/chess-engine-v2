@@ -42,11 +42,11 @@ bool Evaluation::canLMR(move m) {
 
 int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta) {
 	++Evaluation::nodes;
+	const map currboardhash = board.getHashkey();
 
 	const int eval = Evaluation::evaluate(board, boardState, ply); 
 	if (eval >= beta) return beta;
 	if (eval > alpha) alpha = eval;
-
 
 	Movelist ml;
 	ml.moveGen(board, boardState);
@@ -62,6 +62,7 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 		board.makemove(ml.getMove(i), boardState);
 		++Evaluation::ply;
 		const int eval = -Evaluation::quiesenceSearch(board, boardState, -beta, -alpha);
+		board.updateHash(currboardhash); 
 		--Evaluation::ply;
 
 
@@ -86,6 +87,7 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	++Evaluation::nodes; 
 	Evaluation::pvLength[ply] = ply; 
+	const map currboardhash = board.getHashkey(); 
 	
 	if (depth == 0) {
 		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);
@@ -101,7 +103,10 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	//null move pruning 
 	if (depth >= 3 && !inCheck && Evaluation::ply && Evaluation::canNullMove(board)) {
 		board.makenullmove(boardState); 
+
 		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2); 
+		board.updateHash(currboardhash); 
+
 		board = currBoard; 
 		boardState = currBoardState; 
 		if (eval >= beta) {
@@ -124,22 +129,27 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	for (int i = 0; i < mlIndex; ++i) {
 		const move currmove = ml.getMove(i); 
 		board.makemove(currmove, boardState); 
+		const map nextmoveBoardhash = board.getHashkey(); 
 
 		
 		//lmr nodes 
 		if(movesSearched >= Evaluation::FULLDEPTHMOVES && depth >= Evaluation::REDUCTIONLIMIT && !inCheck && Evaluation::canLMR(ml.getMove(i))){
 			//reduction in search 
 			++Evaluation::ply; 
-			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - (Evaluation::REDUCTIONLIMIT - 1)); 
+			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - (Evaluation::REDUCTIONLIMIT - 1));
+			//run time issue... wrong bug try it without updating the board 
+			
 			if ((eval > alpha) && (eval < beta)) {
+				board.updateHash(nextmoveBoardhash); 
 				eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
+				
 			}
 			--Evaluation::ply; 
 		}
 		//interesting positions that do not qualify for lmr || first few full depth searches 
 		else {
 			++Evaluation::ply;
-			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
+			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);		
 			--Evaluation::ply;
 		}
 
@@ -147,6 +157,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 
 		board = currBoard;
 		boardState = currBoardState;
+		board.updateHash(currboardhash);
 		
 		//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
 		if (eval >= beta) {

@@ -116,12 +116,21 @@ int main() {
 		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNB1KBNR w KQk- - 0 1";
 
 		
-		Fen::parse(posInitial, board, boardState);
+		Fen::parse(kiwipete, board, boardState);
 
 	}
 	board.print(boardState);
+	
+	UCI::uciRun(board, boardState); 
+	
+	//perft(board, boardState, 5); 
 
-	Board currBoard = board; 
+	//add hashing to make null move? 
+	//then add the update hash to negamax and quiesence search? since I don't have a take back function 
+
+	//write singleton for transposition table to allow for bigger table?(stack overflow?) 
+
+	/*Board currBoard = board; 
 	BoardState currBoardState = boardState; 
 	const map currhash = Zobrist::hashZobrist(board, boardState); 
 
@@ -137,7 +146,7 @@ int main() {
 		boardState = currBoardState; 
 		board.getHashkey() = currhash; 
 	}
-	std::cout << "done" << std::endl; 
+	std::cout << "done" << std::endl; */
 	
 	//test zobirst hashing 
 
