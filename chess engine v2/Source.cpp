@@ -119,9 +119,15 @@ int main() {
 		Fen::parse(kiwipete, board, boardState);
 
 	}
-	board.print(boardState);
+	Ttable::debug(); 
 	
-	UCI::uciRun(board, boardState); 
+
+	//next step is implementing transposition table -> do this first 
+	 
+	//implement time control -> essentially taking/copying a popular time control code ... wonder if it works in c++ since its written in c ... will it have some issues with std::cin buffer? 
+
+
+	//UCI::uciRun(board, boardState); 
 	
 	//perft(board, boardState, 5); 
 

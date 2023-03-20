@@ -7,6 +7,45 @@
 
 #include <algorithm>
 
+/********************
+*
+*Transposition Table
+*
+*********************/
+
+const int tTableSize = 0x400000;
+
+const int tFlagExact = 0; 
+const int tFlagAlpha = 1; 
+const int tFlagBeta = 2; 
+
+typedef struct transposition{
+	map exactHash; 
+	int eval; 
+	int depth; 
+	int flag = 0; 
+} transposition;
+
+class Ttable {
+public: 
+	static Ttable& get();
+	static void debug(); 
+
+private: 
+	Ttable();
+	~Ttable();
+	
+	void printTtable(const int index); 
+	void Idebug(); 
+
+	transposition* tTable;
+};
+
+/********************
+*
+*Evaluation
+*
+*********************/
 
 namespace Evaluation {
 	const int MAXPLY = 64; 

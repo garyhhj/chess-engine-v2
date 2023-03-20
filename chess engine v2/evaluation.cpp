@@ -16,6 +16,44 @@ int Evaluation::pvLength[Evaluation::MAXPLY]{}; //[ply]
 move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply] 
 
 
+/********************
+*
+*Transposition Table
+*
+*********************/
+
+Ttable& Ttable::get() {
+	static Ttable instance; 
+	return instance; 
+}
+
+static const std::string tflagString[] = {"exact", "alpha", "beta"};
+void Ttable::printTtable(const int index) {
+	std::ios_base::fmtflags f(std::cout.flags());
+	std::cout << "depth/eval: " << Ttable::tTable[index].depth << " / " <<Ttable::tTable[index].eval << "\n";
+	std::cout << "flag/hash: " << tflagString[Ttable::tTable[index].flag] << " / " << std::hex << "0x" << Ttable::tTable[index].exactHash << "\n";
+	std::cout.flags(f);
+}
+
+void Ttable::debug() {
+	Ttable::get().Idebug(); 
+}
+void Ttable::Idebug() {
+	for (int i = 0; i < 10; ++i) {
+		std::cout << "index: " << i << "\n"; 
+		Ttable::printTtable(i); 
+	}
+	std::cout << std::endl; 
+}
+
+Ttable::Ttable() : tTable(new transposition[tTableSize]) {
+	std::cout << "constructor called" << std::endl; 
+}
+Ttable::~Ttable() {
+	delete[] Ttable::tTable; 
+}
+
+
 
 /********************
 *
