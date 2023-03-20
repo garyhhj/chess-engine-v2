@@ -26,6 +26,7 @@ public:
 	static void debug(); 
 	static int lookUp(const map hash, const int depth, const int alpha, const int beta); 
 	static void insert(const map hash, const int depth, const int flag, const int eval);
+	static void clear(); 
 
 private: 
 	Ttable();
@@ -35,14 +36,17 @@ private:
 	void Idebug(); 
 	int IlookUp(const map hash, const int depth, const int alpha, const int beta);
 	void Iinsert(const map hash, const int depth, const int flag, const int eval);
+	void Iclear(); 
+
 	transposition* tTable;
 
-
+public: 
 	static const int tTableSize = 0x400000;
 
 	static const int tFlagExact = 0;
 	static const int tFlagAlpha = 1;
 	static const int tFlagBeta = 2;
+	static const int tFlagUnknown = 3; 
 
 	static const int unknownEval = 1 << 30; 
 };

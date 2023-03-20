@@ -185,6 +185,7 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "ucinewgame") {
 			UCI::parsePosition("position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board, boardState);
+			Ttable::clear(); 
 			board.print(boardState); 
 		}
 		else if (word == "go") {

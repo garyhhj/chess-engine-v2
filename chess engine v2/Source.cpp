@@ -19,6 +19,7 @@ int main() {
 	Board board;
 	BoardState boardState;
 	Zobrist::initZobristTables();
+	Ttable::clear(); 
 
 	{
 		using namespace std;

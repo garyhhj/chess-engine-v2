@@ -44,7 +44,7 @@ int Ttable::IlookUp(const map hash, const int depth, const int alpha, const int 
 		if (tTableElement.flag == Ttable::tFlagAlpha && tTableElement.eval <= alpha) return alpha; 
 
 		if (tTableElement.flag == Ttable::tFlagBeta && tTableElement.eval >= beta) return beta; 
-	}
+	}	
 
 	return Ttable::unknownEval; 
 }
@@ -176,10 +176,20 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	++Evaluation::nodes; 
 	Evaluation::pvLength[ply] = ply; 
 	const map currboardhash = board.getHashkey(); 
+
+	
+	{
+		const int score = Ttable::lookUp(currboardhash, depth, alpha, beta); 
+		if (Evaluation::ply && score != Ttable::unknownEval) {
+			return score; 
+		}
+
+	}
 	
 	if (depth == 0) {
 		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);
-		//return Evaluation::evaluate(board, boardState, ml, ply); 
+		/*Ttable::insert(currboardhash, Evaluation::ply, Ttable::tFlagExact, eval); 
+		return eval; */
 	}
 
 	bool inCheck = board.attacked(board.getPiece()[(boardState.getSide() == white ? wKing : bKing)], boardState);
@@ -214,6 +224,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		++depth; 
 	}
 
+	int hashflag = Ttable::tFlagAlpha; 
 	int eval; 
 	for (int i = 0; i < mlIndex; ++i) {
 		const move currmove = ml.getMove(i); 
@@ -261,6 +272,8 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 				pvTable[ply][nextPly] = pvTable[ply + 1][nextPly]; 
 			}
 			pvLength[ply] = pvLength[ply + 1]; 
+
+			hashflag = Ttable::tFlagExact; 
 			
 			//fail hard beta cut off (oppnent has refutation so this branch will never be played assuming optimal play) 
 			if (eval >= beta) {
@@ -269,6 +282,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 					Evaluation::killerMoves[0][ply] = currmove;
 				}
 
+				Ttable::insert(currboardhash, depth, Ttable::tFlagBeta, beta); 
 				return beta;
 			}
 		}
@@ -284,7 +298,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		return 0;
 	}
 
-
+	Ttable::insert(currboardhash, depth, hashflag, alpha); 
 	return alpha; 
 }
 
