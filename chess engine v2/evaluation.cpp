@@ -424,6 +424,8 @@ int Evaluation::evaluate(Board& board, BoardState& boardState, int ply){
 	const int materialScore = Evaluation::materialEvaluation(board); 
 	//const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
 	const int positionalScore = Evaluation::positionalEvaluation(board); 
+	const int pawnScore = Evaluation::pawnEvaluation(board); 
+	const int rookScore = Evaluation::rookEvaluation(board); 
 	/*std::cout
 		<< "material score: " << materialScore << "\n"
 		<< "mobility score: " << mobilityScore << "\n" << std::flush; */
@@ -432,7 +434,9 @@ int Evaluation::evaluate(Board& board, BoardState& boardState, int ply){
 	return (boardState.getSide() == white ? 1 : -1) * (
 		materialScore +
 		//mobilityScore + 
-		positionalScore); 
+		positionalScore +
+		pawnScore + 
+		rookScore); 
 		/*Evaluation::materialEvaluation(board) +
 		Evaluation::mobilityEvaluation(ml); */
 
@@ -531,13 +535,17 @@ int Evaluation::positionalEvaluation(const Board& board) {
 	return score; 
 }
 
-static const int isolatedPawnScore = 10; 
-static const int stackedPawnScore = 10; 
+static const int isolatedPawnScore = 20; 
+static const int stackedPawnScore = 20; 
 int Evaluation::pawnEvaluation(const Board& board) {
 
 	int res = 0;
 	const map whitePawns = board.getPiece()[wPawn];
 	const map blackPawns = board.getPiece()[bPawn];
+
+	//discourage stacked pawns 
+	res -= getNumBit(whitePawns & (whitePawns >> 8)) * stackedPawnScore; 
+	res += getNumBit(blackPawns & (blackPawns << 8)) * stackedPawnScore; 
 
 	//white pawns 
 	map pawns = whitePawns;
@@ -545,12 +553,9 @@ int Evaluation::pawnEvaluation(const Board& board) {
 		const int index = getlsbBitIndex(pawns);
 
 		//rewared past pawns 
-		if (!(pastPawns[white][index] & blackPawns)) res += pastPawnScore[white][index];
+		if ((pastPawns[white][index] & blackPawns) == 0x0ull) res += pastPawnScore[white][index];
 		//discourage isolated pawns 
-		if (!(isolatedPawn[index] & whitePawns)) res -= isolatedPawnScore;
-		//discourage stacked pawns 
-		if (getNumBit(isolatedPawn[index] & whitePawns) >= 2) res -= stackedPawnScore;
-
+		if ((isolatedPawn[index] & whitePawns) == 0x0ull) res -= isolatedPawnScore;
 		pawns &= pawns - 1;
 	}
 
@@ -559,18 +564,48 @@ int Evaluation::pawnEvaluation(const Board& board) {
 	while (pawns) {
 		const int index = getlsbBitIndex(pawns); 
 
-		//discourage enemy past pawns 
-		if (!(pastPawns[black][index] & whitePawns)) res -= pastPawnScore[black][index];
-		//discourage isolated pawns 
-		if (!(isolatedPawn[index] & blackPawns)) res += isolatedPawnScore;
-		//discourage stacked pawns 
-		if (getNumBit(isolatedPawn[index] & blackPawns) >= 2) res += stackedPawnScore;
+		if ((pastPawns[black][index] & whitePawns) == 0x0ull) res -= pastPawnScore[black][index];
+		if ((isolatedPawn[index] & blackPawns) == 0x0ull) res += isolatedPawnScore;
 
 		pawns &= pawns - 1; 
 	}
 
 	return res; 
 }
+
+static const int openFileScore = 15; 
+static const int semiOpenFileScore = 10; 
+int Evaluation::rookEvaluation(const Board& board) {
+
+	int res = 0; 
+	const map whitePawns = board.getPiece()[wPawn]; 
+	const map blackPawns = board.getPiece()[bPawn]; 
+
+	//white rook and queen 
+	map rooks = board.getPiece()[wRook] | board.getPiece()[wQueen]; 
+	while (rooks) {
+		const int index = getlsbBitIndex(rooks); 
+
+		if ((squareFile[index] & (whitePawns | blackPawns)) == 0x0ull) res += openFileScore;
+		else if ((squareFile[index] & blackPawns) == 0x0ull) res += semiOpenFileScore; 
+
+		rooks &= rooks - 1; 
+	}
+
+	//black rook and queen 
+	rooks = board.getPiece()[bRook] | board.getPiece()[bQueen];
+	while (rooks) {
+		const int index = getlsbBitIndex(rooks); 
+
+		if ((squareFile[index] & (whitePawns | blackPawns)) == 0x0ull) res -= openFileScore;
+		else if ((squareFile[index] & whitePawns) == 0x0ull) res -= semiOpenFileScore; 
+		
+		rooks &= rooks - 1; 
+	}
+
+	return res; 
+}
+
 
 
 

@@ -122,6 +122,10 @@ int main() {
 		Fen::parse(fenTrouble, board, boardState);
 
 	}
+	board.print(boardState); 
+
+	UCI::uciRun(board, boardState); 
+
 	//
 	//map pastPawn[8] = { 0x0ull }; 
 
@@ -173,38 +177,15 @@ int main() {
 
 	//white isolated pawns :
 	
-	constexpr int pastPawnScore[2][64] = {
-		{
-			200, 200, 200, 200, 200, 200, 200, 200,
-			100, 100, 100, 100, 100, 100, 100, 100,
-			60, 60, 60, 60, 60, 60, 60, 60,
-			35, 35, 35, 35, 35, 35, 35, 35,
+	
 
-			20, 20, 20, 20, 20, 20, 20, 20,
-			10, 10, 10, 10, 10, 10, 10, 10,
-			5, 5, 5, 5, 5, 5, 5, 5, 
-			0, 0, 0, 0, 0, 0, 0, 0, 
-		},
-		{
-			0, 0, 0, 0, 0, 0, 0, 0,
-			5, 5, 5, 5, 5, 5, 5, 5,
-			10, 10, 10, 10, 10, 10, 10, 10,
-			20, 20, 20, 20, 20, 20, 20, 20,
-
-			35, 35, 35, 35, 35, 35, 35, 35,
-			60, 60, 60, 60, 60, 60, 60, 60,
-			100, 100, 100, 100, 100, 100, 100, 100,
-			200, 200, 200, 200, 200, 200, 200, 200,
-		}
-	};
-
-	std::string s;
-	for (int i = 0; i < 64; ++i) {
-		std::cout << "i : " << i << std::endl;
-		printBit(pastPawns[1]
-			[i]);
-		std::cin >> s;
-	}
+	//std::string s;
+	//for (int i = 0; i < 64; ++i) {
+	//	std::cout << "i : " << i << std::endl;
+	//	printBit(pastPawns[1]
+	//		[i]);
+	//	std::cin >> s;
+	//}
 
 
 	//now just need to print out everything so it looks somewhat nice 

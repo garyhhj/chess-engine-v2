@@ -33,12 +33,13 @@ public:
 	static bool repetition(const map hash); 
 
 private: 
+public:
 	void Iincrement(const map hash);
 	void Idecrement(); 
 	bool Irepetition(const map hash); 
 
 	map rTable[1000]; 
-	inline static int index = 0; 
+	inline static int index = 0;	
 };
 
 
@@ -123,5 +124,6 @@ namespace Evaluation {
 	//int mobilityEvaluation(const Movelist& ml);
 	int positionalEvaluation(const Board& board); 
 
-	int pawnEvaluation(const Board& board); 
+	int pawnEvaluation(const Board& board); // stacked/isolated/past pawns 
+	int rookEvaluation(const Board& board); // open/semi open files 
 }
