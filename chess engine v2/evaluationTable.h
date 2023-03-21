@@ -1,4 +1,18 @@
 #pragma once
+
+/********************
+*
+*Utility 
+*
+*********************/
+
+static constexpr map squareFile[64] = {
+    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, };
+
+
 /********************
 *
 *material score 
@@ -193,3 +207,6 @@ static constexpr int bRookPScore[64] =
 //	bRook = 10,
 //	bQueen = 11,
 //};
+
+
+
