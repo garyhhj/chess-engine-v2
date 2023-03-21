@@ -15,6 +15,44 @@ int Evaluation::historyScore[12][Evaluation::MAXPLY]{}; //[piece][ply]
 int Evaluation::pvLength[Evaluation::MAXPLY]{}; //[ply]
 move Evaluation::pvTable[Evaluation::MAXPLY][Evaluation::MAXPLY]{}; //[ply][ply] 
 
+/********************
+*
+*Repetition Table
+*
+*********************/
+
+Rtable& Rtable::get() {
+	static Rtable instance; 
+	return instance; 
+}
+
+void Rtable::increment(const map hash) {
+	Rtable::get().Iincrement(hash); 
+}
+void Rtable::Iincrement(const map hash) {
+	Rtable::rTable[index] = hash; 
+	++Rtable::index; 
+}
+
+void Rtable::decrement() {
+	Rtable::get().Idecrement(); 
+}
+void Rtable::Idecrement() {
+	--Rtable::index; 
+}
+
+bool Rtable::repetition(const map hash) {
+	return Rtable::get().Irepetition(hash); 
+}
+bool Rtable::Irepetition(const map hash) {
+	for (int i = 0; i < Rtable::index; ++i) {
+		if (Rtable::rTable[i] == hash) return true; 
+	}
+	return false; 
+}
+
+
+
 
 /********************
 *

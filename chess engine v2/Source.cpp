@@ -116,7 +116,7 @@ int main() {
 	
 		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNB1KBNR w KQk- - 0 1";
 
-		string fenTrouble = "8/3Q4/8/4K1k1/8/8/8/8 b - - 0 1 "; 
+		string fenTrouble = "2k5/8/2K5/8/4Q3/8/8/8 b - - 10 12 ";
 		
 		Fen::parse(fenTrouble, board, boardState);
 

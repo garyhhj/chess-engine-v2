@@ -9,13 +9,37 @@
 
 /********************
 *
-*Transposition Table
+*Utility
 *
 *********************/
 
 const int infinity = 50000; 
 const int mateScore = 49000; 
 const int mateScoreLowerBound = 48000; 
+
+/********************
+*
+*Repetition Table
+*
+*********************/
+
+class Rtable {
+public: 
+	Rtable() = default; 
+
+	static Rtable& get(); 
+	static void increment(const map hash);
+	static void decrement(); 
+	static bool repetition(); 
+
+private: 
+	void Iincrement(const map hash);
+	void Idecrement(); 
+
+	map rTable[300]; 
+	inline static int index = 0; 
+};
+
 
 /********************
 *
