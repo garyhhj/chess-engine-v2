@@ -74,6 +74,7 @@ void Ttable::Iinsert(const map hash, const int depth, const int flag, int eval) 
 }
 
 void Ttable::clear() {
+	//std::cout << "clearing table" << std::endl; 
 	Ttable::get().Iclear(); 
 }
 
@@ -190,8 +191,9 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 
 	
 	{
+		const bool pvNode = beta - alpha > 1; 
 		const int score = Ttable::lookUp(currboardhash, depth, alpha, beta); 
-		if (Evaluation::ply && score != Ttable::unknownEval) return score; 
+		if (Evaluation::ply && score != Ttable::unknownEval && !pvNode) return score; 
 	}
 	
 	if (depth == 0) {

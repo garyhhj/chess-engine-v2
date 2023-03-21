@@ -116,17 +116,17 @@ int main() {
 	
 		string fenKcpy = "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNB1KBNR w KQk- - 0 1";
 
+		string fenTrouble = "8/3Q4/8/4K1k1/8/8/8/8 b - - 0 1 "; 
 		
-		Fen::parse(kiwipete, board, boardState);
+		Fen::parse(fenTrouble, board, boardState);
 
 	}
 	
 	UCI::uciRun(board, boardState); 
 
-	//next step is implementing transposition table -> do this first 
+	//something feels wrong with the the search... perhaps need to go into quiesence if there is no moves generated? 
 	//next step is to take time control and write the rest of the uci protocol 
 	
-	//clear transposition table function 
 	 
 	//implement time control -> essentially taking/copying a popular time control code ... wonder if it works in c++ since its written in c ... will it have some issues with std::cin buffer? 
 
