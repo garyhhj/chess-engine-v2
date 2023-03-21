@@ -531,7 +531,6 @@ int Evaluation::positionalEvaluation(const Board& board) {
 	return score; 
 }
 
-static const int pastPawnScore = 20; 
 static const int isolatedPawnScore = 10; 
 static const int stackedPawnScore = 10; 
 int Evaluation::pawnEvaluation(const Board& board) {
@@ -546,7 +545,7 @@ int Evaluation::pawnEvaluation(const Board& board) {
 		const int index = getlsbBitIndex(pawns);
 
 		//rewared past pawns 
-		if (!(pastPawns[white][index] & blackPawns)) res += pastPawnScore;
+		if (!(pastPawns[white][index] & blackPawns)) res += pastPawnScore[white][index];
 		//discourage isolated pawns 
 		if (!(isolatedPawn[index] & whitePawns)) res -= isolatedPawnScore;
 		//discourage stacked pawns 
@@ -561,7 +560,7 @@ int Evaluation::pawnEvaluation(const Board& board) {
 		const int index = getlsbBitIndex(pawns); 
 
 		//discourage enemy past pawns 
-		if (!(pastPawns[black][index] & whitePawns)) res -= pastPawnScore;
+		if (!(pastPawns[black][index] & whitePawns)) res -= pastPawnScore[black][index];
 		//discourage isolated pawns 
 		if (!(isolatedPawn[index] & blackPawns)) res += isolatedPawnScore;
 		//discourage stacked pawns 
