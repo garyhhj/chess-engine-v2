@@ -874,7 +874,7 @@ void Board::Imakemovewhite(move move, BoardState& boardState) {
 	if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
 		std::cout << "zobrist hashing has error on white" << std::endl; 
 		int meow = -1;
-		int meow2 = Zobrist::pieceKey[meow][2];
+		map meow2 = Zobrist::pieceKey[meow][2];
 		//assert(false);
 	}
 	//  8   r n b q k b n r
@@ -1015,7 +1015,7 @@ void Board::Imakemoveblack(move move, BoardState& boardState) {
 	if (Board::hashKey != Zobrist::hashZobrist(*this, boardState)) {
 		std::cout << "error with zobirst with has on black" << std::endl; 
 		int meow = -1; 
-		int meow2 = Zobrist::pieceKey[meow][2]; 
+		map meow2 = Zobrist::pieceKey[meow][2]; 
 		//assert(false);
 	}
 	//  8   r n b q k b n r

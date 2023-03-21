@@ -7,6 +7,7 @@
 #include "evaluation.h"
 #include "zobrist.h"
 #include "randomNum.h"
+//#include "evaluationTable.h"
 
 #include <iostream>
 #include <bitset>
@@ -122,17 +123,40 @@ int main() {
 
 	}
 	
-	//UCI::uciRun(board, boardState); 
+	UCI::uciRun(board, boardState); 
 
 
-	
-	std::string s; 
+	//now use those arrays to create isolated pawn array 
 
+
+	//static constexpr map isolatedPawn[64] = {
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//	0x4040404040404040, 0xa0a0a0a0a0a0a0a0, 0x5050505050505050, 0x2828282828282828, 0x1414141414141414, 0xa0a0a0a0a0a0a0a, 0x505050505050505, 0x202020202020202,
+	//};
+
+	/*std::string s; 
 	for (int i = 0; i < 64; ++i) {
-		std::cout << "i : " << i << std::endl; 
-		printBit(squareRow[i]); 
+		std::cout << "i: " << i << std::endl; 
+		printBit(isolatedPawn[i]); 
 		std::cin >> s; 
+
 	}
+	std::cout << std::endl; */
+
+	//std::string s; 
+
+	//for (int i = 0; i < 8; ++i) {
+	//	std::cout << "i : " << i << std::endl; 
+	//	printBit(isolatedPawn[i]); 
+	//	std::cin >> s; 
+	//}
 
 
 
