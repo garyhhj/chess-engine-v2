@@ -39,8 +39,15 @@ int Ttable::IlookUp(const map hash, const int depth, const int alpha, const int 
 
 	if (tTableElement.exactHash == hash && tTableElement.depth >= depth) {
 
-		if (tTableElement.flag == Ttable::tFlagExact) return tTableElement.eval;
+		
 
+		if (tTableElement.flag == Ttable::tFlagExact) {
+			int score = tTableElement.eval; 
+			if (score < -mateScoreLowerBound) score += Evaluation::ply;
+			else if (score > mateScoreLowerBound) score -= Evaluation::ply; 
+
+			return score;
+		}
 		if (tTableElement.flag == Ttable::tFlagAlpha && tTableElement.eval <= alpha) return alpha; 
 
 		if (tTableElement.flag == Ttable::tFlagBeta && tTableElement.eval >= beta) return beta; 
@@ -49,12 +56,16 @@ int Ttable::IlookUp(const map hash, const int depth, const int alpha, const int 
 	return Ttable::unknownEval; 
 }
 
-void Ttable::insert(const map hash, const int depth, const int flag, const int eval) {
+void Ttable::insert(const map hash, const int depth, const int flag, int eval) {
 	Ttable::get().Iinsert(hash, depth, flag, eval); 
 }
 
-void Ttable::Iinsert(const map hash, const int depth, const int flag, const int eval) {
+void Ttable::Iinsert(const map hash, const int depth, const int flag, int eval) {
 	transposition& tTableElement = Ttable::tTable[hash % tTableSize]; 
+		
+	 
+	if (eval < -mateScoreLowerBound) eval -= Evaluation::ply;
+	if (eval > mateScoreLowerBound) eval += Evaluation::ply;
 
 	tTableElement.exactHash = hash; 
 	tTableElement.depth = depth; 
@@ -180,10 +191,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	
 	{
 		const int score = Ttable::lookUp(currboardhash, depth, alpha, beta); 
-		if (Evaluation::ply && score != Ttable::unknownEval) {
-			return score; 
-		}
-
+		if (Evaluation::ply && score != Ttable::unknownEval) return score; 
 	}
 	
 	if (depth == 0) {
@@ -290,7 +298,7 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 
 	const map checkMask = board.checkMask(boardState); 
 	if (checkMask != AllOne && !ml.getIndex()) {
-		return -49000 + ply;
+		return -mateScore + ply;
 		//return (boardState.getSide() == white ? -49000 - depth : -49000 - depth);
 	}
 	else if (checkMask == AllOne && !ml.getIndex()) {

@@ -13,6 +13,16 @@
 *
 *********************/
 
+const int infinity = 50000; 
+const int mateScore = 49000; 
+const int mateScoreLowerBound = 48000; 
+
+/********************
+*
+*Transposition Table
+*
+*********************/
+
 typedef struct transposition{
 	map exactHash; 
 	int eval; 
@@ -25,7 +35,7 @@ public:
 	static Ttable& get();
 	static void debug(); 
 	static int lookUp(const map hash, const int depth, const int alpha, const int beta); 
-	static void insert(const map hash, const int depth, const int flag, const int eval);
+	static void insert(const map hash, const int depth, const int flag, int eval);
 	static void clear(); 
 
 private: 
@@ -35,7 +45,7 @@ private:
 	void printTtable(const int index); 
 	void Idebug(); 
 	int IlookUp(const map hash, const int depth, const int alpha, const int beta);
-	void Iinsert(const map hash, const int depth, const int flag, const int eval);
+	void Iinsert(const map hash, const int depth, const int flag, int eval);
 	void Iclear(); 
 
 	transposition* tTable;

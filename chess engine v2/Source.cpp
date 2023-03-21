@@ -120,8 +120,8 @@ int main() {
 		Fen::parse(kiwipete, board, boardState);
 
 	}
-	Ttable::debug(); 
 	
+	UCI::uciRun(board, boardState); 
 
 	//next step is implementing transposition table -> do this first 
 	//next step is to take time control and write the rest of the uci protocol 

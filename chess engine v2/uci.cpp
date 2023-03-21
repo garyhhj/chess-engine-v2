@@ -134,7 +134,7 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	for (int currDepth = 1; currDepth <= depth; ++currDepth) {
 		Evaluation::nodes = 0; 
 
-		const int eval = Evaluation::negamax(board, boardState, -50000, 50000, currDepth);
+		const int eval = Evaluation::negamax(board, boardState, -infinity, infinity, currDepth);
 		std::cout << "info score cp " << eval << " depth " << currDepth << " nodes " << Evaluation::nodes << " pv ";
 
 		for (int i = 0; i < Evaluation::pvLength[0]; ++i) {
