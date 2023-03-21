@@ -157,13 +157,12 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 		std::cout << "\n";
 	}
 
-	//probably need something to update moves or something after makemove 
+	//update reptition table 
+	Rtable::increment(board.getHashkey()); 
 	
-
 	if (Evaluation::pvTable[0][0] != 0x0ul) {
 		std::cout << "bestmove " << Move::moveString(Evaluation::pvTable[0][0]) << "\n";
 	}
-
 }
 
 void UCI::uciRun(Board& board, BoardState& boardState) {

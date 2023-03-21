@@ -37,7 +37,7 @@ private:
 	void Idecrement(); 
 	bool Irepetition(const map hash); 
 
-	map rTable[300]; 
+	map rTable[1000]; 
 	inline static int index = 0; 
 };
 
