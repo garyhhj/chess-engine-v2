@@ -133,18 +133,7 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 	//iterative deepening
 	for (int currDepth = 1; currDepth <= depth; ++currDepth) {
 		Evaluation::nodes = 0; 
-/*#define mate_value 49000
-#define mate_score 48000*/
-		
 
-		//if (score > -mate_value && score < -mate_score)
-		//	printf("info score mate %d depth %d nodes %ld time %d pv ", -(score + mate_value) / 2 - 1, current_depth, nodes, get_time_ms() - starttime);
-
-		//else if (score > mate_score && score < mate_value)
-		//	printf("info score mate %d depth %d nodes %ld time %d pv ", (mate_value - score) / 2 + 1, current_depth, nodes, get_time_ms() - starttime);
-
-		//else
-		//	printf("info score cp %d depth %d nodes %ld time %d pv ", score, current_depth, nodes, get_time_ms() - starttime);
 
 
 		const int eval = Evaluation::negamax(board, boardState, -infinity, infinity, currDepth);
@@ -167,16 +156,14 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 		}
 		std::cout << "\n";
 	}
+
+	//probably need something to update moves or something after makemove 
 	
 
 	if (Evaluation::pvTable[0][0] != 0x0ul) {
 		std::cout << "bestmove " << Move::moveString(Evaluation::pvTable[0][0]) << "\n";
 	}
-	//else {
-	//	std::cout << "could not find best move" << std::endl; 
-	//	std::cout << "debugging information: " << std::endl;
-	//	board.print(boardState); 
-	//}
+
 }
 
 void UCI::uciRun(Board& board, BoardState& boardState) {
@@ -206,7 +193,7 @@ void UCI::IuciRun(Board& board, BoardState& boardState) {
 		}
 		else if (word == "position") {
 			UCI::parsePosition(line, board, boardState); 
-			Ttable::clear();
+			Ttable::clear(); 
 			board.print(boardState); 
 		}
 		else if (word == "ucinewgame") {

@@ -30,11 +30,12 @@ public:
 	static Rtable& get(); 
 	static void increment(const map hash);
 	static void decrement(); 
-	static bool repetition(); 
+	static bool repetition(const map hash); 
 
 private: 
 	void Iincrement(const map hash);
 	void Idecrement(); 
+	bool Irepetition(const map hash); 
 
 	map rTable[300]; 
 	inline static int index = 0; 

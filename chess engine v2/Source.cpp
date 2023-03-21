@@ -124,6 +124,8 @@ int main() {
 	
 	UCI::uciRun(board, boardState); 
 
+	//time to implement reptition detection 
+
 	//something feels wrong with the the search... perhaps need to go into quiesence if there is no moves generated? 
 	//next step is to take time control and write the rest of the uci protocol 
 	

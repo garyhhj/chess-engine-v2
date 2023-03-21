@@ -1,7 +1,7 @@
 #pragma once
 #include "macro.h"
 #include "attackTable.h"
-//#include "evaluation.h"
+
 #include "zobrist.h"
 #include <string>
 #include <algorithm>

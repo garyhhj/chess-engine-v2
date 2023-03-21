@@ -52,8 +52,6 @@ bool Rtable::Irepetition(const map hash) {
 }
 
 
-
-
 /********************
 *
 *Transposition Table
@@ -181,6 +179,10 @@ bool Evaluation::canLMR(move m) {
 int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta) {
 	++Evaluation::nodes;
 	const map currboardhash = board.getHashkey();
+	
+	if (Rtable::repetition(currboardhash)) {
+		return 0; //stalemate score 
+	}
 
 	const int eval = Evaluation::evaluate(board, boardState, ply); 
 	if (eval >= beta) return beta;
@@ -199,7 +201,9 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 
 		board.makemove(ml.getMove(i), boardState);
 		++Evaluation::ply;
+		Rtable::increment(currboardhash); 
 		const int eval = -Evaluation::quiesenceSearch(board, boardState, -beta, -alpha);
+		Rtable::decrement(); 
 		board.updateHash(currboardhash); 
 		--Evaluation::ply;
 
@@ -227,13 +231,19 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	Evaluation::pvLength[ply] = ply; 
 	const map currboardhash = board.getHashkey(); 
 
-	
+	//check for repetitions 
+	if (Rtable::repetition(currboardhash)) {
+		return 0; //stalemate score 
+	}
+
+	//look up in transposition table 
 	{
 		const bool pvNode = beta - alpha > 1; 
 		const int score = Ttable::lookUp(currboardhash, depth, alpha, beta); 
 		if (Evaluation::ply && score != Ttable::unknownEval && !pvNode) return score; 
 	}
 	
+	//base case 
 	if (depth == 0) {
 		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);
 		/*Ttable::insert(currboardhash, Evaluation::ply, Ttable::tFlagExact, eval); 
@@ -250,7 +260,9 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	if (depth >= 3 && !inCheck && Evaluation::ply && Evaluation::canNullMove(board)) {
 		board.makenullmove(boardState); 
 		++Evaluation::ply; 
+		Rtable::increment(currboardhash); 
 		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2); 
+		Rtable::decrement(); 
 		board.updateHash(currboardhash); 
 		--Evaluation::ply; 
 
@@ -284,20 +296,22 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		if(movesSearched >= Evaluation::FULLDEPTHMOVES && depth >= Evaluation::REDUCTIONLIMIT && !inCheck && Evaluation::canLMR(ml.getMove(i))){
 			//reduction in search 
 			++Evaluation::ply; 
+			Rtable::increment(currboardhash); 
 			eval = -Evaluation::negamax(board, boardState, -alpha - 1, -alpha, depth - (Evaluation::REDUCTIONLIMIT - 1));
-			//run time issue... wrong bug try it without updating the board 
-			
+
 			if ((eval > alpha) && (eval < beta)) {
 				board.updateHash(nextmoveBoardhash); 
 				eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);
-				
 			}
+			Rtable::decrement();
 			--Evaluation::ply; 
 		}
 		//interesting positions that do not qualify for lmr || first few full depth searches 
 		else {
 			++Evaluation::ply;
+			Rtable::increment(currboardhash); 
 			eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1);		
+			Rtable::decrement(); 
 			--Evaluation::ply;
 		}
 
