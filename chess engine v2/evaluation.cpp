@@ -460,9 +460,9 @@ int Evaluation::materialEvaluation(const Board& board) {
 		getNumBit(board.getPiece()[bQueen]) * materialScore[bQueen];
 }
 
-int Evaluation::mobilityEvaluation(const Movelist& ml) {
-	return ml.getIndex() * 100; 
-}
+//int Evaluation::mobilityEvaluation(const Movelist& ml) {
+//	return ml.getIndex() * 100; 
+//}
 
 int Evaluation::positionalEvaluation(const Board& board) {
 	int score = 0; 
@@ -530,6 +530,51 @@ int Evaluation::positionalEvaluation(const Board& board) {
 	
 	return score; 
 }
+
+static const int pastPawnScore = 20; 
+static const int isolatedPawnScore = 10; 
+static const int stackedPawnScore = 10; 
+int Evaluation::pawnEvaluation(const Board& board) {
+
+	int res = 0;
+	const map whitePawns = board.getPiece()[wPawn];
+	const map blackPawns = board.getPiece()[bPawn];
+
+	//white pawns 
+	map pawns = whitePawns;
+	while (pawns) {
+		const int index = getlsbBitIndex(pawns);
+
+		//rewared past pawns 
+		if (!(pastPawns[white][index] & blackPawns)) res += pastPawnScore;
+		//discourage isolated pawns 
+		if (!(isolatedPawn[index] & whitePawns)) res -= isolatedPawnScore;
+		//discourage stacked pawns 
+		if (getNumBit(isolatedPawn[index] & whitePawns) >= 2) res -= stackedPawnScore;
+
+		pawns &= pawns - 1;
+	}
+
+	//black pawns
+	pawns = blackPawns; 
+	while (pawns) {
+		const int index = getlsbBitIndex(pawns); 
+
+		//discourage enemy past pawns 
+		if (!(pastPawns[black][index] & whitePawns)) res -= pastPawnScore;
+		//discourage isolated pawns 
+		if (!(isolatedPawn[index] & blackPawns)) res += isolatedPawnScore;
+		//discourage stacked pawns 
+		if (getNumBit(isolatedPawn[index] & blackPawns) >= 2) res += stackedPawnScore;
+
+		pawns &= pawns - 1; 
+	}
+
+	return res; 
+}
+
+
+
 
 
 //enum piece : const int {

@@ -120,6 +120,8 @@ namespace Evaluation {
 
 	int evaluate(Board& board, BoardState& boardState, int depth);
 	int materialEvaluation(const Board& board);
-	int mobilityEvaluation(const Movelist& ml);
+	//int mobilityEvaluation(const Movelist& ml);
 	int positionalEvaluation(const Board& board); 
+
+	int pawnEvaluation(const Board& board); 
 }
