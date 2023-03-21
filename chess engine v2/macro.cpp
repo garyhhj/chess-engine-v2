@@ -145,7 +145,7 @@ const std::string Move::moveString(const move m) {
 	if (promotePiece == wKnight || promotePiece == bKnight) move += 'k';
 	else if (promotePiece == wBishop || promotePiece == bBishop) move += 'b';
 	else if (promotePiece == wRook || promotePiece == bRook) move += 'r';
-	else if (promotePiece == wQueen || promotePiece == wQueen) move += 'q'; 
+	else if (promotePiece == wQueen || promotePiece == bQueen) move += 'q'; 
 
 	return move; 
 }

@@ -122,8 +122,101 @@ int main() {
 		Fen::parse(fenTrouble, board, boardState);
 
 	}
+	//
+	//map pastPawn[8] = { 0x0ull }; 
+
+	//for (int i = 0; i < 8; ++i) {
+	//	pastPawn[i] |= (squareFile[i] | isolatedPawn[i]);
+	//}
+	//
+	////this is past pawn for white 
+	//map pastPawn2[64] = { 0x0ull };
+
+	//map currmask = 0x0ull; 
+	//for (int i = 0; i < 64; ++i) {
+	//	if (i % 8 == 0 && i != 0) {
+	//		currmask |= squareRow[i - 1]; 
+	//	}
+
+	//	pastPawn2[i] = (currmask & pastPawn[i % 8]); 
+	//}
+
+	//map pastPawn3[64]; //black isolated pawn mask 
+	//currmask = AllOne & ~Row8; 
+	//for (int i = 0; i < 64; ++i) {
+	//	if (i % 8 == 0 && i != 0) {
+	//		currmask &= ~squareRow[i]; 
+	//	}
+	//	pastPawn3[i] = (currmask & pastPawn[i % 8]); 
+	//}
+
+
+	////first print white isolated pawns 
+
+	//std::cout << "white isolated pawns: " << std::endl; 
+	//for (int i = 0; i < 64; ++i) {
+	//	if (i % 8 == 0 && i != 0) {
+	//		std::cout << "\n"; 
+	//	}
+	//	std::cout << "0x" << std::hex << pastPawn2[i] << ", "; 
+	//}
+	//std::cout << "\n\n"; 
+	//std::cout << "black isolated pawns:" << std::endl; 
+	//for (int i = 0; i < 64; ++i) {
+	//	if (i % 8 == 0 && i != 0) {
+	//		std::cout << "\n";
+	//	}
+	//	std::cout << "0x" << std::hex << pastPawn3[i] << ", ";
+	//}
+
 	
-	UCI::uciRun(board, boardState); 
+
+	//white isolated pawns :
+	constexpr map pastPawns[2][64] = {
+		{
+		0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+		0xc000000000000000, 0xe000000000000000, 0x7000000000000000, 0x3800000000000000, 0x1c00000000000000, 0xe00000000000000, 0x700000000000000, 0x300000000000000,
+		0xc0c0000000000000, 0xe0e0000000000000, 0x7070000000000000, 0x3838000000000000, 0x1c1c000000000000, 0xe0e000000000000, 0x707000000000000, 0x303000000000000,
+		0xc0c0c00000000000, 0xe0e0e00000000000, 0x7070700000000000, 0x3838380000000000, 0x1c1c1c0000000000, 0xe0e0e0000000000, 0x707070000000000, 0x303030000000000,
+		0xc0c0c0c000000000, 0xe0e0e0e000000000, 0x7070707000000000, 0x3838383800000000, 0x1c1c1c1c00000000, 0xe0e0e0e00000000, 0x707070700000000, 0x303030300000000,
+		0xc0c0c0c0c0000000, 0xe0e0e0e0e0000000, 0x7070707070000000, 0x3838383838000000, 0x1c1c1c1c1c000000, 0xe0e0e0e0e000000, 0x707070707000000, 0x303030303000000,
+		0xc0c0c0c0c0c00000, 0xe0e0e0e0e0e00000, 0x7070707070700000, 0x3838383838380000, 0x1c1c1c1c1c1c0000, 0xe0e0e0e0e0e0000, 0x707070707070000, 0x303030303030000,
+		0xc0c0c0c0c0c0c000, 0xe0e0e0e0e0e0e000, 0x7070707070707000, 0x3838383838383800, 0x1c1c1c1c1c1c1c00, 0xe0e0e0e0e0e0e00, 0x707070707070700, 0x303030303030300,
+		},
+		{
+		0xc0c0c0c0c0c0c0, 0xe0e0e0e0e0e0e0, 0x70707070707070, 0x38383838383838, 0x1c1c1c1c1c1c1c, 0xe0e0e0e0e0e0e, 0x7070707070707, 0x3030303030303,
+		0xc0c0c0c0c0c0, 0xe0e0e0e0e0e0, 0x707070707070, 0x383838383838, 0x1c1c1c1c1c1c, 0xe0e0e0e0e0e, 0x70707070707, 0x30303030303,
+		0xc0c0c0c0c0, 0xe0e0e0e0e0, 0x7070707070, 0x3838383838, 0x1c1c1c1c1c, 0xe0e0e0e0e, 0x707070707, 0x303030303,
+		0xc0c0c0c0, 0xe0e0e0e0, 0x70707070, 0x38383838, 0x1c1c1c1c, 0xe0e0e0e, 0x7070707, 0x3030303,
+		0xc0c0c0, 0xe0e0e0, 0x707070, 0x383838, 0x1c1c1c, 0xe0e0e, 0x70707, 0x30303,
+		0xc0c0, 0xe0e0, 0x7070, 0x3838, 0x1c1c, 0xe0e, 0x707, 0x303,
+		0xc0, 0xe0, 0x70, 0x38, 0x1c, 0xe, 0x7, 0x3,
+		0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+		}
+	};
+
+
+	std::string s;
+	for (int i = 0; i < 64; ++i) {
+		std::cout << "i : " << i << std::endl;
+		printBit(pastPawns[1][i]);
+		std::cin >> s;
+	}
+
+
+	//now just need to print out everything so it looks somewhat nice 
+
+//print out white then black and then just manually combine them tobh  
+	
+/*
+	for (int i = 0; i < 8; ++i) {
+		std::cout << "i: " << i << std::endl; 
+		printBit(pastPawn[i]); 
+	*///}
+
+
+
+	//UCI::uciRun(board, boardState); 
 
 
 	//now use those arrays to create isolated pawn array 
