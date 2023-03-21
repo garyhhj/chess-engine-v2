@@ -125,16 +125,12 @@ int main() {
 	//UCI::uciRun(board, boardState); 
 
 
-	map squareFile[64] = {
-		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, };
-
+	
 	std::string s; 
+
 	for (int i = 0; i < 64; ++i) {
 		std::cout << "i : " << i << std::endl; 
-		printBit(squareFile[i]); 
+		printBit(squareRow[i]); 
 		std::cin >> s; 
 	}
 

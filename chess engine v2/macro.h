@@ -246,6 +246,22 @@ const map Edge = AFile | HFile | Row1 | Row8;
 
 const map AllOne = 0xffffffffffffffffull; 
 
+constexpr map squareFile[64] = {
+		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+		AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+};
+
+constexpr map squareRow[64] = {
+	Row8, Row8, Row8, Row8, Row8, Row8, Row8, Row8, Row7, Row7, Row7, Row7, Row7, Row7, Row7, Row7,
+	Row6, Row6, Row6, Row6, Row6, Row6, Row6, Row6, Row5, Row5, Row5, Row5, Row5, Row5, Row5, Row5,
+	Row4, Row4, Row4, Row4, Row4, Row4, Row4, Row4, Row3, Row3, Row3, Row3, Row3, Row3, Row3, Row3,
+	Row2, Row2, Row2, Row2, Row2, Row2, Row2, Row2, Row1, Row1, Row1, Row1, Row1, Row1, Row1, Row1,
+};
+
+
+
 enum piece : const int {
 	wPawn = 0,
 	wKnight = 1,

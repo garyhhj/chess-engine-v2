@@ -1,4 +1,5 @@
 #pragma once
+#include "macro.h"
 
 /********************
 *
@@ -6,11 +7,11 @@
 *
 *********************/
 
-static constexpr map squareFile[64] = {
-    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
-    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, };
+//static constexpr map squareFile[64] = {
+//    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+//    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+//    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile,
+//    AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, AFile, BFile, CFile, DFile, EFile, FFile, GFile, HFile, };
 
 
 /********************
