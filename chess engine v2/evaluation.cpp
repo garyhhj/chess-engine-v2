@@ -51,6 +51,13 @@ bool Rtable::Irepetition(const map hash) {
 	return false; 
 }
 
+void Rtable::clear() {
+	Rtable::get().Iclear(); 
+}
+void Rtable::Iclear() {
+	Rtable::index = 0; 
+}
+
 
 /********************
 *
