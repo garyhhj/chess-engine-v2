@@ -3,7 +3,7 @@
 ## Introduction 
 
 This is a uci chess engine written in c++. 
-It is statically evaluated and has an estimated strength of ~1700elo. 
+It is statically evaluated and has won against chess bots of ~1800elo. 
 
 ## features 
 
