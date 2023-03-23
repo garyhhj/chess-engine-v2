@@ -23,7 +23,6 @@ It is statically evaluated and has an estimated strength of 1700elo.
 - quiesence search 
 - pv table 
 - transposition table 
-- iterative depening 
 
 ### evaluation 
 - material score 
@@ -31,7 +30,13 @@ It is statically evaluated and has an estimated strength of 1700elo.
 - basic pawn evaluation 
 - basic rook evaluation
 
-## todo  
-- implement time control 
+## todo
 - opening book 
+- time control 
+
+## references 
+
+[magic bitboard chess engine guide](https://www.youtube.com/watch?v=QUNP-UjujBM&list=PLmN0neTso3Jxh8ZIylk74JpwfiWNI76Cs) by Code Monkey King. 
+
+[chess programming webiste](https://www.chessprogramming.org/Main_Page) that explains concepts used 
 
