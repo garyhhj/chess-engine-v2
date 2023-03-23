@@ -1,27 +1,37 @@
-# chess-engine-v2
+# chess engine
 
-description: 
-This is a magic bitboard uci chess engine with hand crafted evaluations. Its estimated playing strength is 1500-2000 elo  
+## Introduction 
 
-Features: 
+This is a uci chess engine written in c++. 
+It is statically evaluated and has an estimated strength of 1700elo. 
 
-move generation: 
--legal move generator 
--checkmask & pinmasks to prune illegal moves 
+## demo 
 
-Search: 
--negamax search 
--alpha beta pruning 
--null move pruning 
--late move reduction 
--quiesence search 
--iterative deepening 
+[insert gif of engine playing against itself]
 
-Evaluation:
--material score 
--positional evaluation 
--open file score 
--basic pawn evaluation 
+## features 
 
+### move generation
+- legal move generator 
+- checkmask & pinmasks to prune illegal moves 
 
+### search 
+- negamax algorithm 
+- alpha beta pruning 
+- null move pruning 
+- late move reduction 
+- quiesence search 
+- pv table 
+- transposition table 
+- iterative depening 
+
+### evaluation 
+- material score 
+- positional evaluation 
+- basic pawn evaluation 
+- basic rook evaluation
+
+## todo  
+- implement time control 
+- opening book 
 
