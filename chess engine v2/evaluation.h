@@ -31,12 +31,15 @@ public:
 	static void increment(const map hash);
 	static void decrement(); 
 	static bool repetition(const map hash); 
+	static void clear(); 
+	static void debug(); 
 
 private: 
-public:
 	void Iincrement(const map hash);
 	void Idecrement(); 
 	bool Irepetition(const map hash); 
+	void Iclear(); 
+	void Idebug(); 
 
 	map rTable[1000]; 
 	inline static int index = 0;	
@@ -50,9 +53,9 @@ public:
 *********************/
 
 typedef struct transposition{
-	map exactHash; 
-	int eval; 
-	int depth; 
+	map exactHash = 0x0ull; 
+	int eval = 0; 
+	int depth = 0; 
 	int flag = 0; 
 } transposition;
 
@@ -109,11 +112,8 @@ namespace Evaluation {
 
 	bool canLMR(move m); 
 	bool canNullMove(const Board& board); 
-	//int negamaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth);
 	int negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth); 
 
-	//int minMax(Board& board, BoardState& boardState, int depth, std::string& bestmove);
-	//int minMaxHelper(Board& board, BoardState& boardState, int alpha, int beta, int depth); 
 	int quiesenceSearch(Board& board, BoardState& boardState, int alpha, int beta);
 
 	int moveScore(const Board& board, move m); 
@@ -121,7 +121,6 @@ namespace Evaluation {
 
 	int evaluate(Board& board, BoardState& boardState, int depth);
 	int materialEvaluation(const Board& board);
-	//int mobilityEvaluation(const Movelist& ml);
 	int positionalEvaluation(const Board& board); 
 
 	int pawnEvaluation(const Board& board); // stacked/isolated/past pawns 

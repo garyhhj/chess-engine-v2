@@ -16,14 +16,11 @@ public:
 	static void parsePosition(const std::string& position, Board& board, BoardState& boardState); 
 	static void parseGo(const std::string& command, Board& board, BoardState& boardState);
 	static void uciRun(Board& board, BoardState& boardState); 
+
 private: 
 	int IparseMove(const std::string& move, Movelist& ml, int side); 
 	void IparsePosition(const std::string& position, Board& board, BoardState& boardState);
 	void IparseGo(const std::string& command, Board& board, BoardState& boardState);
 	void IuciRun(Board& board, BoardState& boardState); 
-
-
-
-
 
 };

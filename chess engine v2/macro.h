@@ -14,7 +14,6 @@ typedef uint64_t map;
 typedef uint64_t board;
 
 
-
 //forces compile time evaluation 
 //error, e3160, nothing on stackoverflow and documentation
 /*
@@ -64,19 +63,6 @@ namespace Move {
 *	Bit Macro
 *
 *********************/
-
-//extern constexpr bool getBit(const uint64_t bitBoard, const int index);
-//
-//extern constexpr void setBit(uint64_t& bitBoard, const uint64_t square);
-//
-//extern constexpr void popBit(uint64_t& bitBoard, const uint64_t square);
-//
-//extern constexpr uint64_t getLsbBit(const uint64_t bitBoard);
-//
-//extern constexpr int getNumBit(uint64_t bitboard);
-//
-//extern constexpr int getlsbBitIndex(uint64_t bitboard);
-//
 
 constexpr bool getBit(const uint64_t bitBoard, const int index) {
 	return bitBoard & (0x8000000000000000 >> index);
@@ -276,9 +262,9 @@ enum piece : const int {
 	bQueen = 11, 
 };
 
-extern const char pieceChar[12];/* = {
+constexpr char pieceChar[12] = {
 	'P', 'N', 'K', 'B', 'R', 'Q',
 	'p', 'n', 'k', 'b', 'r', 'q', 
-};*/
+};
 
 

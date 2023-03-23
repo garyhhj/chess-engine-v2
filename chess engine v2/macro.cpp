@@ -12,15 +12,6 @@ typedef uint64_t map;
 typedef uint64_t board;
 
 
-//forces compile time evaluation 
-//error, e3160, nothing on stackoverflow and documentation
-
-/*
-consteval auto compileTime(auto val) {
-	return val;
-}
-*/
-
 consteval auto compileTime(auto val) {
 	return val;
 }
@@ -81,9 +72,6 @@ move Move::makemove(uint64_t sourceSquare, uint64_t targetSquare, int piece, int
 }
  
 void Move::decode(const move m) {
-
-	//sourceSquare 
-	//std::cout << Move::sourceSquare(m) << std::endl; 
 
 	std::cout << "SS: "; 
 
@@ -319,7 +307,7 @@ enum piece : const int {
 	bQueen = 11,
 }; */
 
-extern const char pieceChar[12] = {
-	'P', 'N', 'K', 'B', 'R', 'Q',
-	'p', 'n', 'k', 'b', 'r', 'q',
-};
+//extern const char pieceChar[12] = {
+//	'P', 'N', 'K', 'B', 'R', 'Q',
+//	'p', 'n', 'k', 'b', 'r', 'q',
+//};

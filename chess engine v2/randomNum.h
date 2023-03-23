@@ -14,7 +14,6 @@ public:
 	static uint64_t getRandomUint64(); 
 	static uint64_t getRandomUint32(); 
 
-
 private: 
 	//uint64_t IgetRandomUint64Helper(); 
 	uint64_t IgetRandomUint64();

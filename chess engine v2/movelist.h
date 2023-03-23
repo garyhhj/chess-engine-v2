@@ -10,9 +10,6 @@
 class Movelist {
 public: 
 	Movelist() = default; 
-	/*Movelist(const Movelist& rhs);
-	Movelist& operator=(Movelist& rhs);
-	~Movelist(); */
 
 	move* getMovelist(); 
 	move getMove(const int index); 
@@ -26,7 +23,7 @@ private:
 	void moveGenWhite(const Board& board, BoardState& boardState);
 	void moveGenBlack(const Board& board, BoardState& boardState);
 
-	//move* movelist;
-	move movelist[256];
+	//move* movelist; 
+	move movelist[256]{};
 	int index = 0; 
 };

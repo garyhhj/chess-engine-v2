@@ -58,6 +58,19 @@ void Rtable::Iclear() {
 	Rtable::index = 0; 
 }
 
+void Rtable::debug() {
+	Rtable::get().Idebug(); 
+}
+void Rtable::Idebug() {
+	std::ios_base::fmtflags f(std::cout.flags());
+	std::cout << "Rtable: ";
+	for (int i = 0; i < Rtable::index; ++i) {
+		std::cout << "0x" << std::hex << Rtable::rTable[i] << ", "; 
+	}
+	std::cout << std::endl; 
+	std::cout.flags(f);
+}
+
 
 /********************
 *
@@ -117,7 +130,6 @@ void Ttable::Iinsert(const map hash, const int depth, const int flag, int eval) 
 }
 
 void Ttable::clear() {
-	//std::cout << "clearing table" << std::endl; 
 	Ttable::get().Iclear(); 
 }
 
@@ -178,7 +190,7 @@ bool Evaluation::canNullMove(const Board& board) {
 }
 
 bool Evaluation::canLMR(move m) {
-	//if there are captures and promotions return false 
+	//if there are captures and promotions or is a principle variation move return false 
 	return !(Move::captureFlag(m)) && (Move::promotePiece(m) == wPawn) && (m != Evaluation::pvTable[0][ply]);
 }
 
@@ -235,12 +247,10 @@ int Evaluation::quiesenceSearch(Board& board, BoardState& boardState, int alpha,
 
 int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int beta, int depth) {
 	++Evaluation::nodes; 
-	Evaluation::pvLength[ply] = ply; 
 	const map currboardhash = board.getHashkey(); 
 
-	//check for repetitions 
 	if (Rtable::repetition(currboardhash)) {
-		return 0; //stalemate score 
+		return 0; //stalemate score; 
 	}
 
 	//look up in transposition table 
@@ -250,11 +260,12 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		if (Evaluation::ply && score != Ttable::unknownEval && !pvNode) return score; 
 	}
 	
+	Evaluation::pvLength[ply] = ply;
+
+
 	//base case 
 	if (depth == 0) {
 		return Evaluation::quiesenceSearch(board, boardState, alpha, beta);
-		/*Ttable::insert(currboardhash, Evaluation::ply, Ttable::tFlagExact, eval); 
-		return eval; */
 	}
 
 	bool inCheck = board.attacked(board.getPiece()[(boardState.getSide() == white ? wKing : bKing)], boardState);
@@ -266,17 +277,17 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	//null move pruning 
 	if (depth >= 3 && !inCheck && Evaluation::ply && Evaluation::canNullMove(board)) {
 		board.makenullmove(boardState); 
-		++Evaluation::ply; 
-		Rtable::increment(currboardhash); 
-		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2); 
-		Rtable::decrement(); 
-		board.updateHash(currboardhash); 
-		--Evaluation::ply; 
+		++Evaluation::ply;
+		Rtable::increment(board.getHashkey());
+		const int eval = -Evaluation::negamax(board, boardState, -beta, -alpha, depth - 1 - 2);
+		Rtable::decrement();
+		board.updateHash(currboardhash);
+		--Evaluation::ply;
 
-		board = currBoard; 
-		boardState = currBoardState; 
+		board = currBoard;
+		boardState = currBoardState;
 		if (eval >= beta) {
-			return beta; 
+			return beta;
 		}
 	}
 
@@ -297,7 +308,8 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 		const move currmove = ml.getMove(i); 
 		board.makemove(currmove, boardState); 
 		const map nextmoveBoardhash = board.getHashkey(); 
-
+		
+		
 		
 		//lmr nodes 
 		if(movesSearched >= Evaluation::FULLDEPTHMOVES && depth >= Evaluation::REDUCTIONLIMIT && !inCheck && Evaluation::canLMR(ml.getMove(i))){
@@ -360,7 +372,6 @@ int Evaluation::negamax(Board& board, BoardState& boardState, int alpha, int bet
 	const map checkMask = board.checkMask(boardState); 
 	if (checkMask != AllOne && !ml.getIndex()) {
 		return -mateScore + ply;
-		//return (boardState.getSide() == white ? -49000 - depth : -49000 - depth);
 	}
 	else if (checkMask == AllOne && !ml.getIndex()) {
 		//stalemate score
@@ -423,37 +434,14 @@ void Evaluation::sortMove(const Board& board, Movelist& ml) {
 *evaluation 
 *********************/
 int Evaluation::evaluate(Board& board, BoardState& boardState, int ply){
-	//checkmate and stalemate 
-	const map checkMask = board.checkMask(boardState);
-
-	
-	//material score 
-	const int materialScore = Evaluation::materialEvaluation(board); 
-	//const int mobilityScore = Evaluation::mobilityEvaluation(ml); 
-	const int positionalScore = Evaluation::positionalEvaluation(board); 
-	const int pawnScore = Evaluation::pawnEvaluation(board); 
-	const int rookScore = Evaluation::rookEvaluation(board); 
-	/*std::cout
-		<< "material score: " << materialScore << "\n"
-		<< "mobility score: " << mobilityScore << "\n" << std::flush; */
-
-
-	return (boardState.getSide() == white ? 1 : -1) * (
-		materialScore +
-		//mobilityScore + 
-		positionalScore +
-		pawnScore + 
-		rookScore); 
-		/*Evaluation::materialEvaluation(board) +
-		Evaluation::mobilityEvaluation(ml); */
-
-
-	//some ideas for evaluation 
-	//bishops hang back 
-	//knights and pawns control center 
-	//pawn structure score 
-
-	//after certain amount of material is off the board //perhaps implement through some lazy technique... stop evaluating based on position and just let engine search super deep 
+	return (boardState.getSide() == white ? 1 : -1) * 
+		(
+		Evaluation::materialEvaluation(board) +
+		Evaluation::positionalEvaluation(board) +
+		Evaluation::pawnEvaluation(board) +
+		Evaluation::rookEvaluation(board)
+		); 
+		
 }
 
 int Evaluation::materialEvaluation(const Board& board) {
@@ -471,9 +459,6 @@ int Evaluation::materialEvaluation(const Board& board) {
 		getNumBit(board.getPiece()[bQueen]) * materialScore[bQueen];
 }
 
-//int Evaluation::mobilityEvaluation(const Movelist& ml) {
-//	return ml.getIndex() * 100; 
-//}
 
 int Evaluation::positionalEvaluation(const Board& board) {
 	int score = 0; 
@@ -615,21 +600,3 @@ int Evaluation::rookEvaluation(const Board& board) {
 
 
 
-
-
-
-//enum piece : const int {
-//	wPawn = 0,
-//	wKnight = 1,
-//	wKing = 2,
-//	wBishop = 3,
-//	wRook = 4,
-//	wQueen = 5,
-//
-//	bPawn = 6,
-//	bKnight = 7,
-//	bKing = 8,
-//	bBishop = 9,
-//	bRook = 10,
-//	bQueen = 11,
-//};

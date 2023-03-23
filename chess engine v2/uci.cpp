@@ -159,11 +159,11 @@ void UCI::IparseGo(const std::string& command, Board& board, BoardState& boardSt
 
 	//update reptition table 
 	Rtable::increment(board.getHashkey()); 
-	//std::cout << "index of hash key for detecting repetition is : " << Rtable::index << std::endl;
 	
 	if (Evaluation::pvTable[0][0] != 0x0ul) {
 		std::cout << "bestmove " << Move::moveString(Evaluation::pvTable[0][0]) << "\n";
 	}
+	Rtable::debug(); 
 }
 
 void UCI::uciRun(Board& board, BoardState& boardState) {
