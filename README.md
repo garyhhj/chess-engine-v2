@@ -5,10 +5,6 @@
 This is a uci chess engine written in c++. 
 It is statically evaluated and has an estimated strength of ~1700elo. 
 
-## demo 
-
-![gif of demo has gone bad](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
-
 ## features 
 
 ### move generation
