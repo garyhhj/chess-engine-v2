@@ -36,3 +36,5 @@ It is statically evaluated and has an estimated strength of ~1700elo.
 
 [chess programming webiste](https://www.chessprogramming.org/Main_Page) that explains concepts used 
 
+[fully legal move generator](https://www.codeproject.com/Articles/5313417/Worlds-Fastest-Bitboard-Chess-Movegenerator) article 
+
