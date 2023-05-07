@@ -1,5 +1,10 @@
 # chess engine
 
+## Demo 
+
+![chess-engine-demo](https://user-images.githubusercontent.com/54121714/236674622-c532858e-66bf-40a9-996f-3a0ea63cc614.gif)
+
+
 ## Introduction 
 
 This is a uci chess engine written in c++. 
